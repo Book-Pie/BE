@@ -14,8 +14,9 @@ public class UserRepository {
 
     private final EntityManager em;
 
-    public void save(User user){
+    public Long save(User user){
         em.persist(user);
+        return user.getId();
     }
 
     public Optional<User> findById(Long id){
@@ -23,16 +24,15 @@ public class UserRepository {
     }
 
     public List<User> findByNickName(String nickName){
-        return em.createQuery("select u from User u where u.nickName =:nickName",User.class)
+        return em.createQuery("select u from User u where u.nickName= :nickName",User.class)
                 .setParameter("nickName",nickName)
                 .getResultList();
     }
 
     public Optional<User> findByEmail(String email){
-        return Optional.ofNullable(em.createQuery("select u from User u where u.email =:email",User.class)
-                .setParameter("email",email)
-                .getSingleResult()
-                );
+        return Optional.ofNullable(em.createQuery("select u from User u where u.email= :email", User.class)
+                .setParameter("email", email)
+                .getSingleResult());
     }
 
 

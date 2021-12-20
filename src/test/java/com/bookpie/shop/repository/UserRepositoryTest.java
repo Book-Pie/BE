@@ -47,6 +47,6 @@ class UserRepositoryTest {
     void findByEmail() {
         init();
         User user = userRepository.findByEmail("test@gmail.com").get();
-        assertEquals("kim",user.getName());
+        assertEquals(1,user.getId());
     }
 }
