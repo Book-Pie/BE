@@ -12,12 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserCreateDto {
+    private String username;
     private String email;
     private String password;
     private String name;
     private String phone;
     private String nickName;
     private Address address;
-
 
 }

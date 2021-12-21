@@ -25,6 +25,7 @@ public class User implements UserDetails {
     @Column(name = "user_id")
     private Long id;
 
+    private String username;
     private String email;
     private String password;
     private String name;
@@ -64,6 +65,7 @@ public class User implements UserDetails {
     
     public static User createUser(UserCreateDto userCreateDto){
         User user = new User();
+        user.username = userCreateDto.getUsername();
         user.name = userCreateDto.getName();
         user.address = userCreateDto.getAddress();
         user.email = userCreateDto.getEmail();
@@ -86,7 +88,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.username;
     }
 
     @Override

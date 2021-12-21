@@ -7,12 +7,10 @@ import com.bookpie.shop.domain.dto.UserCreateDto;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +31,8 @@ public class UserSevice {
 
 
     public String login(LoginDto loginDto){
-        User user = userRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(()->new IllegalArgumentException("가입되지 않은 email 입니다."));
+        User user = userRepository.findByUsername(loginDto.getUserId())
+                .orElseThrow(()->new IllegalArgumentException("가입되지 않은 ID 입니다."));
 
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
@@ -42,4 +40,11 @@ public class UserSevice {
         return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
     }
 
+    public boolean usernameValidation(String username){
+        return userRepository.findByUsername(username).isEmpty();
+    }
+
+    public boolean nickNameValidation(String nickName){
+        return userRepository.findByNickName(nickName).isEmpty();
+    }
 }
