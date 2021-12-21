@@ -25,16 +25,10 @@ public class UserRepository {
     }
 
     public Optional<User> findByNickName(String nickName){
-        Optional<User> user = null;
-        try {
-            user = Optional.ofNullable(em.createQuery("select u from User u where u.nickName= :nickName", User.class)
-                    .setParameter("nickName", nickName)
-                    .getSingleResult());
-        }catch (Exception e){
-            user = Optional.empty();
-        }finally {
-            return user;
-        }
+        List<User> users = em.createQuery("select u from User u where u.nickName= :nickName", User.class)
+                .setParameter("nickName", nickName)
+                .getResultList();
+        return users.stream().findAny();
 
     }
 
@@ -47,16 +41,10 @@ public class UserRepository {
 
 
     public Optional<User> findByUsername(String username){
-        Optional<User> user = null;
-        try {
-            user = Optional.ofNullable(em.createQuery("select u from User u where u.username= :username",User.class)
-                    .setParameter("username",username)
-                    .getSingleResult());
-        }catch (Exception e){
-            user = Optional.empty();
-        }finally {
-            return user;
-        }
+        List users = em.createQuery("select u from User u where u.username= :username")
+                .setParameter("username", username)
+                .getResultList();
+        return users.stream().findAny();
 
     }
 
