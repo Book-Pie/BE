@@ -21,7 +21,7 @@ public class UserRepository {
     }
 
     public Optional<User> findById(Long id){
-        return Optional.of(em.find(User.class,id));
+        return Optional.ofNullable((em.find(User.class,id)));
     }
 
     public Optional<User> findByNickName(String nickName){
@@ -48,5 +48,24 @@ public class UserRepository {
 
     }
 
+    /*
+        Jwt를 이용해 사용자 정보를 불러올 때 사용하는 메서드.
+        fechjoin 을 이용해 한번의 쿼리로 User Entity의 roles를 가져오기
+        위해 findByUsername 메서드와 분리함
+     */
+    public Optional<User> findByUsernameWithRole(String username){
+        List users = em.createQuery("select distinct u from User u " +
+                                            " join fetch u.roles" +
+                                            " where u.username= :username")
+                .setParameter("username",username)
+                .getResultList();
+        return users.stream().findAny();
+    }
+
+    public boolean delete(Long id){
+        User user = em.find(User.class,id);
+        em.remove(user);
+        return true;
+    }
 
 }

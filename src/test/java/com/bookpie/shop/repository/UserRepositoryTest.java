@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,5 +50,15 @@ class UserRepositoryTest {
         init();
         User user = userRepository.findByUsername("test").orElseThrow(()-> new IllegalArgumentException("이미 사용중인 아이디"));
         assertEquals("kim",user.getName());
+    }
+
+    @Test
+    public void UserRepositoryTest() throws Exception{
+        //given
+        init();
+        //when
+        userRepository.delete(1l);
+        //then
+        assertThrows(UsernameNotFoundException.class,()->userRepository.findById(1l).orElseThrow(()->new UsernameNotFoundException("not found")));
     }
 }

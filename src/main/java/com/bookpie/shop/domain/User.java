@@ -59,6 +59,7 @@ public class User implements UserDetails {
     private List<UsedBookLike> likes = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
@@ -78,6 +79,9 @@ public class User implements UserDetails {
         return user;
     }
 
+    public void changeNickname(String nickName){
+        this.nickName = nickName;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

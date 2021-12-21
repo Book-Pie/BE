@@ -53,7 +53,7 @@ class UserSeviceTest {
         userSevice.signup(userCreateDto);
         //when
         LoginDto loginDto= new LoginDto();
-        loginDto.setUserId("test");
+        loginDto.setUsername("test");
         loginDto.setPassword("1234");
         //then
         String token = userSevice.login(loginDto);
@@ -68,7 +68,7 @@ class UserSeviceTest {
         userSevice.signup(userCreateDto);
         //when
         LoginDto loginDto= new LoginDto();
-        loginDto.setUserId("test");
+        loginDto.setUsername("test");
         loginDto.setPassword("12345");
         //then
         assertThrows(IllegalArgumentException.class,()->userSevice.login(loginDto));

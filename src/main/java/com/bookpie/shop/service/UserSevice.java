@@ -4,9 +4,11 @@ import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.LoginDto;
 import com.bookpie.shop.domain.dto.UserCreateDto;
+import com.bookpie.shop.domain.dto.UserDetailDto;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +33,13 @@ public class UserSevice {
 
 
     public String login(LoginDto loginDto){
-        User user = userRepository.findByUsername(loginDto.getUserId())
+        User user = userRepository.findByUsername(loginDto.getUsername())
                 .orElseThrow(()->new IllegalArgumentException("가입되지 않은 ID 입니다."));
 
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
+        return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
     }
 
     public boolean usernameValidation(String username){
@@ -47,4 +49,23 @@ public class UserSevice {
     public boolean nickNameValidation(String nickName){
         return userRepository.findByNickName(nickName).isEmpty();
     }
+
+    @Transactional
+    public String updateNickname(Long id,String nickName){
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        user.changeNickname(nickName);
+        return user.getNickName();
+    }
+
+    public UserDetailDto getUserDetail(Long id){
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return UserDetailDto.createUserDetailDto(user);
+
+    }
+
+    @Transactional
+    public boolean deleteAccount(Long id){
+        return userRepository.delete(id);
+    }
+
 }
