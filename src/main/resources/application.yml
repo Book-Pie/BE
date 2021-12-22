@@ -9,7 +9,7 @@ spring:
     database : mysql
     database-platform : org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         default_batch_fetch_size: 100
@@ -19,3 +19,8 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+    com.bookpie.shop : debug
+
+path :
+  image :
+    deploy : C:\bookpie_image\
