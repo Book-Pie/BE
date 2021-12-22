@@ -1,6 +1,7 @@
 package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.UserCreateDto;
+import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.domain.enums.Role;
 import lombok.Builder;
@@ -79,6 +80,14 @@ public class User implements UserDetails {
         user.grade = Grade.GENERAL;
         return user;
     }
+
+    public void update(UserUpdateDto userUpdateDto){
+        this.name = userUpdateDto.getName();
+        this.phone = userUpdateDto.getPhone();
+        this.email = userUpdateDto.getEmail();
+        this.address = userUpdateDto.getAddress();
+    }
+
     public void deleteAccount(String reason){
         this.withDraw = reason;
         this.grade = Grade.WITH_DRAW;
@@ -93,6 +102,7 @@ public class User implements UserDetails {
                 .map((Role role) -> new SimpleGrantedAuthority(role.toString()))
                 .collect(Collectors.toList());
     }
+    public void changePassword(String password){this.password = password;}
 
     @Override
     public String getUsername() {

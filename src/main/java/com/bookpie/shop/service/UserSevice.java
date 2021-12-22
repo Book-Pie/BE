@@ -5,6 +5,7 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.LoginDto;
 import com.bookpie.shop.domain.dto.UserCreateDto;
 import com.bookpie.shop.domain.dto.UserDetailDto;
+import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,25 @@ public class UserSevice {
     public boolean deleteAccount(Long id,String reason){
         User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         user.deleteAccount(reason);
+        return true;
+    }
+
+    public boolean checkPassword(Long id, String password){
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return passwordEncoder.matches(password,user.getPassword());
+
+    }
+
+    public boolean changePassword(Long id,String password){
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        user.changePassword(passwordEncoder.encode(password));
+        return true;
+    }
+
+    @Transactional
+    public boolean updateUserInfo(Long id, UserUpdateDto userUpdateDto){
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        user.update(userUpdateDto);
         return true;
     }
 
