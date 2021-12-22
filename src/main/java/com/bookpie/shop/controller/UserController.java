@@ -59,10 +59,14 @@ public class UserController {
     }
 
     @DeleteMapping("/me")
-    public ApiResult withDraw(){
-        return success(userSevice.deleteAccount(getCurrentUserId()));
+    public ApiResult withDraw(@RequestBody String reason){
+        return success(userSevice.deleteAccount(getCurrentUserId(),reason));
     }
 
+    @GetMapping("{id}")
+    public ApiResult getUserInfo(@PathVariable("id") Long id){
+        return success(userSevice.getUserDetail(id));
+    }
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();

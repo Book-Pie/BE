@@ -76,9 +76,13 @@ public class User implements UserDetails {
         user.point = Point.createDefaultPoint();
         user.roles = Collections.singletonList(Role.ROLE_USER);
         user.createDate = LocalDateTime.now();
+        user.grade = Grade.GENERAL;
         return user;
     }
-
+    public void deleteAccount(String reason){
+        this.withDraw = reason;
+        this.grade = Grade.WITH_DRAW;
+    }
     public void changeNickname(String nickName){
         this.nickName = nickName;
     }

@@ -64,8 +64,10 @@ public class UserSevice {
     }
 
     @Transactional
-    public boolean deleteAccount(Long id){
-        return userRepository.delete(id);
+    public boolean deleteAccount(Long id,String reason){
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        user.deleteAccount(reason);
+        return true;
     }
 
 }

@@ -1,11 +1,11 @@
 package com.bookpie.shop.repository;
 
 import com.bookpie.shop.domain.User;
+import com.bookpie.shop.domain.enums.Grade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +41,9 @@ public class UserRepository {
 
 
     public Optional<User> findByUsername(String username){
-        List users = em.createQuery("select u from User u where u.username= :username")
+        List users = em.createQuery("select u from User u where u.username= :username and u.grade<> :grade")
                 .setParameter("username", username)
+                .setParameter("grade",Grade.WITH_DRAW)
                 .getResultList();
         return users.stream().findAny();
 
@@ -56,16 +57,13 @@ public class UserRepository {
     public Optional<User> findByUsernameWithRole(String username){
         List users = em.createQuery("select distinct u from User u " +
                                             " join fetch u.roles" +
-                                            " where u.username= :username")
+                                            " where u.username= :username" +
+                                            " and u.grade<> :grade")
                 .setParameter("username",username)
+                .setParameter("grade", Grade.WITH_DRAW)
                 .getResultList();
         return users.stream().findAny();
     }
 
-    public boolean delete(Long id){
-        User user = em.find(User.class,id);
-        em.remove(user);
-        return true;
-    }
 
 }
