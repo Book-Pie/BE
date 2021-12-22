@@ -1,6 +1,7 @@
 package com.bookpie.shop.domain.dto;
 
 import com.bookpie.shop.domain.Address;
+import com.bookpie.shop.domain.Image;
 import com.bookpie.shop.domain.Point;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.enums.Grade;
@@ -34,8 +35,8 @@ public class UserDetailDto {
         dto.setGrade(user.getGrade());
         dto.setAddress(user.getAddress());
         dto.setPoint(user.getPoint());
-        dto.setImage(user.getImage());
         dto.setCreateDate(user.getCreateDate());
+        dto.setImage(user.getImage());
         return dto;
     }
 

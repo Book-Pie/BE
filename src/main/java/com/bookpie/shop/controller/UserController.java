@@ -8,9 +8,12 @@ import com.bookpie.shop.service.UserSevice;
 import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -36,6 +39,7 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ApiResult login(@RequestBody LoginDto loginDto){
+        log.debug("login");
         return success(userSevice.login(loginDto));
     }
 
@@ -99,6 +103,11 @@ public class UserController {
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
+    }
+
+    @PostMapping("/image")
+    public ApiResult uploadUserImage(@RequestParam("image")MultipartFile file) throws Exception{
+        return success(userSevice.uploadImage(getCurrentUserId(),file));
     }
 
 

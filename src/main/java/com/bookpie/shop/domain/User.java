@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.domain.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@ToString
 public class User implements UserDetails {
 
     @Id @GeneratedValue
@@ -35,11 +37,12 @@ public class User implements UserDetails {
     private LocalDateTime createDate;
     @Embedded private Address address;
     private float rating;
-    private String image;
     private String withDraw;
 
     @Enumerated(EnumType.STRING) private Grade grade;
     @Embedded private Point point;
+
+    private String image;
 
     @OneToMany(mappedBy = "buyer")
     private List<Order> orders = new ArrayList<>();
@@ -78,6 +81,7 @@ public class User implements UserDetails {
         user.roles = Collections.singletonList(Role.ROLE_USER);
         user.createDate = LocalDateTime.now();
         user.grade = Grade.GENERAL;
+        user.image = null;
         return user;
     }
 
@@ -96,6 +100,9 @@ public class User implements UserDetails {
         this.nickName = nickName;
     }
 
+    public void changeImage(String imageName) {
+        this.image = imageName;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()

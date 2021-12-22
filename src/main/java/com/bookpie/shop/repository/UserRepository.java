@@ -25,23 +25,25 @@ public class UserRepository {
     }
 
     public Optional<User> findByNickName(String nickName){
-        List<User> users = em.createQuery("select u from User u where u.nickName= :nickName", User.class)
+        List<User> users = em.createQuery("select u from User u where u.nickName= :nickName and u.grade<> :grade", User.class)
                 .setParameter("nickName", nickName)
+                .setParameter("grade",Grade.WITH_DRAW)
                 .getResultList();
         return users.stream().findAny();
 
     }
 
     public List<User> findByEmail(String email){
-        return em.createQuery("select u from User u where u.email= :email", User.class)
+        return em.createQuery("select u from User u where u.email= :email and u.grade<> :grade", User.class)
                 .setParameter("email", email)
+                .setParameter("grade",Grade.WITH_DRAW)
                 .getResultList();
     }
 
 
 
     public Optional<User> findByUsername(String username){
-        List users = em.createQuery("select u from User u where u.username= :username and u.grade<> :grade")
+        List<User> users = em.createQuery("select u from User u where u.username= :username and u.grade<> :grade",User.class)
                 .setParameter("username", username)
                 .setParameter("grade",Grade.WITH_DRAW)
                 .getResultList();
@@ -55,15 +57,26 @@ public class UserRepository {
         위해 findByUsername 메서드와 분리함
      */
     public Optional<User> findByUsernameWithRole(String username){
-        List users = em.createQuery("select distinct u from User u " +
+        List<User> users = em.createQuery("select distinct u from User u " +
                                             " join fetch u.roles" +
                                             " where u.username= :username" +
-                                            " and u.grade<> :grade")
+                                            " and u.grade<> :grade",User.class)
                 .setParameter("username",username)
                 .setParameter("grade", Grade.WITH_DRAW)
                 .getResultList();
         return users.stream().findAny();
     }
 
+    /*
+    public Optional<User> findByIdWithImage(Long id){
+        List<User> users = em.createQuery("select u from User u " +
+                                " join fetch u.image" +
+                                " where u.id= :id and u.grade<> :grade",User.class)
+                .setParameter("id",id)
+                .setParameter("grade",Grade.WITH_DRAW)
+                .getResultList();
+        return users.stream().findAny();
+    }
+    */
 
 }
