@@ -1,10 +1,12 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
+import com.bookpie.shop.domain.dto.FindUserDto;
 import com.bookpie.shop.domain.dto.LoginDto;
 import com.bookpie.shop.domain.dto.UserCreateDto;
 import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.service.UserSevice;
+import com.bookpie.shop.utils.ApiUtil;
 import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +110,18 @@ public class UserController {
     @PostMapping("/image")
     public ApiResult uploadUserImage(@RequestParam("image")MultipartFile file) throws Exception{
         return success(userSevice.uploadImage(getCurrentUserId(),file));
+    }
+
+    //아이디 찾기
+    @PostMapping("/find/id")
+    public ApiResult findId(@RequestBody FindUserDto findUserDto) throws Exception{
+        return success(userSevice.findId(findUserDto));
+    }
+
+    //비밀번호 찾기
+    @PostMapping("/find/password")
+    public ApiResult findPassword(@RequestBody FindUserDto findUserDto) throws Exception{
+        return success(userSevice.findPassword(findUserDto));
     }
 
 

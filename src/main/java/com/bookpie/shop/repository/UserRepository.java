@@ -33,11 +33,12 @@ public class UserRepository {
 
     }
 
-    public List<User> findByEmail(String email){
-        return em.createQuery("select u from User u where u.email= :email and u.grade<> :grade", User.class)
+    public Optional<User> findByEmail(String email){
+        List<User> users =  em.createQuery("select u from User u where u.email= :email and u.grade<> :grade", User.class)
                 .setParameter("email", email)
                 .setParameter("grade",Grade.WITH_DRAW)
                 .getResultList();
+        return users.stream().findAny();
     }
 
 

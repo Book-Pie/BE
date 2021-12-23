@@ -28,12 +28,19 @@ public class User implements UserDetails {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(nullable = false,unique = true)
     private String username;
+
+    @Column(nullable = false,unique = true)
     private String email;
+
     private String password;
     private String name;
     private String phone;
+
+    @Column(nullable = false,unique = true)
     private String nickName;
+
     private LocalDateTime createDate;
     @Embedded private Address address;
     private float rating;

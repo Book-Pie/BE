@@ -2,10 +2,7 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.LoginDto;
-import com.bookpie.shop.domain.dto.UserCreateDto;
-import com.bookpie.shop.domain.dto.UserDetailDto;
-import com.bookpie.shop.domain.dto.UserUpdateDto;
+import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +37,12 @@ public class UserSevice {
     public Long signup(UserCreateDto userCreateDto){
         userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         User user = User.createUser(userCreateDto);
-        return userRepository.save(user);
+        if (usernameValidation(user.getUsername()) && emailValidation(user.getEmail()) &&
+                nickNameValidation(user.getNickName())){
+            return userRepository.save(user);}
+        else {
+            throw new IllegalArgumentException("이미 가입된 아이디 입니다.");
+        }
     }
 
 
@@ -120,6 +122,31 @@ public class UserSevice {
             throw new FileUploadException("파일 업로드 중 에러가 발생하였습니다.");
         }
 
+    }
+    public boolean emailValidation(String email){
+        return userRepository.findByEmail(email).isEmpty();
+    }
+
+
+    public String findId(FindUserDto findUserDto) throws Exception{
+        User user = userRepository.findByEmail(findUserDto.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getName().equals(findUserDto.getName()) && user.getPhone().equals(findUserDto.getPhone())){
+            return user.getUsername();
+        }else{
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    @Transactional
+    public boolean findPassword(FindUserDto findUserDto) throws Exception{
+        User user = userRepository.findByUsername(findUserDto.getUsername()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getEmail().equals(findUserDto.getEmail()) &&
+            user.getName().equals(findUserDto.getName()) &&
+            user.getPhone().equals(findUserDto.getPhone())){
+            return changePassword(user.getId(),findUserDto.getPassword());
+        }else{
+            throw new IllegalArgumentException("이름, 이메일, 휴대폰번호를 올바르게 입력해주세요.");
+        }
     }
 
 }
