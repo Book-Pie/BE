@@ -4,6 +4,7 @@ import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.repository.UserRepository;
+import com.bookpie.shop.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -105,22 +106,10 @@ public class UserSevice {
 
     @Transactional
     public String uploadImage(Long id,MultipartFile file) throws Exception {
-        if(file.isEmpty()){
-            throw new FileUploadException("파일이 없습니다.");
-        }
-        String fileName = new StringBuilder()
-                .append(new Date().getTime())
-                .append(file.getOriginalFilename())
-                .toString();
-        try{
-            Path path = Paths.get(filePath+fileName);
-            Files.write(path,file.getBytes());
-            User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-            user.changeImage(fileName);
-            return fileName;
-        }catch (Exception e){
-            throw new FileUploadException("파일 업로드 중 에러가 발생하였습니다.");
-        }
+        User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        String fileName = FileUtil.save(filePath,file);
+        user.changeImage(fileName);
+        return fileName;
 
     }
     public boolean emailValidation(String email){
