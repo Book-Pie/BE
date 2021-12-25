@@ -52,13 +52,5 @@ class UserRepositoryTest {
         assertEquals("kim",user.getName());
     }
 
-    @Test
-    public void UserRepositoryTest() throws Exception{
-        //given
-        init();
-        //when
-        userRepository.delete(1l);
-        //then
-        assertThrows(UsernameNotFoundException.class,()->userRepository.findById(1l).orElseThrow(()->new UsernameNotFoundException("not found")));
-    }
+
 }
