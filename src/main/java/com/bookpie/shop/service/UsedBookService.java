@@ -27,7 +27,7 @@ public class UsedBookService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
 
-    @Value("${path.image.deploy}")
+    @Value("${path.image.dev}")
     private String filePath;
 
     @Transactional
@@ -56,6 +56,7 @@ public class UsedBookService {
                 usedBook.addImage(image);
             }
         }
+        if(!fileNames.isEmpty()) usedBook.setThumbnail(fileNames.get(0));
         return usedBookRepository.save(usedBook);
     }
 

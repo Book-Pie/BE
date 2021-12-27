@@ -31,7 +31,7 @@ public class UserSevice {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${path.image.deploy}")
+    @Value("${path.image.dev}")
     private String filePath;
 
     @Transactional

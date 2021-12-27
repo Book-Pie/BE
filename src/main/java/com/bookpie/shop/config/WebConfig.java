@@ -11,7 +11,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${path.image.deploy}")
+    @Value("${path.image.dev}")
     private String uploadImagePath;
 
     @Override

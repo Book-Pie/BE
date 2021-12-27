@@ -23,7 +23,7 @@ public class UsedBook {
     private int price;
     private int view;
     private LocalDateTime uploadDate;
-
+    private String thumbnail;
     @Enumerated(EnumType.STRING)
     private BookState bookState;
 
@@ -38,7 +38,7 @@ public class UsedBook {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<UsedBookLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
@@ -57,6 +57,10 @@ public class UsedBook {
         image.setBook(this);
     }
 
+    public void setThumbnail(String fileName){
+        thumbnail=fileName;
+    }
+
     public static UsedBook createUsedBook(User user,UsedBookCreateDto dto){
         UsedBook usedBook = new UsedBook();
         usedBook.seller = user;
@@ -66,6 +70,7 @@ public class UsedBook {
         usedBook.uploadDate = LocalDateTime.now();
         usedBook.bookState = dto.getState();
         usedBook.saleState = SaleState.SALE;
+        usedBook.bookState = dto.getState();
         return usedBook;
     }
 
