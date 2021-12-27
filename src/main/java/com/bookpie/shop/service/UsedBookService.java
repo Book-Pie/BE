@@ -1,8 +1,10 @@
 package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.*;
+import com.bookpie.shop.domain.dto.FindUsedBookDto;
 import com.bookpie.shop.domain.dto.UsedBookCreateDto;
 import com.bookpie.shop.domain.dto.UsedBookDto;
+import com.bookpie.shop.domain.dto.UsedBookListDto;
 import com.bookpie.shop.repository.TagRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
@@ -65,5 +67,21 @@ public class UsedBookService {
         log.debug(usedBook.getImages().toString());
         UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
         return usedBookDto;
+    }
+
+    public List<UsedBookListDto> getUsedBookList(FindUsedBookDto findUsedBookDto){
+        List<UsedBook> result = usedBookRepository.findAll(findUsedBookDto);
+        log.debug(String.valueOf(result.size()));
+        return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+    }
+
+    public List<UsedBookListDto> getUserUpload(Long id){
+        List<UsedBook> result = usedBookRepository.findByUserId(id);
+        return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public boolean delete(Long id){
+        return usedBookRepository.delete(id);
     }
 }

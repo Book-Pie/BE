@@ -2,6 +2,7 @@ package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.UsedBookCreateDto;
 import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.domain.enums.SaleState;
 import lombok.Getter;
 
@@ -24,6 +25,13 @@ public class UsedBook {
     private int view;
     private LocalDateTime uploadDate;
     private String thumbnail;
+
+    @Enumerated(EnumType.STRING)
+    private Category fstCategory;
+
+    @Enumerated(EnumType.STRING)
+    private Category sndCategory;
+
     @Enumerated(EnumType.STRING)
     private BookState bookState;
 
@@ -71,6 +79,8 @@ public class UsedBook {
         usedBook.bookState = dto.getState();
         usedBook.saleState = SaleState.SALE;
         usedBook.bookState = dto.getState();
+        usedBook.fstCategory = dto.getFstCategory();
+        usedBook.sndCategory = dto.getSndCategory();
         return usedBook;
     }
 

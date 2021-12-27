@@ -71,7 +71,6 @@ public class User implements UserDetails {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
     

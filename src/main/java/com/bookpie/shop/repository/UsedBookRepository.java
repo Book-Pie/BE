@@ -1,10 +1,20 @@
 package com.bookpie.shop.repository;
 
+
+import com.bookpie.shop.domain.QUsedBook;
 import com.bookpie.shop.domain.UsedBook;
+import com.bookpie.shop.domain.dto.FindUsedBookDto;
+import com.bookpie.shop.domain.enums.Category;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +29,17 @@ public class UsedBookRepository {
         return usedBook.getId();
     }
 
+    public boolean delete(Long id){
+        UsedBook usedBook = findById(id).orElseThrow(()->new UsernameNotFoundException("등록된 책이 없습니다."));
+        em.remove(usedBook);
+        return true;
+    }
+
     public List<UsedBook> findByUserId(Long userId){
         return em.createQuery("select ub from UsedBook  ub" +
                                 " join fetch ub.seller s" +
-                                " join fetch ub.tags t" +
-                                " join fetch ub.images" +
+                                //" join fetch ub.tags t" +
+                                //" join fetch ub.images" +
                                 " where s.id= : userId",UsedBook.class)
                 .setParameter("userId",userId)
                 .getResultList();
@@ -38,4 +54,47 @@ public class UsedBookRepository {
                 .setParameter("id",id)
                 .getResultList().stream().findAny();
     }
+
+    public List<UsedBook> findAll(FindUsedBookDto dto){
+        QUsedBook qUsedBook= QUsedBook.usedBook;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        OrderSpecifier condition = null;
+        if(dto.getSort().equals("date")){
+            condition = qUsedBook.uploadDate.desc();
+        }else if (dto.getSort().equals("view")){
+            condition = qUsedBook.view.desc();
+        }
+        return query.select(qUsedBook)
+                .from(qUsedBook)
+                .where(eqTitle(dto.getTitle()),
+                        eqFstCategory(dto.getFstCategory()),
+                        eqSndCategory(dto.getSndCategory()))
+                .offset(dto.getOffset())
+                .limit(dto.getLimit())
+                .orderBy(condition)
+                .fetch();
+    }
+
+    private BooleanExpression eqTitle(String title){
+        if(!StringUtils.hasText(title)){
+            return null;
+        }
+        return QUsedBook.usedBook.title.containsIgnoreCase(title);
+
+    }
+    private BooleanExpression eqFstCategory(Category category){
+        if(category == null){
+            return null;
+        }
+        return QUsedBook.usedBook.fstCategory.eq(category);
+    }
+
+    private BooleanExpression eqSndCategory(Category category){
+        if(category == null){
+            return null;
+        }
+        return QUsedBook.usedBook.sndCategory.eq(category);
+    }
+
+
 }

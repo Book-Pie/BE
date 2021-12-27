@@ -2,6 +2,7 @@ package com.bookpie.shop.domain.dto;
 
 import com.bookpie.shop.domain.Tag;
 import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.domain.enums.Category;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,5 +16,7 @@ public class UsedBookCreateDto {
     private String content;
     private int price;
     private BookState state;
+    private Category fstCategory;
+    private Category sndCategory;
     private List<String> tags = new ArrayList<>();
 }

@@ -3,6 +3,7 @@ package com.bookpie.shop.domain.dto;
 import com.bookpie.shop.domain.Image;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.domain.enums.SaleState;
 import lombok.Data;
 
@@ -22,7 +23,8 @@ public class UsedBookDto {
     private int view;
     private BookState bookState;
     private SaleState saleState;
-    //private int likeCount;
+    private String fstCategory;
+    private String sndCategory;
 
     private List<String> tags = new ArrayList<>();
     private List<String> images = new ArrayList<>();
@@ -40,6 +42,8 @@ public class UsedBookDto {
         dto.setView(usedBook.getView());
         dto.setSaleState(usedBook.getSaleState());
         dto.setView(usedBook.getView());
+        dto.setFstCategory(usedBook.getFstCategory().getKr());
+        dto.setSndCategory(usedBook.getSndCategory().getKr());
         List<Image> images = usedBook.getImages();
         images.stream().forEach(image -> dto.images.add(image.getFileName()));
         usedBook.getTags().stream()

@@ -1,6 +1,7 @@
 package com.bookpie.shop.domain.dto;
 
 import com.bookpie.shop.domain.UsedBook;
+import com.bookpie.shop.domain.enums.SaleState;
 import lombok.Data;
 
 @Data
@@ -17,5 +18,6 @@ public class UsedBookListDto {
         this.title = usedBook.getTitle();
         this.price = usedBook.getPrice();
         this.image = usedBook.getThumbnail();
+
     }
 }
