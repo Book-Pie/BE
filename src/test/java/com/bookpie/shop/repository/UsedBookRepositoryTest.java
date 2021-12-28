@@ -47,8 +47,8 @@ class UsedBookRepositoryTest {
         //when
 
         UsedBook usedBook = UsedBook.createUsedBook(user,dto);
-        usedBookRepository.save(usedBook);
+        Long id = usedBookRepository.save(usedBook);
         //then
-
+        assertNotNull(usedBookRepository.findById(id).get());
     }
 }

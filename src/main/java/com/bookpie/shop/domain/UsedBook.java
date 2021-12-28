@@ -46,7 +46,7 @@ public class UsedBook {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book")
     private List<UsedBookLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)

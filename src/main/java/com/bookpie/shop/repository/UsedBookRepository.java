@@ -28,7 +28,9 @@ public class UsedBookRepository {
         em.persist(usedBook);
         return usedBook.getId();
     }
-
+    public Optional<UsedBook> findById(Long id){
+        return Optional.ofNullable(em.find(UsedBook.class,id));
+    }
     public boolean delete(Long id){
         UsedBook usedBook = findById(id).orElseThrow(()->new UsernameNotFoundException("등록된 책이 없습니다."));
         em.remove(usedBook);
@@ -45,7 +47,7 @@ public class UsedBookRepository {
                 .getResultList();
     }
 
-    public Optional<UsedBook> findById(Long id){
+    public Optional<UsedBook> findByIdDetail(Long id){
         return em.createQuery("select distinct ub from UsedBook ub" +
                                     " join fetch ub.seller s" +
                                     " join fetch ub.tags bt" +
@@ -94,6 +96,15 @@ public class UsedBookRepository {
             return null;
         }
         return QUsedBook.usedBook.sndCategory.eq(category);
+    }
+
+    public List<UsedBook> getLikedBook(Long userId){
+        return em.createQuery("select ub from UsedBook ub" +
+                        " join fetch ub.likes l"+
+                        " join fetch l.user u" +
+                        " where u.id=: userId",UsedBook.class)
+                .setParameter("userId",userId)
+                .getResultList();
     }
 
 

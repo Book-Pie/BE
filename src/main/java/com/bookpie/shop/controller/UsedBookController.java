@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.dto.FindUsedBookDto;
 import com.bookpie.shop.domain.dto.UsedBookCreateDto;
 import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.repository.UsedBookRepository;
+import com.bookpie.shop.service.UsedBookLikeService;
 import com.bookpie.shop.service.UsedBookService;
 import com.bookpie.shop.utils.ApiUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +31,7 @@ import static com.bookpie.shop.utils.ApiUtil.*;
 public class UsedBookController {
 
     private final UsedBookService usedBookService;
-
+    private final UsedBookLikeService usedBookLikeService;
     //중고도서 등록
     @PostMapping("")
     public ApiResult upload(@RequestPart("images")List<MultipartFile> images,
@@ -77,10 +78,22 @@ public class UsedBookController {
         return success(usedBookService.getUserUpload(id));
     }
 
+
+    //좋아요
+    @PostMapping("/like/{bookId}")
+    public ApiResult updateLike(@PathVariable("bookId") Long bookId){
+        return success(usedBookLikeService.like(getCurrentUserId(),bookId));
+    }
+
+    //내가 좋아요 한 목록
+    @GetMapping("/like")
+    public ApiResult getMyLike(){
+       return success(usedBookService.getUserLiked(getCurrentUserId()));
+    }
+
+
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
     }
-
-
 }

@@ -18,4 +18,12 @@ public class UsedBookLike {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    public static UsedBookLike createUsedBookLike(User userLike,UsedBook usedBook){
+        UsedBookLike like = new UsedBookLike();
+        like.user = userLike;
+        like.book = usedBook;
+        userLike.getLikes().add(like);
+        usedBook.getLikes().add(like);
+        return like;
+    }
 }

@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.dto.UsedBookCreateDto;
 import com.bookpie.shop.domain.dto.UsedBookDto;
 import com.bookpie.shop.domain.dto.UsedBookListDto;
 import com.bookpie.shop.repository.TagRepository;
+import com.bookpie.shop.repository.UsedBookLikeRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
@@ -32,6 +33,7 @@ public class UsedBookService {
     @Value("${path.image.dev}")
     private String filePath;
 
+    // 중고도서 등록
     @Transactional
     public Long uploadUsedBook(Long id, UsedBookCreateDto dto,List<MultipartFile> files){
         User user = userRepository.findById(id).get();
@@ -62,17 +64,27 @@ public class UsedBookService {
         return usedBookRepository.save(usedBook);
     }
 
+    //중고도서 상세조회
     public UsedBookDto getUsedBook(Long id){
-        UsedBook usedBook = usedBookRepository.findById(id).orElseThrow(()->new IllegalArgumentException("등록된 책이 없습니다."));
+        UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new IllegalArgumentException("등록된 책이 없습니다."));
         log.debug(usedBook.getImages().toString());
         UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
         return usedBookDto;
     }
 
+    //중고도서 검색
     public List<UsedBookListDto> getUsedBookList(FindUsedBookDto findUsedBookDto){
         List<UsedBook> result = usedBookRepository.findAll(findUsedBookDto);
         log.debug(String.valueOf(result.size()));
         return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+    }
+
+
+
+    //중고도서 삭제
+    @Transactional
+    public boolean delete(Long id){
+        return usedBookRepository.delete(id);
     }
 
     public List<UsedBookListDto> getUserUpload(Long id){
@@ -80,8 +92,8 @@ public class UsedBookService {
         return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
     }
 
-    @Transactional
-    public boolean delete(Long id){
-        return usedBookRepository.delete(id);
+    public List<UsedBookListDto> getUserLiked(Long id){
+        List<UsedBook> result = usedBookRepository.getLikedBook(id);
+        return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
     }
 }
