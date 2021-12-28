@@ -76,6 +76,14 @@ public class UsedBookRepository {
                 .orderBy(condition)
                 .fetch();
     }
+    public Long count(){
+        QUsedBook qUsedBook = QUsedBook.usedBook;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.select(qUsedBook.count())
+                .from(qUsedBook)
+                .fetchOne();
+
+    }
 
     private BooleanExpression eqTitle(String title){
         if(!StringUtils.hasText(title)){
