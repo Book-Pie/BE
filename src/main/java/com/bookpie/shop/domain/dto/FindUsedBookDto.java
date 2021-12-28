@@ -12,5 +12,6 @@ public class FindUsedBookDto {
     private int offset;
     private int limit;
     private String sort;
+    private Long pageCount;
 
 }

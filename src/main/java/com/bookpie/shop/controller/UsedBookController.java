@@ -23,8 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.xml.transform.OutputKeys;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.bookpie.shop.utils.ApiUtil.*;
 
@@ -36,6 +40,7 @@ public class UsedBookController {
 
     private final UsedBookService usedBookService;
     private final UsedBookLikeService usedBookLikeService;
+    private final UsedBookRepository repository;
     //중고도서 등록
     @PostMapping("")
     public ResponseEntity upload(@RequestPart("images")List<MultipartFile> images,
@@ -61,7 +66,8 @@ public class UsedBookController {
                                      @RequestParam(value = "limit",required = false,defaultValue = "20") int limit,
                                     @RequestParam(value = "sort",required = false,defaultValue = "date")String sort,
                                      @RequestParam(value = "first",required = false,defaultValue = "기타")String first,
-                                     @RequestParam(value = "second",required = false)String second){
+                                     @RequestParam(value = "second",required = false)String second,
+                                          @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
         FindUsedBookDto findUsedBookDto = new FindUsedBookDto();
         findUsedBookDto.setTitle(title);
         findUsedBookDto.setLimit(limit);
@@ -69,6 +75,7 @@ public class UsedBookController {
         findUsedBookDto.setFstCategory(Category.nameOf(first));
         findUsedBookDto.setSndCategory(Category.nameOf(second));
         findUsedBookDto.setSort(sort);
+        findUsedBookDto.setPageCount(pageCount);
         log.debug(findUsedBookDto.toString());
         return new ResponseEntity(success(usedBookService.getUsedBookList(findUsedBookDto)),HttpStatus.OK);
     }
@@ -99,6 +106,16 @@ public class UsedBookController {
     }
 
 
+    @GetMapping("/category")
+    public ResponseEntity getCategorys(){
+        List<Category> parents = Category.AllParent();
+        Map<String,List<String>> map = new HashMap<>();
+        for(Category parent : parents){
+            List<String> childrenKr = parent.children().stream().map(c -> c.getKr()).collect(Collectors.toList());
+            map.put(parent.getKr(),childrenKr);
+        }
+        return new ResponseEntity(success(map),HttpStatus.OK);
+    }
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();

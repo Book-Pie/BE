@@ -1,10 +1,7 @@
 package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.*;
-import com.bookpie.shop.domain.dto.FindUsedBookDto;
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.dto.UsedBookDto;
-import com.bookpie.shop.domain.dto.UsedBookListDto;
+import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.repository.TagRepository;
 import com.bookpie.shop.repository.UsedBookLikeRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
@@ -74,10 +71,16 @@ public class UsedBookService {
     }
 
     //중고도서 검색
-    public List<UsedBookListDto> getUsedBookList(FindUsedBookDto findUsedBookDto){
+    public PageUtil.PageDto getUsedBookList(FindUsedBookDto findUsedBookDto){
         List<UsedBook> result = usedBookRepository.findAll(findUsedBookDto);
+        if(findUsedBookDto.getPageCount() == 0){
+            findUsedBookDto.setPageCount(usedBookRepository.count());
+        }
+        Long pageCount =findUsedBookDto.getPageCount()/findUsedBookDto.getLimit();
+        if (findUsedBookDto.getPageCount()% findUsedBookDto.getLimit() !=0){pageCount++;}
         log.debug(String.valueOf(result.size()));
-        return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+        List<UsedBookListDto> collect = result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+        return new PageUtil.PageDto(pageCount,collect);
     }
 
 
