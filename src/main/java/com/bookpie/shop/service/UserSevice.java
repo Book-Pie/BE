@@ -49,7 +49,7 @@ public class UserSevice {
 
     public String login(LoginDto loginDto){
         User user = userRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(()->new IllegalArgumentException("가입되지 않은 ID 입니다."));
+                .orElseThrow(()->new UsernameNotFoundException("가입되지 않은 아이디입니다."));
 
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
@@ -122,7 +122,7 @@ public class UserSevice {
         if (user.getName().equals(findUserDto.getName()) && user.getPhone().equals(findUserDto.getPhone())){
             return user.getUsername();
         }else{
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
     }
 

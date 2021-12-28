@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 import static com.bookpie.shop.utils.ApiUtil.error;
@@ -34,7 +35,7 @@ public class UserController {
 
     // 회원 가입
     @PostMapping("/signup")
-    public ApiResult join(@RequestBody UserCreateDto userCreateDto){
+    public ApiResult join(@Valid @RequestBody UserCreateDto userCreateDto){
         return success(userSevice.signup(userCreateDto));
     }
 

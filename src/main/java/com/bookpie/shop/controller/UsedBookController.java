@@ -16,9 +16,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -35,10 +37,13 @@ public class UsedBookController {
     //중고도서 등록
     @PostMapping("")
     public ApiResult upload(@RequestPart("images")List<MultipartFile> images,
-                            @RequestParam("usedBook")String request) throws JsonProcessingException {
+                            @Valid @RequestParam("usedBook")String request) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         UsedBookCreateDto usedBookCreateDto = objectMapper.readValue(request, new TypeReference<UsedBookCreateDto>() {});
         log.debug(usedBookCreateDto.toString());
+        if(!StringUtils.hasText(usedBookCreateDto.getTitle())) throw new IllegalArgumentException("제목을 입력해주세요.");
+        if(!StringUtils.hasText(usedBookCreateDto.getContent())) throw new IllegalArgumentException("내용을 입력해주세요.");
+        if(usedBookCreateDto.getPrice() == 0) throw new IllegalArgumentException("가격을 입력해주세요");
         return success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images));
     }
     //중고도서 상세정보 조회

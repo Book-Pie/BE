@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class UsedBookService {
 
     //중고도서 상세조회
     public UsedBookDto getUsedBook(Long id){
-        UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new IllegalArgumentException("등록된 책이 없습니다."));
+        UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));
         log.debug(usedBook.getImages().toString());
         UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
         return usedBookDto;
