@@ -25,7 +25,7 @@ public class UsedBook {
     private int view;
     private LocalDateTime uploadDate;
     private String thumbnail;
-
+    private String isbn;
     @Enumerated(EnumType.STRING)
     private Category fstCategory;
 

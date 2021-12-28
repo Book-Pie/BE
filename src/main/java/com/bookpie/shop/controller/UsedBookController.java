@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -36,25 +38,25 @@ public class UsedBookController {
     private final UsedBookLikeService usedBookLikeService;
     //중고도서 등록
     @PostMapping("")
-    public ApiResult upload(@RequestPart("images")List<MultipartFile> images,
-                            @Valid @RequestParam("usedBook")String request) throws JsonProcessingException {
+    public ResponseEntity upload(@RequestPart("images")List<MultipartFile> images,
+                                 @Valid @RequestParam("usedBook")String request) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         UsedBookCreateDto usedBookCreateDto = objectMapper.readValue(request, new TypeReference<UsedBookCreateDto>() {});
         log.debug(usedBookCreateDto.toString());
         if(!StringUtils.hasText(usedBookCreateDto.getTitle())) throw new IllegalArgumentException("제목을 입력해주세요.");
         if(!StringUtils.hasText(usedBookCreateDto.getContent())) throw new IllegalArgumentException("내용을 입력해주세요.");
         if(usedBookCreateDto.getPrice() == 0) throw new IllegalArgumentException("가격을 입력해주세요");
-        return success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images));
+        return new ResponseEntity(success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images)), HttpStatus.OK);
     }
     //중고도서 상세정보 조회
     @GetMapping("/{id}")
-    public ApiResult getUsedBookDetail(@PathVariable("id")Long id){
-        return success(usedBookService.getUsedBook(id));
+    public ResponseEntity getUsedBookDetail(@PathVariable("id")Long id){
+        return new ResponseEntity(success(usedBookService.getUsedBook(id)),HttpStatus.OK);
     }
 
     //중고도서 검색
     @GetMapping("")
-    public ApiResult getUsedBookList(@RequestParam(value = "title",required = false,defaultValue = "") String title,
+    public ResponseEntity getUsedBookList(@RequestParam(value = "title",required = false,defaultValue = "") String title,
                                     @RequestParam(value = "page",required=false,defaultValue = "1") int page,
                                      @RequestParam(value = "limit",required = false,defaultValue = "20") int limit,
                                     @RequestParam(value = "sort",required = false,defaultValue = "date")String sort,
@@ -68,32 +70,32 @@ public class UsedBookController {
         findUsedBookDto.setSndCategory(Category.nameOf(second));
         findUsedBookDto.setSort(sort);
         log.debug(findUsedBookDto.toString());
-        return success(usedBookService.getUsedBookList(findUsedBookDto));
+        return new ResponseEntity(success(usedBookService.getUsedBookList(findUsedBookDto)),HttpStatus.OK);
     }
 
     //중고도서 삭제
     @DeleteMapping("/{id}")
-    public ApiResult deleteUsedBook(@PathVariable("id") Long id){
-        return success(usedBookService.delete(id));
+    public ResponseEntity deleteUsedBook(@PathVariable("id") Long id){
+        return new ResponseEntity(success(usedBookService.delete(id)),HttpStatus.OK);
     }
 
     //회원이 올린 중고도서 검색
     @GetMapping("/user/{id}")
-    public ApiResult getMyUpload(@PathVariable("id") Long id){
-        return success(usedBookService.getUserUpload(id));
+    public ResponseEntity getMyUpload(@PathVariable("id") Long id){
+        return new ResponseEntity(success(usedBookService.getUserUpload(id)),HttpStatus.OK);
     }
 
 
     //좋아요
     @PostMapping("/like/{bookId}")
-    public ApiResult updateLike(@PathVariable("bookId") Long bookId){
-        return success(usedBookLikeService.like(getCurrentUserId(),bookId));
+    public ResponseEntity updateLike(@PathVariable("bookId") Long bookId){
+        return new ResponseEntity(success(usedBookLikeService.like(getCurrentUserId(),bookId)),HttpStatus.OK);
     }
 
     //내가 좋아요 한 목록
     @GetMapping("/like")
-    public ApiResult getMyLike(){
-       return success(usedBookService.getUserLiked(getCurrentUserId()));
+    public ResponseEntity getMyLike(){
+       return new ResponseEntity(success(usedBookService.getUserLiked(getCurrentUserId())),HttpStatus.OK);
     }
 
 

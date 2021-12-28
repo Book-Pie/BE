@@ -11,9 +11,8 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserCreateDto {
-    @NotBlank(message = "아이디는 4글자 이상 20글자 이하여야 합니다.")
-    @Min(value = 4,message = "아이디는 4글자 이상 20글자 이하여야 합니다.")
-    @Max(value =20,message = "아이디는 4글자 이상 20글자 이하여야 합니다.")
+    @NotBlank(message = "공백.")
+    @Size(min=4,max = 20,message = "아이디는 4글자 이상 20글자 이하여야 합니다.1")
     private String username;
 
     @Email(message = "이메일 형식이 잘못되었습니다.")
