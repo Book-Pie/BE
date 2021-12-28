@@ -12,7 +12,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        default_batch_fetch_size: 100
+        default_batch_fetch_size: 30
         format_sql: true
 
 logging:
@@ -23,4 +23,4 @@ logging:
 
 path :
   image :
-    deploy : C:\bookpie_image\
+    dev : C:\bookpie_image\
