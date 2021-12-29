@@ -1,5 +1,6 @@
 package com.bookpie.shop.repository;
 
+import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.enums.Grade;
 import lombok.RequiredArgsConstructor;
@@ -68,16 +69,6 @@ public class UserRepository {
         return users.stream().findAny();
     }
 
-    /*
-    public Optional<User> findByIdWithImage(Long id){
-        List<User> users = em.createQuery("select u from User u " +
-                                " join fetch u.image" +
-                                " where u.id= :id and u.grade<> :grade",User.class)
-                .setParameter("id",id)
-                .setParameter("grade",Grade.WITH_DRAW)
-                .getResultList();
-        return users.stream().findAny();
-    }
-    */
+
 
 }
