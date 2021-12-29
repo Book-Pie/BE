@@ -1,6 +1,7 @@
 package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.enums.Category;
+import com.sun.source.util.TaskEvent;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 public class Book {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     private Long id;
 
@@ -23,12 +24,24 @@ public class Book {
     private LocalDateTime publishDate;
     private int price;
     private String image;
+
+    @Column(name = "fst_category")
+    @Enumerated(EnumType.STRING)
     private Category fstCategory;
+
+    @Column(name = "snd_category")
+    @Enumerated(EnumType.STRING)
     private Category sndCategory;
+
+    @Column(name = "category_id")
+    private Long category_id;
+
     private float rating;
+
+    @Column(name = "review_count")
     private int reviewCount;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<BookReview> reviews = new ArrayList<>();
 
 }
