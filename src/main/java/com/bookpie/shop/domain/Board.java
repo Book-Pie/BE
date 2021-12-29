@@ -21,7 +21,7 @@ import java.util.Optional;
 public class Board {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long id;
 
@@ -41,7 +41,7 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
     private List<Reply> replies = new ArrayList<>();
 
     public Board(String title, String content, LocalDateTime now, int view, BoardType boardType, int price, User user) {

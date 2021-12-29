@@ -3,6 +3,7 @@ package com.bookpie.shop.domain.dto.board;
 import com.bookpie.shop.domain.Board;
 import com.bookpie.shop.domain.enums.BoardType;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -24,20 +25,6 @@ public class BoardDto {
     private String nickname;
     private LocalDateTime boardDate;
     private int view;
-
-//    public BoardDto(Long board_id, String title, String content, int price, BoardType boardType,
-//                    Long user_id, String nickName, LocalDateTime boardDate, int view) {
-//        this.board_id = board_id;
-//        this.title = title;
-//        this.content = content;
-//        this.price = price;
-//        this.boardType = boardType;
-//        this.user_id = user_id;
-//        this.nickname = nickName;
-//        this.boardDate = boardDate;
-//        this.view = view;
-//    }
-
 
     public static BoardDto createBoardDto(Board board) {
         return new BoardDto(board.getId(), board.getTitle(), board.getContent(),
