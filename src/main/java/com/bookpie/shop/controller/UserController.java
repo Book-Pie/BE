@@ -59,6 +59,12 @@ public class UserController {
         return new ResponseEntity(success(userSevice.nickNameValidation(nickname)),HttpStatus.OK);
     }
 
+    //회원 이메일 중복검사
+    @GetMapping("/email/{email}")
+    public ResponseEntity emailValidation(@PathVariable("email") String email){
+        return new ResponseEntity(success(userSevice.emailValidation(email)),HttpStatus.OK);
+    }
+
     //닉네임 변경
     @PutMapping("nickname/{nickname}")
     public ResponseEntity nickNameUpdate(@PathVariable("nickname") String nickname){
