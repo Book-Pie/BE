@@ -10,6 +10,7 @@ import javax.validation.constraints.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserCreateDto {
     @NotBlank(message = "공백.")
     @Size(min=4,max = 20,message = "아이디는 4글자 이상 20글자 이하여야 합니다.1")

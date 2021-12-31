@@ -138,4 +138,7 @@ public class UserSevice {
         }
     }
 
+    public Long totalUser(){
+        return userRepository.count();
+    }
 }
