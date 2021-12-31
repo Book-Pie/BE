@@ -6,12 +6,8 @@ import com.bookpie.shop.domain.dto.LoginDto;
 import com.bookpie.shop.domain.dto.UserCreateDto;
 import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.service.UserSevice;
-import com.bookpie.shop.utils.ApiUtil;
-import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -132,5 +128,10 @@ public class UserController {
         return new ResponseEntity(success(userSevice.findPassword(findUserDto)),HttpStatus.OK);
     }
 
+    //전체 회원 수
+    @GetMapping("/total")
+    public ResponseEntity getTotalUser(){
+        return new ResponseEntity(success(userSevice.totalUser()),HttpStatus.OK);
+    }
 
 }

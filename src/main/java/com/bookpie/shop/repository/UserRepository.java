@@ -1,8 +1,10 @@
 package com.bookpie.shop.repository;
 
 import com.bookpie.shop.domain.Order;
+import com.bookpie.shop.domain.QUser;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.enums.Grade;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -69,6 +71,11 @@ public class UserRepository {
         return users.stream().findAny();
     }
 
+    public Long count(){
+        QUser qUser = QUser.user;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.select(qUser.count()).from(qUser).fetchOne();
+    }
 
 
 }
