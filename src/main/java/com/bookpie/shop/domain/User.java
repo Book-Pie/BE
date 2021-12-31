@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-//@ToString(exclude = "boards")
+@ToString(exclude = "boards")
 public class User implements UserDetails {
 
     @Id @GeneratedValue

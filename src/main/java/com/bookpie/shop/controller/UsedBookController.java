@@ -65,8 +65,8 @@ public class UsedBookController {
                                     @RequestParam(value = "page",required=false,defaultValue = "1") int page,
                                      @RequestParam(value = "limit",required = false,defaultValue = "20") int limit,
                                     @RequestParam(value = "sort",required = false,defaultValue = "date")String sort,
-                                     @RequestParam(value = "first",required = false,defaultValue = "기타")String first,
-                                     @RequestParam(value = "second",required = false)String second,
+                                     @RequestParam(value = "first",required = false,defaultValue = "null")String first,
+                                     @RequestParam(value = "second",required = false,defaultValue = "null")String second,
                                           @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
         FindUsedBookDto findUsedBookDto = new FindUsedBookDto();
         findUsedBookDto.setTitle(title);

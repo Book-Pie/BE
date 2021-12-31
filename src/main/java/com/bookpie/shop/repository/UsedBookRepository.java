@@ -4,7 +4,9 @@ package com.bookpie.shop.repository;
 import com.bookpie.shop.domain.QUsedBook;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
+import com.bookpie.shop.domain.enums.BookState;
 import com.bookpie.shop.domain.enums.Category;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -83,6 +85,15 @@ public class UsedBookRepository {
                 .from(qUsedBook)
                 .fetchOne();
 
+    }
+
+    public List<Tuple> groupCount(){
+        QUsedBook qUsedBook = QUsedBook.usedBook;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.select(qUsedBook.saleState,qUsedBook.count())
+                .from(qUsedBook)
+                .groupBy(qUsedBook.saleState)
+                .fetch();
     }
 
     private BooleanExpression eqTitle(String title){
