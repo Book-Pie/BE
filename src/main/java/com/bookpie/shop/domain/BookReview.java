@@ -21,6 +21,7 @@ public class BookReview {
 
     private String content;
     private float rating;
+
     @Column(name = "review_date")
     private LocalDateTime reviewDate;
 

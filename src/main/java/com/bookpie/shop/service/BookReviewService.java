@@ -76,14 +76,26 @@ public class BookReviewService {
     }
 
     // 해당 도서의 리뷰 전체 조회
-    public Page<BookReviewDto> getReview(Long book_id, int page, int size) {
+    public Page<BookReviewDto> getReview(Long book_id, String page, String size) {
+        log.info("page와 size : " + page + ", " + size);
+
         // 도서 확인 및 예외 발생
         Book book = bookRepository.findById(book_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 도서는 존재하지 않습니다."));
         // 임시 유저
         Long user_id = 1L;
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("reviewDate").descending());  // 페이징 정보
+        // page와 size 값을 int로 변환 (디폴트값 동시 설정)
+        int realPage = 0;
+        int realSize = 4;
+
+        // page, size 디폴트값 설정
+        if (page != null) { realPage = Integer.parseInt(page); }
+
+        if (size != null) { realSize = Integer.parseInt(size); }
+
+
+        PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
         Page<BookReview> bookReviewPage = bookReviewRepository.findAll(pageRequest);  // 페이징 처리
 
         return bookReviewPage.map(bookReview -> BookReviewDto.createBookReviewDto(bookReview, user_id));
@@ -91,13 +103,20 @@ public class BookReviewService {
 
 
     // 내가 쓴 도서리뷰
-    public Page<BookReviewDto> getMyReview(Long user_id, int page, int size) {
+    public Page<BookReviewDto> getMyReview(Long user_id, String page, String size) {
         // 회원 객체 생성
         Optional<User> user = userRepository.findById(user_id);
         User objUser = user.orElse(null);
 
+        // page, size 값 디폴트
+        int realPage = 0;
+        int realSize = 5;
+
+        if (page != null) realPage = Integer.parseInt(page);
+        if (size != null) realSize = Integer.parseInt(size);
+
         // 페이징 데이터
-        Pageable pageable = PageRequest.of(page, size, Sort.by("reviewDate").descending());
+        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());
 
         // 해당 회원이 작성한 도서 리뷰 조회
         Page<BookReview> bookReviewPage = bookReviewRepository.findAllByUserId(user_id, pageable);
