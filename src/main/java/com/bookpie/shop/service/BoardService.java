@@ -39,7 +39,8 @@ public class BoardService {
         Optional<User> user = userRepository.findById(dto.getUser_id());
         // user 객체를 꺼내기 위한 메서드
         User createdUser = user.orElse(null);
-        log.info("user : " + createdUser);
+
+        log.info("생성된 user : " + createdUser);
 
         // 게시글 엔티티 생성
         Board board = Board.createBoard(dto, createdUser);
@@ -96,14 +97,21 @@ public class BoardService {
 //                .collect(Collectors.toList());
 //    }
     // 게시글 전체 조회(카테고리별), 페이징 포함
-    public Page<BoardDto> getAll(BoardType boardType, int page, int size) {
+    public Page<BoardDto> getAll(BoardType boardType, String page, String size) {
         log.info("Service getAll() 실행 : " + boardType);
         // 존재하지 않는 카테고리
         if (BoardType.valueOf(boardType.name()) == null)
             throw new IllegalArgumentException("존재하지 않는 카테고리입니다.");
 
+        // page, size 디폴트값
+        int realPage = 0;
+        int realSize = 10;
+
+        if (page != null) realPage = Integer.parseInt(page);
+        if (size != null) realSize = Integer.parseInt(size);
+
         // 게시글 조회
-        Pageable pageable = PageRequest.of(page, size, Sort.by("boardDate").descending());  // 페이징 정보
+        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("boardDate").descending());  // 페이징 정보
         log.info("페이지 정보 : " + pageable.toString());
 
         Page<Board> boardPage = boardRepository.findByBoardType(boardType, pageable);
@@ -119,17 +127,27 @@ public class BoardService {
         return dto;
     }
 
-    // 해당 회원이 작성한 게시글 전체 보기
-    public List<BoardDto> getMyBoard(Long user_id) {
+    // 해당 회원이 작성한 게시글 전체 보기 (페이징 처리함)
+    public Page<BoardDto> getMyBoard(Long user_id, String page, String size) {
         Optional<User> user = userRepository.findById(user_id);
         User objUser = user.orElse(null);
 
+        // page, size 디폴트값
+        int realPage = 0;
+        int realSize = 10;
+
+        if (page != null) realPage = Integer.parseInt(page);
+        if (size != null) realSize = Integer.parseInt(size);
+
+        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("boardDate").descending());
+
         // 해당 유저가 작성한 게시글
-        List<Board> boardList = objUser.getBoards();
-        return boardList.stream().map(board -> BoardDto.createBoardDto(board))
-                .collect(Collectors.toList());
+        Page<Board> boardList = boardRepository.findAllByUserId(objUser.getId(), pageable);
+
+        return boardList.map(board -> BoardDto.createBoardDto(board));
     }
 
+    // 조회수 증가하는 메서드
     public void viewPlus(Long board_id) {
         boardRepository.viewPlus(board_id);
     }

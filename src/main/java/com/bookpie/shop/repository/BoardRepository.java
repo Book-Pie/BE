@@ -19,4 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query(value = "update board p set p.view = p.view + 1 where p.board_id = :board_id", nativeQuery = true)
     void viewPlus(@Param("board_id") Long board_id);
+
+    //@Query(value = "select b from board b where b.user_id = :user_id", nativeQuery = true)
+    Page<Board> findAllByUserId(Long user_id, @Param("pageable") Pageable pageable);
 }

@@ -6,6 +6,8 @@ import com.bookpie.shop.service.BoardService;
 import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,31 +26,32 @@ public class BoardController {
 
     // 게시글 작성
     @PostMapping("/create")
-    public ApiResult create(@RequestBody BoardDto dto) {
-        return success(boardService.create(dto));
+    public ResponseEntity create(@RequestBody BoardDto dto) {
+        return new ResponseEntity(success(boardService.create(dto)), HttpStatus.OK);
     }
 
     // 게시글 수정
     @PutMapping("/update")
-    public ApiResult update(@RequestBody BoardDto dto) {
-        return success(boardService.update(dto));
+    public ResponseEntity update(@RequestBody BoardDto dto) {
+        return new ResponseEntity(success(boardService.update(dto)), HttpStatus.OK);
     }
 
     // 게시글 삭제
     @DeleteMapping("/delete/{board_id}")
-    public ApiResult delete(@PathVariable Long board_id) {
-        return success(boardService.delete(board_id));
+    public ResponseEntity delete(@PathVariable Long board_id) {
+        return new ResponseEntity(success(boardService.delete(board_id)), HttpStatus.OK);
     }
 
     // 게시글 전체 조회(카테고리별)
     @GetMapping("/getAll/{boardType}")
-    public ApiResult getAll(@PathVariable BoardType boardType, @RequestParam int page, @RequestParam int size) {
-        return success(boardService.getAll(boardType, page, size));
+    public ResponseEntity getAll(@PathVariable BoardType boardType, @RequestParam(required = false) String page,
+                                 @RequestParam(required = false) String size) {
+        return new ResponseEntity(success(boardService.getAll(boardType, page, size)), HttpStatus.OK);
     }
 
     // 게시글 상세 조회
     @GetMapping("/getBoard/{board_id}")
-    public ApiResult get(@PathVariable Long board_id, HttpServletRequest req,
+    public ResponseEntity get(@PathVariable Long board_id, HttpServletRequest req,
                          HttpServletResponse rep) {
         Cookie oldCookie = null;
         Cookie cookies[] = req.getCookies();
@@ -80,12 +83,13 @@ public class BoardController {
             newCookie.setMaxAge(60 * 60 * 24);
             rep.addCookie(newCookie);
         }
-        return success(boardService.getBoard(board_id));
+        return new ResponseEntity(success(boardService.getBoard(board_id)), HttpStatus.OK);
     }
 
     // 회원이 작성한 게시글 보기
     @GetMapping("/my/{user_id}")
-    public ApiResult myBoard(@PathVariable Long user_id) {
-        return success(boardService.getMyBoard(user_id));
+    public ResponseEntity myBoard(@PathVariable Long user_id, @RequestParam(required = false) String page,
+                                  @RequestParam(required = false) String size) {
+        return new ResponseEntity(success(boardService.getMyBoard(user_id, page, size)), HttpStatus.OK);
     }
 }
