@@ -25,32 +25,32 @@ public class BoardController {
     private BoardService boardService;
 
     // 게시글 작성
-    @PostMapping("/create")
+    @PostMapping("")
     public ResponseEntity create(@RequestBody BoardDto dto) {
         return new ResponseEntity(success(boardService.create(dto)), HttpStatus.OK);
     }
 
     // 게시글 수정
-    @PutMapping("/update")
+    @PutMapping("")
     public ResponseEntity update(@RequestBody BoardDto dto) {
         return new ResponseEntity(success(boardService.update(dto)), HttpStatus.OK);
     }
 
     // 게시글 삭제
-    @DeleteMapping("/delete/{board_id}")
+    @DeleteMapping("/{board_id}")
     public ResponseEntity delete(@PathVariable Long board_id) {
         return new ResponseEntity(success(boardService.delete(board_id)), HttpStatus.OK);
     }
 
     // 게시글 전체 조회(카테고리별)
-    @GetMapping("/getAll/{boardType}")
+    @GetMapping("/{boardType}")
     public ResponseEntity getAll(@PathVariable BoardType boardType, @RequestParam(required = false) String page,
                                  @RequestParam(required = false) String size) {
         return new ResponseEntity(success(boardService.getAll(boardType, page, size)), HttpStatus.OK);
     }
 
     // 게시글 상세 조회
-    @GetMapping("/getBoard/{board_id}")
+    @GetMapping("/{board_id}")
     public ResponseEntity get(@PathVariable Long board_id, HttpServletRequest req,
                          HttpServletResponse rep) {
         Cookie oldCookie = null;
