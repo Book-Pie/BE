@@ -21,6 +21,7 @@ public class BookReview {
 
     private String content;
     private float rating;
+    private Long isbn;
 
     @Column(name = "review_date")
     private LocalDateTime reviewDate;
@@ -29,23 +30,19 @@ public class BookReview {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review")
     private List<ReviewLike> reviewLikes = new ArrayList<>();
 
-    public BookReview(String content, float rating, LocalDateTime now, Book book, User user) {
+    public BookReview(String content, float rating, Long isbn, LocalDateTime now, User user) {
         this.content = content;
         this.rating = rating;
+        this.isbn = isbn;
         this.reviewDate = now;
-        this.book = book;
         this.user = user;
     }
 
-    public static BookReview createBookReview(BookReviewDto dto, Book book, User user) {
-        return new BookReview(dto.getContent(), dto.getRating(), LocalDateTime.now(), book, user);
+    public static BookReview createBookReview(BookReviewDto dto, User user) {
+        return new BookReview(dto.getContent(), dto.getRating(), dto.getIsbn(), LocalDateTime.now(), user);
     }
 
     public void patch(BookReviewDto dto) {
@@ -55,7 +52,7 @@ public class BookReview {
 
         // 객체를 갱신
         if (dto.getContent() != null) this.content = dto.getContent();
-        if (dto.getRating() != this.rating) this.rating = dto.getRating();
+        if (dto.getRating() != 0) this.rating = dto.getRating();
     }
 
 }
