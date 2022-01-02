@@ -43,11 +43,14 @@ public class UserController {
         return new ResponseEntity<>(success(userSevice.login(loginDto)),HttpStatus.OK);
     }
 
+    /*
     //회원 아이디 중복 검사
     @GetMapping("/username/{username}")
     public ResponseEntity userIdValidation(@PathVariable("username") String username){
         return new ResponseEntity(success(userSevice.usernameValidation(username)),HttpStatus.OK);
     }
+
+     */
 
     //회원 닉네임 중복 검사
     @GetMapping("/nickname/{nickname}")

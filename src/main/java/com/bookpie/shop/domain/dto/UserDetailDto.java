@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class UserDetailDto {
     private Long id;
-    private String username;
+    //private String username;
     private String email;
     private String nickName;
     private String name;
@@ -27,7 +27,7 @@ public class UserDetailDto {
     public static UserDetailDto createUserDetailDto(User user){
         UserDetailDto dto = new UserDetailDto();
         dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
+        //dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
         dto.setNickName(user.getNickName());
         dto.setName(user.getName());

@@ -38,8 +38,7 @@ public class UserSevice {
     public Long signup(UserCreateDto userCreateDto){
         userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         User user = User.createUser(userCreateDto);
-        if (usernameValidation(user.getUsername()) && emailValidation(user.getEmail()) &&
-                nickNameValidation(user.getNickName())){
+        if (emailValidation(user.getEmail()) && nickNameValidation(user.getNickName())){
             return userRepository.save(user);}
         else {
             throw new IllegalArgumentException("이미 가입된 아이디 입니다.");
@@ -48,18 +47,21 @@ public class UserSevice {
 
 
     public String login(LoginDto loginDto){
-        User user = userRepository.findByUsername(loginDto.getUsername())
+        User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(()->new UsernameNotFoundException("가입되지 않은 아이디입니다."));
-
+        log.debug(user.toString());
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
+        return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
     }
 
+    /*
     public boolean usernameValidation(String username){
         return userRepository.findByUsername(username).isEmpty();
     }
+
+     */
 
     public boolean nickNameValidation(String nickName){
         return userRepository.findByNickName(nickName).isEmpty();
@@ -128,7 +130,7 @@ public class UserSevice {
 
     @Transactional
     public boolean findPassword(FindUserDto findUserDto) throws Exception{
-        User user = userRepository.findByUsername(findUserDto.getUsername()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.findByEmail(findUserDto.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         if (user.getEmail().equals(findUserDto.getEmail()) &&
             user.getName().equals(findUserDto.getName()) &&
             user.getPhone().equals(findUserDto.getPhone())){

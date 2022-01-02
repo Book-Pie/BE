@@ -45,7 +45,7 @@ public class UserRepository {
     }
 
 
-
+    /*
     public Optional<User> findByUsername(String username){
         List<User> users = em.createQuery("select u from User u where u.username= :username and u.grade<> :grade",User.class)
                 .setParameter("username", username)
@@ -55,17 +55,19 @@ public class UserRepository {
 
     }
 
+     */
+
     /*
         Jwt를 이용해 사용자 정보를 불러올 때 사용하는 메서드.
         fechjoin 을 이용해 한번의 쿼리로 User Entity의 roles를 가져오기
         위해 findByUsername 메서드와 분리함
      */
-    public Optional<User> findByUsernameWithRole(String username){
+    public Optional<User> findByEmailWithRole(String email){
         List<User> users = em.createQuery("select distinct u from User u " +
                                             " join fetch u.roles" +
-                                            " where u.username= :username" +
+                                            " where u.email= :email" +
                                             " and u.grade<> :grade",User.class)
-                .setParameter("username",username)
+                .setParameter("email",email)
                 .setParameter("grade", Grade.WITH_DRAW)
                 .getResultList();
         return users.stream().findAny();
