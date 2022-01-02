@@ -1,0 +1,61 @@
+package com.bookpie.shop.controller;
+
+import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import com.bookpie.shop.service.BookReviewService;
+import com.bookpie.shop.service.ReviewLikeService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import static com.bookpie.shop.utils.ApiUtil.success;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/book-review")
+public class BookReviewController {
+    @Autowired
+    private BookReviewService bookReviewService;
+    @Autowired
+    private ReviewLikeService reviewLikeService;
+
+    // 도서 리뷰 작성
+    @PostMapping("")
+    public ResponseEntity create(@RequestBody BookReviewDto dto) {
+        return new ResponseEntity(success(bookReviewService.create(dto)), HttpStatus.OK);
+    }
+
+    // 도서 리뷰 수정
+    @PutMapping("")
+    public ResponseEntity update(@RequestBody BookReviewDto dto) {
+        return new ResponseEntity(success(bookReviewService.update(dto)), HttpStatus.OK);
+    }
+
+    // 도서 리뷰 삭제
+    @DeleteMapping("/{review_id}")
+    public ResponseEntity delete(@PathVariable Long review_id) {
+        return new ResponseEntity(success(bookReviewService.delete(review_id)), HttpStatus.OK);
+    }
+
+    // 도서 리뷰에 좋아요(등록/취소)
+    @GetMapping("/like/{review_id}")
+    public ResponseEntity likeUp(@PathVariable Long review_id) {
+        return new ResponseEntity(success(reviewLikeService.like(review_id)), HttpStatus.OK);
+    }
+
+    // 해당 도서에 대한 도서 리뷰 조회
+    @GetMapping("/{isbn}")
+    public ResponseEntity getReview(@PathVariable Long isbn, @RequestParam(required = false) String page,
+                                    @RequestParam(required = false) String size, @RequestParam Long user_id) {
+        return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, user_id)), HttpStatus.OK);
+    }
+
+    // 내가 쓴 도서리뷰 조회
+    @GetMapping("/my")
+    public ResponseEntity getMyReview(@RequestParam(required = false) String page,
+                                      @RequestParam(required = false) String size, @RequestParam(required = false) Long user_id) {
+        return new ResponseEntity(success(bookReviewService.getMyReview(user_id, page, size)), HttpStatus.OK);
+    }
+
+}

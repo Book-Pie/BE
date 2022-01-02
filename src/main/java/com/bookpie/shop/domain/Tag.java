@@ -1,13 +1,15 @@
 package com.bookpie.shop.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Tag {
 
     @Id @GeneratedValue
@@ -17,6 +19,9 @@ public class Tag {
     private String name;
 
     @OneToMany(mappedBy = "tag")
-    private List<BookTag> bookTags = new ArrayList<>();
+    private Set<BookTag> bookTags = new HashSet<>();
 
+    public Tag(String name){
+        this.name = name;
+    }
 }

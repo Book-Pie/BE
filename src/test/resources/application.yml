@@ -1,9 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test
-    username: sa
+    url: jdbc:h2:mem:testdb
+    username: book-pie
     passwoerd:
     driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+  servlet :
+    multipart:
+      max-file-size: 1MB
+      max-request-size : 10MB
 
   jpa:
     hibernate:
@@ -18,3 +26,7 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+path:
+  image:
+    dev: C:\bookpie_image\

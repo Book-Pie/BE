@@ -20,5 +20,13 @@ public class BookTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    public static BookTag createBookTag(Tag tag){
+        BookTag bookTag = new BookTag();
+        bookTag.tag = tag;
+        return bookTag;
+    }
+    public void setBook(UsedBook book){
+        this.book=book;
+    }
 
 }
