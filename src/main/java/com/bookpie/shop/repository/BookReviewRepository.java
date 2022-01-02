@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
 
-
     Page<BookReview> findAllByUserId(@Param("user_id") Long user_id, @Param("pageable") Pageable pageable);
+
+    Page<BookReview> findAllByIsbn(@Param("isbn") Long isbn, Pageable pageable);
 }

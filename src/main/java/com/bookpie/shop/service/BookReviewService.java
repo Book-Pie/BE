@@ -31,60 +31,47 @@ public class BookReviewService {
     private UserRepository userRepository;
 
     // 도서 리뷰 작성
-    public boolean create(BookReviewDto dto) {
-        // 책 조회 및 예외 발생
-        Book book = bookRepository.findById(dto.getBook_id())
-                .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
+    public BookReviewDto create(BookReviewDto dto) {
         // 회원 객체 생성
         Optional<User> user = userRepository.findById(dto.getUser_id());
         User objUser = user.orElse(null);
 
         // 책 리뷰 엔티티 생성
-        BookReview bookReview = BookReview.createBookReview(dto, book, objUser);
+        BookReview bookReview = BookReview.createBookReview(dto, objUser);
 
         // 연관 관계 생성
-        book.getReviews().add(bookReview);
         objUser.getBookReviews().add(bookReview);
-
 
         // DB저장
         BookReview createdBookReview = bookReviewRepository.save(bookReview);
-        if (createdBookReview == null) return false;
-        return true;
+        return BookReviewDto.createDto(createdBookReview, objUser.getId());
     }
 
     // 도서 리뷰 수정
-    public boolean update(BookReviewDto dto) {
+    public BookReviewDto update(BookReviewDto dto) {
         // 해당 리뷰 생성
         BookReview bookReview = bookReviewRepository.findById(dto.getReview_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
+
         // 리뷰 수정
         bookReview.patch(dto);
-        //
+
+        // 리뷰 수정 후 DB저장
         BookReview createdBookReview = bookReviewRepository.save(bookReview);
-        if (createdBookReview == null) return false;
-        return true;
+        return BookReviewDto.createDto(createdBookReview, dto.getUser_id());
     }
 
     // 도서 리뷰 삭제
-    public boolean delete(Long review_id) {
+    public String delete(Long review_id) {
         // 해당 리뷰 생성
         BookReview bookReview = bookReviewRepository.findById(review_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
         bookReviewRepository.delete(bookReview);
-        return true;
+        return "해당 리뷰가 삭제되었습니다.";
     }
 
     // 해당 도서의 리뷰 전체 조회
-    public Page<BookReviewDto> getReview(Long book_id, String page, String size) {
-        log.info("page와 size : " + page + ", " + size);
-
-        // 도서 확인 및 예외 발생
-        Book book = bookRepository.findById(book_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 도서는 존재하지 않습니다."));
-        // 임시 유저
-        Long user_id = 1L;
-
+    public Page<BookReviewDto> getReview(Long isbn, String page, String size, Long user_id) {
         // page와 size 값을 int로 변환 (디폴트값 동시 설정)
         int realPage = 0;
         int realSize = 4;
@@ -96,9 +83,9 @@ public class BookReviewService {
 
 
         PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
-        Page<BookReview> bookReviewPage = bookReviewRepository.findAll(pageRequest);  // 페이징 처리
+        Page<BookReview> bookReviewPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest);  // 페이징 처리
 
-        return bookReviewPage.map(bookReview -> BookReviewDto.createBookReviewDto(bookReview, user_id));
+        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, user_id));
     }
 
 
@@ -124,6 +111,6 @@ public class BookReviewService {
 
         List<BookReview> reviewList = objUser.getBookReviews();
 
-        return bookReviewPage.map(bookReview -> BookReviewDto.createBookReviewDto(bookReview, user_id));
+        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, user_id));
     }
 }
