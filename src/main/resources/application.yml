@@ -47,9 +47,9 @@ spring:
       on-profile: release
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 
-paht:
+path:
   base: http://bookpie.tk:8080
   image:
     dev: /home/ubuntu/image/
