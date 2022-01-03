@@ -24,6 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .authorizeRequests().antMatchers("/api/user/signup").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/api/oauth/**").permitAll()
                 .antMatchers("/api/user/me").hasRole("USER")
                 .antMatchers("/api/user/nickname").hasRole("USER")
                 .antMatchers("/api/user/password").hasRole("USER")
