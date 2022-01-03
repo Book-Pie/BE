@@ -3,9 +3,10 @@ package com.bookpie.shop.domain;
 import com.bookpie.shop.domain.dto.UserCreateDto;
 import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.domain.enums.Grade;
+import com.bookpie.shop.domain.enums.LoginType;
 import com.bookpie.shop.domain.enums.Role;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,14 +23,15 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @ToString(exclude = "boards")
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false,unique = true)
-    private String username;
+    //@Column(nullable = false,unique = true)
+    //private String username;
 
     @Column(nullable = false,unique = true)
     private String email;
@@ -38,7 +40,10 @@ public class User implements UserDetails {
     private String name;
     private String phone;
 
-    @Column(nullable = false,unique = true)
+    @Enumerated(EnumType.STRING)
+    private LoginType loginType;
+
+    //@Column(nullable = false,unique = true)
     private String nickName;
 
     private LocalDateTime createDate;
@@ -46,7 +51,8 @@ public class User implements UserDetails {
     private float rating;
     private String withDraw;
 
-    @Enumerated(EnumType.STRING) private Grade grade;
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
     @Embedded private Point point;
 
     private String image;
@@ -73,10 +79,26 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
+
+
+    public static User oauthCreate(String email,String name,LoginType type){
+        User user = new User();
+        user.email = email;
+        user.nickName = name;
+        user.name = name;
+        user.roles = Collections.singletonList(Role.ROLE_USER);
+        user.createDate = LocalDateTime.now();
+        user.grade = Grade.GENERAL;
+        user.point = Point.createDefaultPoint();
+        user.image = null;
+        user.loginType = type;
+        return user;
+    }
+
     
     public static User createUser(UserCreateDto userCreateDto){
         User user = new User();
-        user.username = userCreateDto.getUsername();
+        //user.username = userCreateDto.getUsername();
         user.name = userCreateDto.getName();
         user.address = userCreateDto.getAddress();
         user.email = userCreateDto.getEmail();
@@ -87,6 +109,7 @@ public class User implements UserDetails {
         user.roles = Collections.singletonList(Role.ROLE_USER);
         user.createDate = LocalDateTime.now();
         user.grade = Grade.GENERAL;
+        user.loginType = LoginType.LOCAL;
         user.image = null;
         return user;
     }
@@ -94,7 +117,6 @@ public class User implements UserDetails {
     public void update(UserUpdateDto userUpdateDto){
         this.name = userUpdateDto.getName();
         this.phone = userUpdateDto.getPhone();
-        this.email = userUpdateDto.getEmail();
         this.address = userUpdateDto.getAddress();
     }
 
@@ -117,9 +139,10 @@ public class User implements UserDetails {
     }
     public void changePassword(String password){this.password = password;}
 
+
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override

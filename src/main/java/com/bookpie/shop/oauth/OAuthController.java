@@ -42,7 +42,7 @@ public class OAuthController {
 
 
     @GetMapping("/login/kakao")
-    public String kakaoRedirect(HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public String kakaoRedirect() throws Exception{
         String reqUrl = loginUrl+"?client_id="+clientId+"&redirect_uri="+redirectUrl+"&response_type=code";
         return reqUrl;
     }
