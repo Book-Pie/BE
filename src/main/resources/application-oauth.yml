@@ -2,7 +2,7 @@
 
 kakao:
   client-id: 18026e16808c2a78e74664808aa9dd9e
-  redirect-url: http://localhost:8080/api/oauth/loginresult/kakao
+  redirect-url: /api/oauth/loginresult/kakao
   login: https://kauth.kakao.com/oauth/authorize
   token: https://kauth.kakao.com/oauth/token
   profile: https://kapi.kakao.com/v2/user/me

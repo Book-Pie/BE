@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: oauth
   datasource:
     driver-class-name : com.mysql.cj.jdbc.Driver
     url : jdbc:mysql://localhost:3306/bookpie?serverTimezone=UTC&characterEncoding=UTF-8
@@ -22,5 +24,6 @@ logging:
     com.bookpie.shop : debug
 
 path:
+  base: http://bookpie.tk:8080
   image:
     dev: /home/ubuntu/image/
