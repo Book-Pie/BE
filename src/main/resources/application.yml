@@ -2,6 +2,7 @@
 spring:
   profiles:
     include: oauth
+    default: local
   datasource:
     driver-class-name : com.mysql.cj.jdbc.Driver
     url : jdbc:mysql://localhost:3306/bookpie?serverTimezone=UTC&characterEncoding=UTF-8
@@ -11,8 +12,8 @@ spring:
   jpa:
     database : mysql
     database-platform : org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: create
+#    hibernate:
+#      ddl-auto: create
     properties:
       hibernate:
         default_batch_fetch_size: 30
@@ -24,7 +25,31 @@ logging:
     org.hibernate.type: trace
     com.bookpie.shop : debug
 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    hibernate:
+      ddl-auto: update
 path:
   base: http://localhost:8080
   image:
     dev: C:\bookpie_image\
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: release
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+paht:
+  base: http://bookpie.tk:8080
+  image:
+    dev: /home/ubuntu/image/
