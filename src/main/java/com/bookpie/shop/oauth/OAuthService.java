@@ -40,6 +40,9 @@ public class OAuthService {
             user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         }else{
             user = optionalUser.get();
+            if (user.getLoginType() != LoginType.KAKAO){
+                throw new UsernameNotFoundException("로그인 형식이 잘못되었습니다.");
+            }
         }
         return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
     }

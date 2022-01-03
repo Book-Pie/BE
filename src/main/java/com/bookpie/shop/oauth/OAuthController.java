@@ -61,7 +61,11 @@ public class OAuthController {
         return new ResponseEntity(success(oAuthService.kakaoLogin(profile)),HttpStatus.OK);
     }
 
-
+    @PostMapping("/login/kakao/test/{accessToken}")
+    public ResponseEntity kakaoLoginTest(@PathVariable("accessToken")String accessToken){
+        JSONObject profile = getKakaoProfile(accessToken);
+        return new ResponseEntity(success(oAuthService.kakaoLogin(profile)),HttpStatus.OK);
+    }
 
 
     public String getAccessToken(String code) throws Exception{
@@ -93,8 +97,12 @@ public class OAuthController {
         MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<>();
         //parameters.add("property_keys", "[\"id\"]");
         HttpEntity<MultiValueMap<String ,Object>> request = new HttpEntity(parameters,headers);
-        ResponseEntity<JSONObject> response = restTemplate.postForEntity(profileUrl,request,JSONObject.class);
-        return response.getBody();
+        try {
+            ResponseEntity<JSONObject> response = restTemplate.postForEntity(profileUrl, request, JSONObject.class);
+            return response.getBody();
+        }catch (Exception e){
+            throw new IllegalArgumentException("카카오 사용자 정보를 불러올 수 없습니다.");
+        }
 
     }
 
