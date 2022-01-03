@@ -47,7 +47,7 @@ spring:
       on-profile: release
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
 
 paht:
   base: http://bookpie.tk:8080
