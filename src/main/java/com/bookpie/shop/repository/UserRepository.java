@@ -44,7 +44,14 @@ public class UserRepository {
         return users.stream().findAny();
     }
 
-
+    public Optional<User> findByNameAndPhone(String name,String phone){
+        QUser qUser = QUser.user;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return Optional.ofNullable(query.select(qUser)
+                .from(qUser)
+                .where(qUser.name.eq(name),qUser.phone.eq(phone))
+                .fetchOne());
+    }
     /*
     public Optional<User> findByUsername(String username){
         List<User> users = em.createQuery("select u from User u where u.username= :username and u.grade<> :grade",User.class)

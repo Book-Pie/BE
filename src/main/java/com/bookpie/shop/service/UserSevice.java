@@ -120,21 +120,20 @@ public class UserSevice {
 
 
     public String findId(FindUserDto findUserDto) throws Exception{
-        User user = userRepository.findByEmail(findUserDto.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if (user.getName().equals(findUserDto.getName()) && user.getPhone().equals(findUserDto.getPhone())){
-            return user.getUsername();
-        }else{
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
-        }
+        User user = userRepository.findByNameAndPhone(findUserDto.getName(), findUserDto.getPhone()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        //if (user.getName().equals(findUserDto.getName()) && user.getPhone().equals(findUserDto.getPhone())){
+        return user.getUsername();
+        //}else{
+        //    throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+       // }
     }
 
     @Transactional
     public boolean findPassword(FindUserDto findUserDto) throws Exception{
         User user = userRepository.findByEmail(findUserDto.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if (user.getEmail().equals(findUserDto.getEmail()) &&
-            user.getName().equals(findUserDto.getName()) &&
+        if (user.getName().equals(findUserDto.getName()) &&
             user.getPhone().equals(findUserDto.getPhone())){
-            return changePassword(user.getId(),findUserDto.getPassword());
+        return changePassword(user.getId(),findUserDto.getPassword());
         }else{
             throw new IllegalArgumentException("이름, 이메일, 휴대폰번호를 올바르게 입력해주세요.");
         }
