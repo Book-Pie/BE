@@ -61,7 +61,7 @@ public class OAuthController {
         return new ResponseEntity(success(oAuthService.kakaoLogin(profile)),HttpStatus.OK);
     }
 
-    @PostMapping("/login/kakao/test/{accessToken}")
+    @GetMapping("/login/kakao/test/{accessToken}")
     public ResponseEntity kakaoLoginTest(@PathVariable("accessToken")String accessToken){
         JSONObject profile = getKakaoProfile(accessToken);
         return new ResponseEntity(success(oAuthService.kakaoLogin(profile)),HttpStatus.OK);
