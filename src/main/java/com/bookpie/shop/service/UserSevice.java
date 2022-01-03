@@ -41,7 +41,7 @@ public class UserSevice {
         if (emailValidation(user.getEmail()) && nickNameValidation(user.getNickName())){
             return userRepository.save(user);}
         else {
-            throw new IllegalArgumentException("이미 가입된 아이디 입니다.");
+            throw new IllegalArgumentException("이미 가입된 이메일 입니다.");
         }
     }
 
