@@ -40,11 +40,13 @@ public class OAuthController {
     @Value("${kakao.token}")
     private String tokenUrl;
 
+    @Value("${path.base}")
+    private String baseUrl;
 
     @GetMapping("/login/kakao")
-    public String kakaoRedirect() throws Exception{
-        String reqUrl = loginUrl+"?client_id="+clientId+"&redirect_uri="+redirectUrl+"&response_type=code";
-        return reqUrl;
+    public ResponseEntity kakaoRedirect() throws Exception{
+        String reqUrl = loginUrl+"?client_id="+clientId+"&redirect_uri="+baseUrl+redirectUrl+"&response_type=code";
+        return new ResponseEntity(success(reqUrl),HttpStatus.OK);
     }
 
     @GetMapping("/loginresult/kakao")
@@ -70,7 +72,7 @@ public class OAuthController {
         MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<>();
         parameters.set("grant_type","authorization_code");
         parameters.set("client_id",clientId);
-        parameters.set("redirect_uri",redirectUrl);
+        parameters.set("redirect_uri",baseUrl+redirectUrl);
         parameters.set("code",code);
         HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(parameters,headers);
         ResponseEntity<JSONObject> response = restTemplate.postForEntity(tokenUrl,request,JSONObject.class);
