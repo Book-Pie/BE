@@ -119,9 +119,9 @@ public class UserController {
         return new ResponseEntity(success(userSevice.uploadImage(getCurrentUserId(),file)),HttpStatus.OK);
     }
 
-    //아이디 찾기
-    @PostMapping("/find/id")
-    public ResponseEntity findId(@RequestBody FindUserDto findUserDto) throws Exception{
+    //이메일 찾기
+    @PostMapping("/find/email")
+    public ResponseEntity findEmail(@RequestBody FindUserDto findUserDto) throws Exception{
         return new ResponseEntity(success(userSevice.findId(findUserDto)),HttpStatus.OK);
     }
 
