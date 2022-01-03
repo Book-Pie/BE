@@ -1,17 +1,12 @@
 package com.bookpie.shop.controller;
 
-import com.bookpie.shop.domain.Book;
 import com.bookpie.shop.domain.dto.book.BookCategoryDto;
 import com.bookpie.shop.domain.dto.book.BookDto;
 import com.bookpie.shop.service.BookService;
-import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.valves.rewrite.RewriteCond;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import static com.bookpie.shop.utils.ApiUtil.success;
