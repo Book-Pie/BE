@@ -4,6 +4,7 @@ import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.enums.LoginType;
 import com.bookpie.shop.repository.UserRepository;
+import com.bookpie.shop.service.UserSevice;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class OAuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final UserSevice userSevice;
     @Transactional
     public String kakaoLogin(JSONObject profile){
         Map<String,Object> kakaoAccount = (Map<String, Object>) profile.get("kakao_account");
@@ -36,6 +37,9 @@ public class OAuthService {
         User user;
         if (optionalUser.isEmpty()){
             User nUser = User.oauthCreate(email,name, LoginType.KAKAO);
+            
+            if (!userSevice.emailValidation(email)) throw new IllegalArgumentException("이미 가입된 이메일 입니다.");
+
             Long id = userRepository.save(nUser);
             user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         }else{
