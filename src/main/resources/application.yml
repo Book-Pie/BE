@@ -33,7 +33,7 @@ spring:
       on-profile: local
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 path:
   base: http://localhost:8080
   image:

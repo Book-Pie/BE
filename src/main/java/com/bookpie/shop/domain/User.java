@@ -106,6 +106,7 @@ public class User implements UserDetails {
         user.phone = userCreateDto.getPhone();
         user.nickName = userCreateDto.getNickName();
         user.point = Point.createDefaultPoint();
+        //user.roles.add(Role.ROLE_USER);
         user.roles = Collections.singletonList(Role.ROLE_USER);
         user.createDate = LocalDateTime.now();
         user.grade = Grade.GENERAL;
