@@ -5,9 +5,7 @@ import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.domain.enums.LoginType;
 import com.bookpie.shop.domain.enums.Role;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,15 +21,14 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @ToString(exclude = "boards")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 
     @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
 
-    //@Column(nullable = false,unique = true)
-    //private String username;
+
 
     @Column(nullable = false,unique = true)
     private String email;
@@ -43,7 +40,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-    //@Column(nullable = false,unique = true)
     private String nickName;
 
     private LocalDateTime createDate;
@@ -79,40 +75,52 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
-
+    @Builder
+    public User(String name,String password,String nickName,Role role,LocalDateTime createDate,
+                Grade grade,Point point,LoginType loginType,String phone,Address address,String email){
+        this.name = name;
+        this.password = password;
+        this.nickName = nickName;
+        this.roles = Collections.singletonList(role);
+        this.createDate = createDate;
+        this.grade = grade;
+        this.point = point;
+        this.loginType = loginType;
+        this.phone = phone;
+        this.address = address;
+        this.email = email;
+    }
 
     public static User oauthCreate(String email,String name,LoginType type){
-        User user = new User();
-        user.email = email;
-        user.nickName = name;
-        user.name = name;
-        user.roles = Collections.singletonList(Role.ROLE_USER);
-        user.createDate = LocalDateTime.now();
-        user.grade = Grade.GENERAL;
-        user.point = Point.createDefaultPoint();
-        user.image = null;
-        user.loginType = type;
-        return user;
+        return User.builder()
+                .email(email)
+                .name(name)
+                .loginType(type)
+                .nickName(type.toString()+" "+name)
+                .role(Role.ROLE_USER)
+                .createDate(LocalDateTime.now())
+                .point(Point.createDefaultPoint())
+                .grade(Grade.GENERAL)
+                .build();
+
     }
 
     
     public static User createUser(UserCreateDto userCreateDto){
-        User user = new User();
-        //user.username = userCreateDto.getUsername();
-        user.name = userCreateDto.getName();
-        user.address = userCreateDto.getAddress();
-        user.email = userCreateDto.getEmail();
-        user.password = userCreateDto.getPassword();
-        user.phone = userCreateDto.getPhone();
-        user.nickName = userCreateDto.getNickName();
-        user.point = Point.createDefaultPoint();
-        //user.roles.add(Role.ROLE_USER);
-        user.roles = Collections.singletonList(Role.ROLE_USER);
-        user.createDate = LocalDateTime.now();
-        user.grade = Grade.GENERAL;
-        user.loginType = LoginType.LOCAL;
-        user.image = null;
-        return user;
+        return User.builder()
+                .name(userCreateDto.getName())
+                .nickName(userCreateDto.getNickName())
+                .email(userCreateDto.getEmail())
+                .address(userCreateDto.getAddress())
+                .createDate(LocalDateTime.now())
+                .grade(Grade.GENERAL)
+                .loginType(LoginType.LOCAL)
+                .point(Point.createDefaultPoint())
+                .role(Role.ROLE_USER)
+                .phone(userCreateDto.getPhone())
+                .password(userCreateDto.getPassword())
+                .build();
+
     }
 
     public void update(UserUpdateDto userUpdateDto){
