@@ -20,7 +20,7 @@ public class OAuthController {
     private final OAuthService oAuthService;
 
 
-    @GetMapping("/login/kakao/test/{accessToken}")
+    @GetMapping("/login/kakao/{accessToken}")
     public ResponseEntity kakaoLoginTest(@PathVariable("accessToken")String accessToken){
         return new ResponseEntity(success(oAuthService.kakaoLogin(accessToken)),HttpStatus.OK);
     }
