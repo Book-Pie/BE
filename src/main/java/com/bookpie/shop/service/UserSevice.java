@@ -93,6 +93,7 @@ public class UserSevice {
 
     }
 
+    @Transactional
     public boolean changePassword(Long id,String password){
         User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         user.changePassword(passwordEncoder.encode(password));
