@@ -37,6 +37,8 @@ public class OAuthService {
     @Value("${kakao.profile}")
 
     private String profileUrl;
+
+    @Transactional
     public String kakaoLogin(String token){
         JSONObject profile = getKakaoProfile(token);
         Map<String,Object> kakaoAccount = (Map<String, Object>) profile.get("kakao_account");
@@ -47,6 +49,7 @@ public class OAuthService {
         return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
     }
 
+    @Transactional
     public String naverLogin(String token){
         JSONObject naverProfile = getNaverProfile(token);
         Map<String,Object> response =(Map<String, Object>) naverProfile.get("response");
