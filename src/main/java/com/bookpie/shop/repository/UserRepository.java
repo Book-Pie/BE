@@ -47,7 +47,9 @@ public class UserRepository {
     public Optional<User> findByEmailAllgrade(String email){
         QUser qUser = QUser.user;
         JPAQueryFactory query = new JPAQueryFactory(em);
-        User user = query.select(qUser).where(qUser.email.eq(email)).fetchOne();
+        User user = query.select(qUser)
+                .from(qUser)
+                .where(qUser.email.eq(email)).fetchOne();
         return Optional.ofNullable(user);
     }
 
