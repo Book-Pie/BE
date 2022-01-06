@@ -9,6 +9,10 @@ spring:
     username : bookpie
     password : bookpie
 
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
   jpa:
     database : mysql
     database-platform : org.hibernate.dialect.MySQL5InnoDBDialect

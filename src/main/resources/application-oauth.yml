@@ -10,4 +10,5 @@ kakao:
 naver:
   url : https://openapi.naver.com/v1/nid/me
   client-id: qtbZhYGrYVHhLWesnRyJ
-  client-secret: qtbZhYGrYVHhLWesnRyJ
+  client-secret: yffTE6zK6x
+  token : https://nid.naver.com/oauth2.0/token
