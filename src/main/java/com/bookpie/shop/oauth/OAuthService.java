@@ -28,6 +28,9 @@ public class OAuthService {
     @Value("${naver.url}")
     private String naverUrl;
 
+    @Value("${naver.token}")
+    private String tokenUrl;
+
     @Value("${naver.client-id}")
     private String naverClientId;
 
@@ -50,7 +53,8 @@ public class OAuthService {
     }
 
     @Transactional
-    public String naverLogin(String token){
+    public String naverLogin(String code,String state){
+        String token = getNaverToken(code,state);
         JSONObject naverProfile = getNaverProfile(token);
         Map<String,Object> response =(Map<String, Object>) naverProfile.get("response");
         String email = (String) response.get("email");
@@ -58,6 +62,7 @@ public class OAuthService {
         User user = oauthSaveAndGet(email,name,LoginType.NAVER);
         return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
     }
+
 
     @Transactional
     public User oauthSaveAndGet(String eamil,String name,LoginType type){
@@ -74,19 +79,32 @@ public class OAuthService {
         return user;
     }
 
-
+    public String getNaverToken(String code,String state){
+        String requstUrl = tokenUrl + "?grant_type=authorization_code&client_id="+naverClientId + "&client_secret="
+                + naverClientSecret + "&code=" + code + "&state=" + state;
+        RestTemplate restTemplate = new RestTemplate();
+        log.debug(requstUrl);
+        try {
+            ResponseEntity<JSONObject> response = restTemplate.getForEntity(requstUrl, JSONObject.class);
+            if(response.getStatusCode() != HttpStatus.OK) throw new IllegalArgumentException("네이버 인증 토큰을 받아올 수 없습니다.");
+            JSONObject body = response.getBody();
+            log.debug(response.toString());
+            return (String) body.get("access_token");
+        }catch (Exception e){
+            throw new IllegalArgumentException("네이버 인증 토큰을 받아올 수 없습니다.");
+        }
+    }
 
     public JSONObject getNaverProfile(String token){
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authrization","Bearer "+token);
-        headers.set("X-Naver-Client-Id",naverClientId);
-        headers.set("X-Naver-Client-Secret",naverClientSecret);
+        headers.set("Authorization","Bearer "+token);
         HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(null,headers);
         try{
             ResponseEntity<JSONObject> response = restTemplate.exchange(naverUrl,HttpMethod.GET,request,JSONObject.class);
             return response.getBody();
         }catch (Exception e){
+            e.printStackTrace();
             throw new IllegalArgumentException("네이버 사용자 정보를 불러올 수 없습니다.");
         }
     }
