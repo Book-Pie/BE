@@ -25,7 +25,6 @@ class UserSeviceTest {
     @Test
     UserCreateDto init() {
         UserCreateDto userCreateDto= new UserCreateDto();
-        userCreateDto.setUsername("test");
         userCreateDto.setAddress(new Address("aaa","bbb","ccc"));
         userCreateDto.setEmail("test@gmail.com");
         userCreateDto.setName("kim");
@@ -41,7 +40,7 @@ class UserSeviceTest {
         UserCreateDto userCreateDto = init();
         //when
         userSevice.signup(userCreateDto);
-        User user = userRepository.findByUsername("test").get();
+        User user = userRepository.findByEmail("test@gmail.com").get();
         //then
         assertEquals("kim",user.getName());
     }
@@ -53,7 +52,7 @@ class UserSeviceTest {
         userSevice.signup(userCreateDto);
         //when
         LoginDto loginDto= new LoginDto();
-        loginDto.setUsername("test");
+        loginDto.setEmail("test@gmail.com");
         loginDto.setPassword("1234");
         //then
         String token = userSevice.login(loginDto);
@@ -68,7 +67,7 @@ class UserSeviceTest {
         userSevice.signup(userCreateDto);
         //when
         LoginDto loginDto= new LoginDto();
-        loginDto.setUsername("test");
+        loginDto.setEmail("test@gmail.com");
         loginDto.setPassword("12345");
         //then
         assertThrows(IllegalArgumentException.class,()->userSevice.login(loginDto));
@@ -80,8 +79,8 @@ class UserSeviceTest {
         UserCreateDto userCreateDto = init();
         userSevice.signup(userCreateDto);
         //when
-        boolean exist_id = userSevice.usernameValidation("test");
-        boolean empty_id = userSevice.usernameValidation("test11");
+        boolean exist_id = userSevice.emailValidation("test@gmail.com");
+        boolean empty_id = userSevice.emailValidation("test11@gmail.com");
         boolean exist_nick = userSevice.nickNameValidation("nick");
         boolean empty_nick = userSevice.nickNameValidation("nickkkk");
         //then

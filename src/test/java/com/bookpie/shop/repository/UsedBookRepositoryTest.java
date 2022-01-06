@@ -44,14 +44,13 @@ class UsedBookRepositoryTest {
         dto.getTags().add("tag2");
 
         UserCreateDto useDto = new UserCreateDto();
-        useDto.setUsername("test1");
         useDto.setNickName("nick");
         useDto.setPassword("1234");
         useDto.setPhone("01049432618");
         useDto.setName("kim");
         useDto.setEmail("test@gmail.com");
         userRepository.save(User.createUser(useDto));
-        User user = userRepository.findByUsername("test1").get();
+        User user = userRepository.findByEmail("test@gmail.com").get();
         //when
 
         UsedBook usedBook = UsedBook.createUsedBook(user,dto);
