@@ -3,22 +3,17 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.*;
+import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
 
 
 @Service
@@ -47,11 +42,14 @@ public class UserSevice {
 
 
     public String login(LoginDto loginDto){
-        User user = userRepository.findByEmail(loginDto.getEmail())
+        User user = userRepository.findByEmailAllgrade(loginDto.getEmail())
                 .orElseThrow(()->new UsernameNotFoundException("가입되지 않은 이메일입니다."));
         log.debug(user.toString());
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+        }
+        if(user.getGrade() == Grade.WITH_DRAW){
+            throw new IllegalArgumentException("탈퇴한 회원입니다.");
         }
         return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
     }
