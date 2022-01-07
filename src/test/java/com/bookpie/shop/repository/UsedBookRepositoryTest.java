@@ -1,5 +1,6 @@
 package com.bookpie.shop.repository;
 
+import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.UsedBookCreateDto;

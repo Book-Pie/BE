@@ -4,7 +4,10 @@ import com.bookpie.shop.domain.dto.UsedBookCreateDto;
 import com.bookpie.shop.domain.enums.BookState;
 import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.domain.enums.SaleState;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UsedBook {
 
     @Id @GeneratedValue
@@ -55,6 +59,20 @@ public class UsedBook {
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
+    @Builder
+    public UsedBook(User seller,String content,String title,int price,LocalDateTime uploadDate,BookState bookState,
+                    SaleState saleState,Category first,Category second){
+        this.seller = seller;
+        this.content = content;
+        this.title = title;
+        this.price = price;
+        this.uploadDate = uploadDate;
+        this.bookState = bookState;
+        this.saleState = saleState;
+        this.fstCategory = first;
+        this.sndCategory = second;
+    }
+
     public void addBookTag(BookTag tag){
         tags.add(tag);
         tag.setBook(this);
@@ -65,31 +83,37 @@ public class UsedBook {
         image.setBook(this);
     }
 
+
+
     public void setThumbnail(String fileName){
         thumbnail=fileName;
     }
 
     public static UsedBook createUsedBook(User user,UsedBookCreateDto dto){
-        UsedBook usedBook = new UsedBook();
-        usedBook.seller = user;
-        usedBook.content = dto.getContent();
-        usedBook.title = dto.getTitle();
-        usedBook.price = dto.getPrice();
-        usedBook.uploadDate = LocalDateTime.now();
-        usedBook.bookState = dto.getState();
-        usedBook.saleState = SaleState.SALE;
-        usedBook.bookState = dto.getState();
-        usedBook.fstCategory = dto.getFstCategory();
-        usedBook.sndCategory = dto.getSndCategory();
-        return usedBook;
+        return UsedBook.builder()
+                .seller(user)
+                .content(dto.getContent())
+                .title(dto.getTitle())
+                .price(dto.getPrice())
+                .uploadDate(LocalDateTime.now())
+                .bookState(dto.getState())
+                .saleState(SaleState.SALE)
+                .first(dto.getFstCategory())
+                .second(dto.getSndCategory())
+                .build();
+
+
+    }
+    public void setOrder(Order order){
+        this.order = order;
     }
 
     //주문에 따른 판매상태 변경
     public void trading(){
         this.saleState = SaleState.TRADING;
     }
-
     public void cancel(){
+        this.order = null;
         this.saleState = SaleState.SALE;
     }
     public void soldout(){
