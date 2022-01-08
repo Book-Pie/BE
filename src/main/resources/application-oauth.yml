@@ -12,3 +12,12 @@ naver:
   client-id: qtbZhYGrYVHhLWesnRyJ
   client-secret: yffTE6zK6x
   token : https://nid.naver.com/oauth2.0/token
+external:
+  aladin:
+    key: ttbminw70921526001
+  jungbo:
+    key: fea604846208253ec4d2da7945989a95356f50d74b131dc8b1eab0ff34011536
+  iamport:
+    code: imp09368544
+    key: 1956173896695491
+    secret: f1b6816762ca297bf2ddd12e6fcaf94c2ae665422448fe583489fb77499e4a09fb5f7ca3dec17db1

@@ -1,5 +1,6 @@
 package com.bookpie.shop.service;
 
+import com.bookpie.shop.config.ApiConfig;
 import com.bookpie.shop.domain.Book;
 import com.bookpie.shop.domain.BookCategory;
 import com.bookpie.shop.domain.dto.book.BookCategoryDto;
@@ -31,6 +32,8 @@ public class BookService {
     private BookRepository bookRepository;
     @Autowired
     private BookCategoryRepository bookCategoryRepository;
+    @Autowired
+    private ApiConfig apiConfig;
 
     // 카테고리 추가
     public String addCategory(BookCategoryDto dto) {
@@ -88,13 +91,12 @@ public class BookService {
 
     // 알라딘 api 베스트 셀러 조회
     public JSONObject best(String page, String size) {
-        String ttbKey = "ttbminw70921526001";
         int realPage = 1;
         int realSize = 8;
         if (page != null) realPage = Integer.parseInt(page);
         if (size != null) realSize = Integer.parseInt(size);
 
-        String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+ttbKey+"&QueryType=Bestseller" +
+        String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=Bestseller" +
                 "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101";
 
         return callApi(uri);
@@ -102,8 +104,7 @@ public class BookService {
 
     // 도서 상세 조회
     public JSONObject bookDetail(Long isbn) {
-        String ttbKey = "ttbminw70921526001";
-        String uri = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey="+ttbKey+"&itemIdType=ISBN13&ItemId="+isbn+"" +
+        String uri = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey="+apiConfig.getAladinAPI()+"&itemIdType=ISBN13&ItemId="+isbn+"" +
                 "&output=js&Version=20131101&OptResult=authors,reviewList,fulldescription";
 
         return callApi(uri);
@@ -116,8 +117,7 @@ public class BookService {
         if (page != null) realPage = Integer.parseInt(page);
         if (size != null) realSize = Integer.parseInt(size);
 
-        String ttbKey = "ttbminw70921526001";
-        String uri = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey="+ttbKey+"&Query="+keyword+"&QueryType="+queryType+"" +
+        String uri = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey="+apiConfig.getAladinAPI()+"&Query="+keyword+"&QueryType="+queryType+"" +
                 "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101";
 
         return callApi(uri);
@@ -130,17 +130,15 @@ public class BookService {
         if (page != null) realPage = Integer.parseInt(page);
         if (size != null) realSize = Integer.parseInt(size);
 
-        String ttbKey = "ttbminw70921526001";
-        String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+ttbKey+"&QueryType=ItemEditorChoice" +
+        String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=ItemEditorChoice" +
                 "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&CategoryId="+category_id+"&output=js&Version=20131101";
 
         return callApi(uri);
     }
 
-    // 추천 도서
+    // 추천 도서 (정보나루 api)
     public JSONArray recommend(Long isbn) {
-        String apiKey = "fea604846208253ec4d2da7945989a95356f50d74b131dc8b1eab0ff34011536";
-        String uri = "http://data4library.kr/api/recommandList?authKey="+apiKey+"&isbn13="+isbn+"&format=json";
+        String uri = "http://data4library.kr/api/recommandList?authKey="+apiConfig.getJungboAPI()+"&isbn13="+isbn+"&format=json";
         JSONObject object = null;
         JSONArray jsonArray = new JSONArray();
         String line = null;

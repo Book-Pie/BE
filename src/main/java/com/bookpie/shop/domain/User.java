@@ -71,6 +71,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<UsedBookLike> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<OrderPoint> orderPoint = new ArrayList<>();
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
