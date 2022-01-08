@@ -84,7 +84,17 @@ public class UsedBook {
         return usedBook;
     }
 
+    //주문에 따른 판매상태 변경
+    public void trading(){
+        this.saleState = SaleState.TRADING;
+    }
 
+    public void cancel(){
+        this.saleState = SaleState.SALE;
+    }
+    public void soldout(){
+        this.saleState = SaleState.SOLD_OUT;
+    }
 
 
 }

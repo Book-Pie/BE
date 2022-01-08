@@ -16,21 +16,27 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .httpBasic().disable()
                 .formLogin().disable()
                 .authorizeRequests().antMatchers("/api/user/signup").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/api/oauth/**").permitAll()
                 .antMatchers("/api/user/me").hasRole("USER")
                 .antMatchers("/api/user/nickname").hasRole("USER")
                 .antMatchers("/api/user/password").hasRole("USER")
+                .antMatchers("/swagger-resources/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
+
+
 }

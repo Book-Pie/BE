@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.ServletException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static com.bookpie.shop.utils.ApiUtil.error;
 
@@ -38,5 +40,9 @@ public class ControllerExceptionHandler {
     protected ResponseEntity hadleValidException(MethodArgumentNotValidException e){
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
         return new ResponseEntity(error(message,HttpStatus.BAD_REQUEST),HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({IOException.class, ServletException.class})
+    protected ResponseEntity handleFilterException(Exception e){
+        return new ResponseEntity(error(e,HttpStatus.INTERNAL_SERVER_ERROR),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

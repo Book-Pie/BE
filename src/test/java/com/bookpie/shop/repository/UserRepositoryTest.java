@@ -29,7 +29,6 @@ class UserRepositoryTest {
     void init() {
         UserCreateDto userCreateDto= new UserCreateDto();
         userCreateDto.setAddress(new Address("aaa","bbb","ccc"));
-        userCreateDto.setUsername("test");
         userCreateDto.setEmail("test@gmail.com");
         userCreateDto.setName("kim");
         userCreateDto.setNickName("nick");
@@ -45,12 +44,6 @@ class UserRepositoryTest {
         assertEquals("nick",users.getNickName());
     }
 
-    @Test
-    void findByUsername() {
-        init();
-        User user = userRepository.findByUsername("test").orElseThrow(()-> new IllegalArgumentException("이미 사용중인 아이디"));
-        assertEquals("kim",user.getName());
-    }
 
 
 }

@@ -2,9 +2,15 @@ package com.bookpie.shop.domain.dto;
 
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.enums.SaleState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UsedBookListDto {
 
     private Long id;

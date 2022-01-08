@@ -2,11 +2,14 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.*;
 import com.bookpie.shop.domain.dto.*;
+import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.TagRepository;
 import com.bookpie.shop.repository.UsedBookLikeRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,8 +98,18 @@ public class UsedBookService {
         return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
     }
 
+    //판매중,판매완료 책 개수
+    public Map<SaleState,Long> getGroupCount(){
+        List<Tuple> result = usedBookRepository.groupCount();
+        Map<SaleState,Long> map = new HashMap<>();
+        result.stream().forEach(res->map.put(res.get(0,SaleState.class),res.get(1,Long.class)));
+        Arrays.stream(SaleState.values()).filter(state -> !map.containsKey(state)).forEach(state -> map.put(state, 0l));
+        return map;
+    }
     public List<UsedBookListDto> getUserLiked(Long id){
         List<UsedBook> result = usedBookRepository.getLikedBook(id);
         return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
     }
+
+
 }

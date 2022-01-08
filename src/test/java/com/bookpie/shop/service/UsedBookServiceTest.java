@@ -33,7 +33,6 @@ class UsedBookServiceTest {
         UserCreateDto dto = new UserCreateDto();
         dto.setEmail("123");
         dto.setName("123");
-        dto.setUsername("123123");
         dto.setNickName("123123123");
         return User.createUser(dto);
     }

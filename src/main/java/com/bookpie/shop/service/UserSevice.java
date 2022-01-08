@@ -3,22 +3,17 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.*;
+import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
 
 
 @Service
@@ -38,28 +33,33 @@ public class UserSevice {
     public Long signup(UserCreateDto userCreateDto){
         userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         User user = User.createUser(userCreateDto);
-        if (usernameValidation(user.getUsername()) && emailValidation(user.getEmail()) &&
-                nickNameValidation(user.getNickName())){
+        if (emailValidation(user.getEmail()) && nickNameValidation(user.getNickName())){
             return userRepository.save(user);}
         else {
-            throw new IllegalArgumentException("이미 가입된 아이디 입니다.");
+            throw new IllegalArgumentException("이미 가입된 이메일 입니다.");
         }
     }
 
 
     public String login(LoginDto loginDto){
-        User user = userRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(()->new UsernameNotFoundException("가입되지 않은 아이디입니다."));
-
+        User user = userRepository.findByEmailAllgrade(loginDto.getEmail())
+                .orElseThrow(()->new UsernameNotFoundException("가입되지 않은 이메일입니다."));
+        log.debug(user.toString());
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
+        if(user.getGrade() == Grade.WITH_DRAW){
+            throw new IllegalArgumentException("탈퇴한 회원입니다.");
+        }
+        return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
     }
 
+    /*
     public boolean usernameValidation(String username){
         return userRepository.findByUsername(username).isEmpty();
     }
+
+     */
 
     public boolean nickNameValidation(String nickName){
         return userRepository.findByNickName(nickName).isEmpty();
@@ -91,6 +91,7 @@ public class UserSevice {
 
     }
 
+    @Transactional
     public boolean changePassword(Long id,String password){
         User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         user.changePassword(passwordEncoder.encode(password));
@@ -118,24 +119,26 @@ public class UserSevice {
 
 
     public String findId(FindUserDto findUserDto) throws Exception{
-        User user = userRepository.findByEmail(findUserDto.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if (user.getName().equals(findUserDto.getName()) && user.getPhone().equals(findUserDto.getPhone())){
-            return user.getUsername();
-        }else{
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
-        }
+        User user = userRepository.findByNameAndPhone(findUserDto.getName(), findUserDto.getPhone()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        //if (user.getName().equals(findUserDto.getName()) && user.getPhone().equals(findUserDto.getPhone())){
+        return user.getUsername();
+        //}else{
+        //    throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+       // }
     }
 
     @Transactional
     public boolean findPassword(FindUserDto findUserDto) throws Exception{
-        User user = userRepository.findByUsername(findUserDto.getUsername()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if (user.getEmail().equals(findUserDto.getEmail()) &&
-            user.getName().equals(findUserDto.getName()) &&
+        User user = userRepository.findByEmail(findUserDto.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getName().equals(findUserDto.getName()) &&
             user.getPhone().equals(findUserDto.getPhone())){
-            return changePassword(user.getId(),findUserDto.getPassword());
+        return changePassword(user.getId(),findUserDto.getPassword());
         }else{
             throw new IllegalArgumentException("이름, 이메일, 휴대폰번호를 올바르게 입력해주세요.");
         }
     }
 
+    public Long totalUser(){
+        return userRepository.count();
+    }
 }

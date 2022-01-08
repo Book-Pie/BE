@@ -6,12 +6,8 @@ import com.bookpie.shop.domain.dto.LoginDto;
 import com.bookpie.shop.domain.dto.UserCreateDto;
 import com.bookpie.shop.domain.dto.UserUpdateDto;
 import com.bookpie.shop.service.UserSevice;
-import com.bookpie.shop.utils.ApiUtil;
-import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,11 +43,14 @@ public class UserController {
         return new ResponseEntity<>(success(userSevice.login(loginDto)),HttpStatus.OK);
     }
 
+    /*
     //회원 아이디 중복 검사
     @GetMapping("/username/{username}")
     public ResponseEntity userIdValidation(@PathVariable("username") String username){
         return new ResponseEntity(success(userSevice.usernameValidation(username)),HttpStatus.OK);
     }
+
+     */
 
     //회원 닉네임 중복 검사
     @GetMapping("/nickname/{nickname}")
@@ -120,9 +119,9 @@ public class UserController {
         return new ResponseEntity(success(userSevice.uploadImage(getCurrentUserId(),file)),HttpStatus.OK);
     }
 
-    //아이디 찾기
-    @PostMapping("/find/id")
-    public ResponseEntity findId(@RequestBody FindUserDto findUserDto) throws Exception{
+    //이메일 찾기
+    @PostMapping("/find/email")
+    public ResponseEntity findEmail(@RequestBody FindUserDto findUserDto) throws Exception{
         return new ResponseEntity(success(userSevice.findId(findUserDto)),HttpStatus.OK);
     }
 
@@ -132,5 +131,10 @@ public class UserController {
         return new ResponseEntity(success(userSevice.findPassword(findUserDto)),HttpStatus.OK);
     }
 
+    //전체 회원 수
+    @GetMapping("/total")
+    public ResponseEntity getTotalUser(){
+        return new ResponseEntity(success(userSevice.totalUser()),HttpStatus.OK);
+    }
 
 }
