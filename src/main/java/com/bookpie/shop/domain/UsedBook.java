@@ -61,7 +61,7 @@ public class UsedBook {
 
     @Builder
     public UsedBook(User seller,String content,String title,int price,LocalDateTime uploadDate,BookState bookState,
-                    SaleState saleState,Category first,Category second){
+                    SaleState saleState,Category first,Category second,String isbn){
         this.seller = seller;
         this.content = content;
         this.title = title;
@@ -71,6 +71,8 @@ public class UsedBook {
         this.saleState = saleState;
         this.fstCategory = first;
         this.sndCategory = second;
+        this.isbn = isbn;
+        this.view = 0;
     }
 
     public void addBookTag(BookTag tag){
@@ -100,6 +102,7 @@ public class UsedBook {
                 .saleState(SaleState.SALE)
                 .first(dto.getFstCategory())
                 .second(dto.getSndCategory())
+                .isbn(dto.getIsbn())
                 .build();
 
 
