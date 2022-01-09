@@ -26,6 +26,11 @@ public class OrderController {
         return new ResponseEntity(success(orderService.saveOrder(orderCreateDto)), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getOrderDetail(@PathVariable(value = "id") Long orderId){
+        return new ResponseEntity(success(orderService.getOrderDetail(orderId)),HttpStatus.OK);
+    }
+
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
