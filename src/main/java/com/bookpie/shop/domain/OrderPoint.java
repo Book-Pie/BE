@@ -39,7 +39,7 @@ public class OrderPoint {
     }
 
     public static OrderPoint chargePoint(PointDto dto, User user) {
-        return new OrderPoint(dto.getImp_uid(), dto.getMerchant_uid(), user, dto.getAmount(), dto.getCancel_amount());
+        return new OrderPoint(dto.getImpUid(), dto.getMerchantUid(), user, dto.getAmount(), dto.getCancelAmount());
     }
 
 }

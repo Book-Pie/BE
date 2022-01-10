@@ -40,23 +40,18 @@ public class PointService {
             // 1. iamport로부터 access 토큰 받아오기
             String uri = "https://api.iamport.kr/users/getToken";
             JSONObject jsonObject = new JSONObject();
-            log.info("아임포트 키 : " + apiConfig.getIamportKey());
-            log.info("아임포트 시크릿 : " + apiConfig.getIamportSecret());
             jsonObject.put("imp_key", apiConfig.getIamportKey());
             jsonObject.put("imp_secret", apiConfig.getIamportSecret());
             String type = "POST";
             // 1-1. callApi 함수를 호출하여 token값 받아오기
             JSONObject token = callApi(jsonObject, type, uri);
-            log.info("access 토큰 : " + token);
 
             // 2. imp_uid로 아임포트 서버에서 결제 정보 조회
             //JSONObject jsonObject1 = new JSONObject();
-            uri = "https://api.iamport.kr/payments/" + dto.getImp_uid();
+            uri = "https://api.iamport.kr/payments/" + dto.getImpUid();
             type = "GET";
             // 2-1. 가져온 token값에서 access_token값만을 추출
             JSONObject realToken = (JSONObject) token.get("response");
-
-            log.info("찐 access_token : " + realToken.get("access_token"));
             jsonObject.put("Authorization", realToken.get("access_token"));
             // 2-2. callApi 함수를 호출하여 결제정보 받아오기
             JSONObject info = callApi(jsonObject, type, uri);
@@ -69,13 +64,13 @@ public class PointService {
             if (amount.get("amount").toString().equals(dto.getAmount()+"")) {
                 // 결제가 완료됐으면
                 if (amount.get("status").toString().equals("paid")) {
-                    log.info("user_id : " + dto.getUser_id());
+                    log.info("user_id : " + dto.getUserId());
                     log.info("status : " + amount.get("status").toString());
                     response.put("message", "일반 결제 성공");
 
                     // 3-2. DB에 정보 금액 저장
-                    Optional<User> checkUser = userRepository.findById(dto.getUser_id());
-                    User user = checkUser.orElse(null);
+                    User user = userRepository.findById(dto.getUserId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
                     user.getPoint().chargePoint(dto.getAmount());
 
@@ -146,8 +141,8 @@ public class PointService {
 
     // 포인트 결제 내역 조회
     public List<PointDto> getPointList(Long user_id) {
-        Optional<User> checkUser = userRepository.findById(user_id);
-        User user = checkUser.orElse(null);
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
         List<OrderPoint> pointList = user.getOrderPoint();
 
@@ -158,10 +153,11 @@ public class PointService {
     // 포인트 환불
     public String cancel(PointDto dto) {
         // 유저 유효성 검사
-        Optional<User> checkUser = userRepository.findById(dto.getUser_id());
-        User user = checkUser.orElse(null);
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+
         // 금액이 맞지 않을 경우 환불 불가
-        if (user.getPoint().getTotalPoint() < dto.getCancel_amount()) {
+        if (user.getPoint().getTotalPoint() < dto.getCancelAmount()) {
             throw new IllegalArgumentException("금액이 부족하여 환불하실 수 없습니다.");
         }
         // 아임포트 서버로 보낼 JSONObject 생성
@@ -172,9 +168,9 @@ public class PointService {
         String type = "POST";   // http 요청 방식
 
         // 결제 환불 시 로직
-        if (dto.getPoint_id() != null) {
+        if (dto.getPointId() != null) {
             // 1. 결제번호, 유저정보, 환불가능한 금액 유효성 검사
-            OrderPoint orderPoint = orderPointRepository.findById(dto.getPoint_id())
+            OrderPoint orderPoint = orderPointRepository.findById(dto.getPointId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 주문번호는 존재하지 않습니다."));
             // 1-1. orderPoint 엔티티를 환불 Dto로 변환
             PointDto cancelDto = PointDto.cancelDto(orderPoint);
@@ -190,7 +186,7 @@ public class PointService {
             log.info("access 토큰 : " + realToken.get("access_token"));
 
             // 3. 액세스 토큰으로 아임포트 서버로부터 결제정보 받아오기
-            uri = "https://api.iamport.kr/payments/" + cancelDto.getImp_uid();
+            uri = "https://api.iamport.kr/payments/" + cancelDto.getImpUid();
             type = "GET";
             jsonObject.put("Authorization", realToken.get("access_token"));
             // 3-1. callApi 함수를 호출하여 결제정보 받아오기
@@ -201,12 +197,12 @@ public class PointService {
 
             // 4. 아임포트 서버로 결제환불 요청
             // 4-1. 받아온 주문 정보에서의 금액과 유저가 요청한 금액이 맞는지 확인
-            if (amount.get("amount").toString().equals(cancelDto.getCancel_amount()+"")) {
+            if (amount.get("amount").toString().equals(cancelDto.getCancelAmount()+"")) {
                 uri = "https://api.iamport.kr/payments/cancel";
                 type = "POST";
-                jsonObject.put("imp_uid", cancelDto.getImp_uid());
-                jsonObject.put("amount", cancelDto.getCancel_amount());
-                jsonObject.put("checksum", cancelDto.getCancel_amount());
+                jsonObject.put("imp_uid", cancelDto.getImpUid());
+                jsonObject.put("amount", cancelDto.getCancelAmount());
+                jsonObject.put("checksum", cancelDto.getCancelAmount());
 
                 JSONObject responseObj = callApi(jsonObject, type, uri);
                 JSONObject response = (JSONObject) responseObj.get("response");
@@ -217,6 +213,7 @@ public class PointService {
                     orderPointRepository.delete(orderPoint);
                     orderPointRepository.save(op);
                     user.getOrderPoint().add(op);
+                    user.getPoint().chargePoint(-(op.getCancel_amount()));
                 } else {
                     throw new IllegalArgumentException("환불 실패");
                 }
@@ -234,7 +231,7 @@ public class PointService {
             // 아임포트 서버로 취소 요청
             uri = "https://api.iamport.kr/payments/cancel";
             type = "POST";
-            jsonObject.put("imp_uid", dto.getImp_uid());
+            jsonObject.put("imp_uid", dto.getImpUid());
             jsonObject.put("amount", dto.getAmount());
             jsonObject.put("checksum", dto.getAmount());
 
