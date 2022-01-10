@@ -33,29 +33,29 @@ public class BookReviewController {
     }
 
     // 도서 리뷰 삭제
-    @DeleteMapping("/{review_id}")
-    public ResponseEntity delete(@PathVariable Long review_id) {
-        return new ResponseEntity(success(bookReviewService.delete(review_id)), HttpStatus.OK);
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity delete(@PathVariable Long reviewId) {
+        return new ResponseEntity(success(bookReviewService.delete(reviewId)), HttpStatus.OK);
     }
 
     // 도서 리뷰에 좋아요(등록/취소)
-    @GetMapping("/like/{review_id}")
-    public ResponseEntity likeUp(@PathVariable Long review_id) {
-        return new ResponseEntity(success(reviewLikeService.like(review_id)), HttpStatus.OK);
+    @GetMapping("/like/{reviewId}")
+    public ResponseEntity likeUp(@PathVariable Long reviewId) {
+        return new ResponseEntity(success(reviewLikeService.like(reviewId)), HttpStatus.OK);
     }
 
     // 해당 도서에 대한 도서 리뷰 조회
     @GetMapping("/{isbn}")
     public ResponseEntity getReview(@PathVariable Long isbn, @RequestParam(required = false) String page,
-                                    @RequestParam(required = false) String size, @RequestParam Long user_id) {
-        return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, user_id)), HttpStatus.OK);
+                                    @RequestParam(required = false) String size, @RequestParam Long userId) {
+        return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, userId)), HttpStatus.OK);
     }
 
     // 내가 쓴 도서리뷰 조회
     @GetMapping("/my")
     public ResponseEntity getMyReview(@RequestParam(required = false) String page,
-                                      @RequestParam(required = false) String size, @RequestParam(required = false) Long user_id) {
-        return new ResponseEntity(success(bookReviewService.getMyReview(user_id, page, size)), HttpStatus.OK);
+                                      @RequestParam(required = false) String size, @RequestParam(required = false) Long userId) {
+        return new ResponseEntity(success(bookReviewService.getMyReview(userId, page, size)), HttpStatus.OK);
     }
 
 }

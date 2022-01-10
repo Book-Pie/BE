@@ -13,13 +13,13 @@ import java.util.List;
 @Getter
 @ToString
 public class BookReviewDto {
-    private Long review_id;
+    private Long reviewId;
     private Long isbn;
-    private Long user_id;
+    private Long userId;
     private String content;
     private float rating;
 
-    private String nickname;
+    private String nickName;
     private int reviewLikeCount;
     private LocalDateTime reviewDate;
     private Boolean likeCheck;
@@ -27,9 +27,9 @@ public class BookReviewDto {
 
     public BookReviewDto(Long review_id, Long user_id, String nickName, String content, float rating,
                          Long isbn, int reviewLikeCount, LocalDateTime reviewDate, Boolean likeCheck) {
-        this.review_id = review_id;
-        this.user_id = user_id;
-        this.nickname = nickName;
+        this.reviewId = review_id;
+        this.userId = user_id;
+        this.nickName = nickName;
         this.content = content;
         this.rating = rating;
         this.isbn = isbn;
