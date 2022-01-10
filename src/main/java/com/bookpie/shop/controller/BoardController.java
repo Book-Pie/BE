@@ -36,21 +36,21 @@ public class BoardController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{board_id}")
-    public ResponseEntity delete(@PathVariable Long board_id) {
-        return new ResponseEntity(success(boardService.delete(board_id)), HttpStatus.OK);
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity delete(@PathVariable Long boardId) {
+        return new ResponseEntity(success(boardService.delete(boardId)), HttpStatus.OK);
     }
 
     // 게시글 전체 조회(카테고리별)
-    @GetMapping("/{boardType}")
-    public ResponseEntity getAll(@PathVariable BoardType boardType, @RequestParam(required = false) String page,
+    @GetMapping("/getAll")
+    public ResponseEntity getAll(@RequestParam BoardType boardType, @RequestParam(required = false) String page,
                                  @RequestParam(required = false) String size) {
         return new ResponseEntity(success(boardService.getAll(boardType, page, size)), HttpStatus.OK);
     }
 
     // 게시글 상세 조회
-    @GetMapping("/{board_id}")
-    public ResponseEntity get(@PathVariable Long board_id, HttpServletRequest req,
+    @GetMapping("/{boardId}")
+    public ResponseEntity get(@PathVariable Long boardId, HttpServletRequest req,
                          HttpServletResponse rep) {
         Cookie oldCookie = null;
         Cookie cookies[] = req.getCookies();
@@ -66,9 +66,9 @@ public class BoardController {
         if (oldCookie != null) {
             log.info("oldCookie가 존재합니다.");
             //oldCookie가 존재하지만 해당 번호를 가지지 않았을 경우 조회수 +1
-            if (!oldCookie.getValue().contains("[" + board_id + "]")) {
-                boardService.viewPlus(board_id);
-                oldCookie.setValue(oldCookie.getValue()+"_["+board_id+"]");
+            if (!oldCookie.getValue().contains("[" + boardId + "]")) {
+                boardService.viewPlus(boardId);
+                oldCookie.setValue(oldCookie.getValue()+"_["+boardId+"]");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 rep.addCookie(oldCookie);
@@ -76,19 +76,19 @@ public class BoardController {
         }else {
             // oldCookie 존재하지 않을 경우 쿠키 새로 만들고 조회수 + 1
             log.info("oldCookie가 존재하지 않습니다.");
-            Cookie newCookie = new Cookie("postView", "["+board_id+"}");
-            boardService.viewPlus(board_id);
+            Cookie newCookie = new Cookie("postView", "["+boardId+"}");
+            boardService.viewPlus(boardId);
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             rep.addCookie(newCookie);
         }
-        return new ResponseEntity(success(boardService.getBoard(board_id)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.getBoard(boardId)), HttpStatus.OK);
     }
 
     // 회원이 작성한 게시글 보기
-    @GetMapping("/my/{user_id}")
-    public ResponseEntity myBoard(@PathVariable Long user_id, @RequestParam(required = false) String page,
+    @GetMapping("/my/{userId}")
+    public ResponseEntity myBoard(@PathVariable Long userId, @RequestParam(required = false) String page,
                                   @RequestParam(required = false) String size) {
-        return new ResponseEntity(success(boardService.getMyBoard(user_id, page, size)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.getMyBoard(userId, page, size)), HttpStatus.OK);
     }
 }
