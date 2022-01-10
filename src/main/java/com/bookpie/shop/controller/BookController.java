@@ -25,9 +25,9 @@ public class BookController {
     }
 
     // 카테고리 삭제 (관리자 권한)
-    @DeleteMapping("/api/book/category/{category_id}")
-    public ResponseEntity deleteCategory(@PathVariable Long category_id) {
-        return new ResponseEntity(success(bookService.deleteCategory(category_id)), HttpStatus.OK);
+    @DeleteMapping("/api/book/category/{categoryId}")
+    public ResponseEntity deleteCategory(@PathVariable Long categoryId) {
+        return new ResponseEntity(success(bookService.deleteCategory(categoryId)), HttpStatus.OK);
     }
 
     // 카테고리 조회
@@ -43,9 +43,9 @@ public class BookController {
     }
 
     // 도서 삭제 (테스트용)
-    @DeleteMapping("/api/book/{book_id}")
-    public ResponseEntity delete(@PathVariable Long book_id) {
-        return new ResponseEntity(success(bookService.delete(book_id)), HttpStatus.OK);
+    @DeleteMapping("/api/book/{bookId}")
+    public ResponseEntity delete(@PathVariable Long bookId) {
+        return new ResponseEntity(success(bookService.delete(bookId)), HttpStatus.OK);
     }
 
     // 베스트 셀러 조회 (알라딘 api 호출)
@@ -70,9 +70,9 @@ public class BookController {
 
     // 도서 카테고리별 조회 (알라딘 api 호출)
     @GetMapping("/api/book/byCategory")
-    public ResponseEntity byCategory(@RequestParam Long category_id, @RequestParam(required = false) String page,
+    public ResponseEntity byCategory(@RequestParam Long categoryId, @RequestParam(required = false) String page,
                                      @RequestParam(required = false) String size) {
-        return new ResponseEntity(success(bookService.byCategory(category_id, page, size)), HttpStatus.OK);
+        return new ResponseEntity(success(bookService.byCategory(categoryId, page, size)), HttpStatus.OK);
     }
 
     // 해당 도서에 대한 추천 도서 (도서관 정보나루 api)
