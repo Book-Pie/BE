@@ -55,6 +55,9 @@ public class UsedBook {
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "usedBook", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
     public void addBookTag(BookTag tag){
         tags.add(tag);
         tag.setBook(this);
