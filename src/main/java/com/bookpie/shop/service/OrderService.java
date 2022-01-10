@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +35,11 @@ public class OrderService {
         Order order = Order.createOrder(user, orderCreateDto.getAddress(),usedBook);
         return orderRepository.save(order);
 
+    }
+
+    @Transactional
+    public boolean removeOrder(Long id){
+        return orderRepository.remove(id);
     }
 
     public OrderDto getOrderDetail(Long id){

@@ -23,12 +23,18 @@ public class OrderController {
 
     @PostMapping("")
     public ResponseEntity createOrder(@RequestBody OrderCreateDto orderCreateDto){
+        orderCreateDto.setUserId(getCurrentUserId());
         return new ResponseEntity(success(orderService.saveOrder(orderCreateDto)), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getOrderDetail(@PathVariable(value = "id") Long orderId){
         return new ResponseEntity(success(orderService.getOrderDetail(orderId)),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteOrder(@PathVariable(value = "id")Long orderId){
+        return new ResponseEntity(success(orderService.removeOrder(orderId)),HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){

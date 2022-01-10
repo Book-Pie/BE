@@ -1,18 +1,18 @@
 package com.bookpie.shop.repository;
 
 import com.bookpie.shop.domain.Order;
-import com.bookpie.shop.domain.QOrder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class OrderRepository {
 
     private final EntityManager em;
@@ -51,5 +51,11 @@ public class OrderRepository {
                                     " where b.id= :id",Order.class)
                 .setParameter("id",id)
                 .getResultList();
+    }
+
+    public boolean remove(Long id){
+        Order order = findById(id).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
+        em.remove(order);
+        return true;
     }
 }
