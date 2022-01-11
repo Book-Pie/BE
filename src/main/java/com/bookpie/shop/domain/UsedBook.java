@@ -59,6 +59,10 @@ public class UsedBook {
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "usedBook", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
     @Builder
     public UsedBook(User seller,String content,String title,int price,LocalDateTime uploadDate,BookState bookState,
                     SaleState saleState,Category first,Category second,String isbn){

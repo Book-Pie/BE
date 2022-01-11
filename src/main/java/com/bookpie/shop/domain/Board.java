@@ -41,7 +41,7 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
     public Board(String title, String content, LocalDateTime now, int view, BoardType boardType, int price, User user) {
@@ -56,7 +56,7 @@ public class Board {
 
     public static Board createBoard(BoardDto dto, User user) {
         // 예외 처리
-        if (dto.getUser_id() != user.getId())
+        if (dto.getUserId() != user.getId())
             throw new IllegalArgumentException("게시글 작성 실패! 회원이 일치하지 않습니다.");
         if (dto == null)
             throw new IllegalArgumentException("게시글 작성 실패! 게시글이 존재하지 않습니다.");
@@ -67,7 +67,7 @@ public class Board {
 
     public void patch(BoardDto dto) {
         // 예외 발생
-        if (this.id != dto.getBoard_id())
+        if (this.id != dto.getBoardId())
             throw new IllegalArgumentException("게시글이 일치하지 않습니다.");
 
         // 게시글 수정

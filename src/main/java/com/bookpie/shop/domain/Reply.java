@@ -1,28 +1,91 @@
 package com.bookpie.shop.domain;
 
+import com.bookpie.shop.domain.dto.reply.BoardReplyDto;
+import com.bookpie.shop.domain.dto.reply.UsedBookReplyDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Reply {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reply_id")
     private Long id;
 
     private String content;
     private LocalDateTime replyDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_reply_id")
+    private Reply parentReply;
+
+    @OneToMany(mappedBy = "parentReply", cascade = CascadeType.ALL)
+    private List<Reply> subReply = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
     private Board board;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "used_id")
     private UsedBook usedBook;
+
+    // 게시글 댓글 생성
+    public Reply(String content, User user, Board board) {
+        this.content = content;
+        this.user = user;
+        this.board = board;
+        this.replyDate = LocalDateTime.now();
+    }
+    public static Reply createReplyBoard(BoardReplyDto dto, User user, Board board) {
+        return new Reply(dto.getContent(), user, board);
+    }
+
+    // 대댓글 생성
+    public Reply(String content, User user, Reply parentReply) {
+        this.content = content;
+        this.user = user;
+        this.parentReply = parentReply;
+        this.replyDate = LocalDateTime.now();
+    }
+    public static Reply createSubReplyBoard(BoardReplyDto dto, User user, Reply parentReply) {
+        return new Reply(dto.getContent(), user, parentReply);
+    }
+
+    // 중고도서 댓글
+    public static Reply createReplyUsedBook(UsedBookReplyDto dto, User user, UsedBook usedBook) {
+        return new Reply(dto.getContent(), user, usedBook);
+    }
+    public Reply(String content, User user, UsedBook usedBook) {
+        this.content = content;
+        this.user = user;
+        this.usedBook = usedBook;
+    }
+
+    // 게시글 댓글 수정
+    public void patch(BoardReplyDto dto) {
+        if (dto.getContent() != null) {
+            this.content = dto.getContent();
+            this.replyDate = LocalDateTime.now();
+        }
+    }
+
+    // 중고도서 댓글 수정
+    public void patchUsedBook(UsedBookReplyDto dto) {
+        if (dto.getContent() != null) {
+            this.content = dto.getContent();
+            this.replyDate = LocalDateTime.now();
+        }
+    }
 }

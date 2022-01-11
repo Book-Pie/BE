@@ -47,7 +47,7 @@ public class BookReview {
 
     public void patch(BookReviewDto dto) {
         // 예외 발생
-        if (this.id != dto.getReview_id())
+        if (this.id != dto.getReviewId())
             throw new IllegalArgumentException("리뷰 id가 일치하지 않습니다.");
 
         // 객체를 갱신

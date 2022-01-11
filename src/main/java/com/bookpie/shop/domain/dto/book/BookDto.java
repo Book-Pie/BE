@@ -9,10 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class BookDto {
-    private Long book_id;
+    private Long bookId;
     private String title;
     private String author;
-    private int category_id;
+    private int categoryId;
     private String introduce;
     private int price;
     private String publisher;

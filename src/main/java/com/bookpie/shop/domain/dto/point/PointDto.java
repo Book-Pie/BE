@@ -11,20 +11,20 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 public class PointDto {
-    private Long point_id;
-    private Long user_id;
+    private Long pointId;
+    private Long userId;
     private int amount;
-    private int cancel_amount;
+    private int cancelAmount;
     // 결제번호
-    private String imp_uid;
-    private String merchant_uid;
-    private LocalDateTime order_date;
+    private String impUid;
+    private String merchantUid;
+    private LocalDateTime orderDate;
 
     public PointDto(int amount, String imp_uid, String merchant_uid) {
         this.amount = 0;
-        this.cancel_amount = amount;
-        this.imp_uid = imp_uid;
-        this.merchant_uid = merchant_uid;
+        this.cancelAmount = amount;
+        this.impUid = imp_uid;
+        this.merchantUid = merchant_uid;
     }
 
     public static PointDto createDto(OrderPoint orderPoint) {

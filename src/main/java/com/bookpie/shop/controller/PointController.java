@@ -18,15 +18,13 @@ public class PointController {
     // 포인트 충전
     @PostMapping("/api/point")
     public ResponseEntity charge(@RequestBody PointDto dto) {
-        log.info("paid_amount : " + dto.getAmount() + ", user_id : " + dto.getUser_id() + ", " +
-                "point_id : " + dto.getImp_uid() + ", merchant_uid : " + dto.getMerchant_uid());
         return new ResponseEntity(success(pointService.charge(dto)), HttpStatus.OK);
     }
 
     // 포인트 결제 내역 조회
-    @GetMapping("/api/point/{user_id}")
-    public ResponseEntity getPointList(@PathVariable Long user_id) {
-        return new ResponseEntity(success(pointService.getPointList(user_id)), HttpStatus.OK);
+    @GetMapping("/api/point/{userId}")
+    public ResponseEntity getPointList(@PathVariable Long userId) {
+        return new ResponseEntity(success(pointService.getPointList(userId)), HttpStatus.OK);
     }
 
     // 포인트 환불

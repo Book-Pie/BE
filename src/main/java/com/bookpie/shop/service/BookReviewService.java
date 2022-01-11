@@ -1,6 +1,5 @@
 package com.bookpie.shop.service;
 
-import com.bookpie.shop.domain.Book;
 import com.bookpie.shop.domain.BookReview;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
@@ -33,24 +32,24 @@ public class BookReviewService {
     // 도서 리뷰 작성
     public BookReviewDto create(BookReviewDto dto) {
         // 회원 객체 생성
-        Optional<User> user = userRepository.findById(dto.getUser_id());
-        User objUser = user.orElse(null);
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
         // 책 리뷰 엔티티 생성
-        BookReview bookReview = BookReview.createBookReview(dto, objUser);
+        BookReview bookReview = BookReview.createBookReview(dto, user);
 
         // 연관 관계 생성
-        objUser.getBookReviews().add(bookReview);
+        user.getBookReviews().add(bookReview);
 
         // DB저장
         BookReview createdBookReview = bookReviewRepository.save(bookReview);
-        return BookReviewDto.createDto(createdBookReview, objUser.getId());
+        return BookReviewDto.createDto(createdBookReview, user.getId());
     }
 
     // 도서 리뷰 수정
     public BookReviewDto update(BookReviewDto dto) {
         // 해당 리뷰 생성
-        BookReview bookReview = bookReviewRepository.findById(dto.getReview_id())
+        BookReview bookReview = bookReviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
         // 리뷰 수정
@@ -58,13 +57,13 @@ public class BookReviewService {
 
         // 리뷰 수정 후 DB저장
         BookReview createdBookReview = bookReviewRepository.save(bookReview);
-        return BookReviewDto.createDto(createdBookReview, dto.getUser_id());
+        return BookReviewDto.createDto(createdBookReview, dto.getUserId());
     }
 
     // 도서 리뷰 삭제
-    public String delete(Long review_id) {
+    public String delete(Long reviewId) {
         // 해당 리뷰 생성
-        BookReview bookReview = bookReviewRepository.findById(review_id)
+        BookReview bookReview = bookReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
         bookReviewRepository.delete(bookReview);
         return "해당 리뷰가 삭제되었습니다.";
@@ -90,10 +89,10 @@ public class BookReviewService {
 
 
     // 내가 쓴 도서리뷰
-    public Page<BookReviewDto> getMyReview(Long user_id, String page, String size) {
+    public Page<BookReviewDto> getMyReview(Long userId, String page, String size) {
         // 회원 객체 생성
-        Optional<User> user = userRepository.findById(user_id);
-        User objUser = user.orElse(null);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
         // page, size 값 디폴트
         int realPage = 0;
@@ -106,11 +105,11 @@ public class BookReviewService {
         Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());
 
         // 해당 회원이 작성한 도서 리뷰 조회
-        Page<BookReview> bookReviewPage = bookReviewRepository.findAllByUserId(user_id, pageable);
+        Page<BookReview> bookReviewPage = bookReviewRepository.findAllByUserId(userId, pageable);
 
 
-        List<BookReview> reviewList = objUser.getBookReviews();
+        List<BookReview> reviewList = user.getBookReviews();
 
-        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, user_id));
+        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, userId));
     }
 }
