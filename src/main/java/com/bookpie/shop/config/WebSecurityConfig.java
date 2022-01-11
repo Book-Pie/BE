@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedOrigin("http://www.react-dev.p-e.kr/");
-        configuration.addAllowedOrigin("http://localhost/");
+        configuration.addAllowedOrigin("http://localhost:3000");
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",configuration);
