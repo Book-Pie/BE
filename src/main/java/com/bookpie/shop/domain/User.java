@@ -108,6 +108,7 @@ public class User implements UserDetails {
 
     }
 
+
     
     public static User createUser(UserCreateDto userCreateDto){
         return User.builder()
@@ -124,6 +125,10 @@ public class User implements UserDetails {
                 .password(userCreateDto.getPassword())
                 .build();
 
+    }
+
+    public void addOrder(Order order){
+        this.orders.add(order);
     }
 
     public void update(UserUpdateDto userUpdateDto){

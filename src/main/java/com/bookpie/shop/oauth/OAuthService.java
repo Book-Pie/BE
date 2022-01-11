@@ -70,7 +70,7 @@ public class OAuthService {
         Optional<User> optionalUser = userRepository.findByEmail(eamil);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(user.getLoginType()!= type) throw new IllegalArgumentException("로그인 형식이 잘못되었습니다.");
+            if(user.getLoginType()!= type) throw new IllegalArgumentException("중복된 이메일입니다.");
         }else{
             User nUser = User.oauthCreate(eamil,name,type);
             Long id = userRepository.save(nUser);

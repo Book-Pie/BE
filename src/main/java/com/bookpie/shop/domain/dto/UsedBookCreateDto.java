@@ -24,7 +24,7 @@ public class UsedBookCreateDto {
     private String content;
     @NotNull(message = "가격을 입력해주세요.")
     private int price;
-
+    private String isbn;
     private BookState state;
     private Category fstCategory;
     private Category sndCategory;
