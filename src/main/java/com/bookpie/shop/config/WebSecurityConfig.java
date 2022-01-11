@@ -3,6 +3,7 @@ package com.bookpie.shop.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -27,7 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .httpBasic().disable()
                 .formLogin().disable()
-                .authorizeRequests().antMatchers("/api/user/signup").permitAll()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
+                .antMatchers("/api/user/signup").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/api/oauth/**").permitAll()
                 .antMatchers("/api/user/me").hasRole("USER")
