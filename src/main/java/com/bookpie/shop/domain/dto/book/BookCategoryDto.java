@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @NoArgsConstructor
 public class BookCategoryDto {
-    private Long category_id;
+    private Long categoryId;
     private String categoryName;
-    private Long parent_id;
+    private Long parentId;
     private List<BookCategoryDto> subCategory;
 
     public BookCategoryDto(Long category_id, String categoryName, Long parent_id, List<BookCategory> bookCategoryList) {
-        this.category_id = category_id;
+        this.categoryId = category_id;
         this.categoryName = categoryName;
-        this.parent_id = parent_id;
+        this.parentId = parent_id;
         if (bookCategoryList != null) {
             this.subCategory = bookCategoryList.stream().map(category -> BookCategoryDto.createDto(category))
                 .collect(Collectors.toList());

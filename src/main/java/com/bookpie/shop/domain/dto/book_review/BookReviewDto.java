@@ -3,7 +3,9 @@ package com.bookpie.shop.domain.dto.book_review;
 import com.bookpie.shop.domain.BookReview;
 import com.bookpie.shop.domain.ReviewLike;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@Builder
 public class BookReviewDto {
     private Long reviewId;
     private Long isbn;
@@ -22,27 +25,21 @@ public class BookReviewDto {
     private String nickName;
     private int reviewLikeCount;
     private LocalDateTime reviewDate;
-    private Boolean likeCheck;
-
-
-    public BookReviewDto(Long review_id, Long user_id, String nickName, String content, float rating,
-                         Long isbn, int reviewLikeCount, LocalDateTime reviewDate, Boolean likeCheck) {
-        this.reviewId = review_id;
-        this.userId = user_id;
-        this.nickName = nickName;
-        this.content = content;
-        this.rating = rating;
-        this.isbn = isbn;
-        this.reviewLikeCount = reviewLikeCount;
-        this.reviewDate = reviewDate;
-        this.likeCheck = likeCheck;
-    }
+    @Builder.Default
+    private Boolean likeCheck = false;
 
     public static BookReviewDto createDto(BookReview bookReview, Long user_id) {
-        return new BookReviewDto(bookReview.getId(), bookReview.getUser().getId(),
-                bookReview.getUser().getNickName(), bookReview.getContent(), bookReview.getRating(),
-                bookReview.getIsbn(), bookReview.getReviewLikes().size(),
-                bookReview.getReviewDate(), likeCheck(bookReview, user_id));
+        return BookReviewDto.builder()
+                .reviewId(bookReview.getId())
+                .userId(bookReview.getUser().getId())
+                .nickName(bookReview.getUser().getNickName())
+                .content(bookReview.getContent())
+                .rating(bookReview.getRating())
+                .isbn(bookReview.getIsbn())
+                .reviewLikeCount(bookReview.getReviewLikes().size())
+                .reviewDate(bookReview.getReviewDate())
+                .likeCheck(likeCheck(bookReview, user_id))
+                .build();
     }
 
     // 해당 회원이 좋아요를 눌렀는지 안눌렀는지 확인

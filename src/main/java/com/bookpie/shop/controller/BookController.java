@@ -20,7 +20,6 @@ public class BookController {
     // 카테고리 추가 (관리자 권한)
     @PostMapping("/api/book/category")
     public ResponseEntity addCategory(@RequestBody BookCategoryDto dto) {
-        log.info("BookCategoryDto dto : " + dto.getCategory_id()+", "+dto.getCategoryName()+", "+dto.getParent_id());
         return new ResponseEntity(success(bookService.addCategory(dto)), HttpStatus.OK);
     }
 

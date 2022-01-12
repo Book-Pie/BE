@@ -39,15 +39,15 @@ public class BookReviewController {
     }
 
     // 도서 리뷰에 좋아요(등록/취소)
-    @GetMapping("/like/{reviewId}")
-    public ResponseEntity likeUp(@PathVariable Long reviewId) {
-        return new ResponseEntity(success(reviewLikeService.like(reviewId)), HttpStatus.OK);
+    @PostMapping("/like")
+    public ResponseEntity likeUp(@RequestBody BookReviewDto dto) {
+        return new ResponseEntity(success(reviewLikeService.like(dto)), HttpStatus.OK);
     }
 
     // 해당 도서에 대한 도서 리뷰 조회
     @GetMapping("/{isbn}")
     public ResponseEntity getReview(@PathVariable Long isbn, @RequestParam(required = false) String page,
-                                    @RequestParam(required = false) String size, @RequestParam Long userId) {
+                                    @RequestParam(required = false) String size, @RequestParam String userId) {
         return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, userId)), HttpStatus.OK);
     }
 

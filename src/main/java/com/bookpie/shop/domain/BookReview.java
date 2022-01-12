@@ -1,6 +1,8 @@
 package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class BookReview {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +34,18 @@ public class BookReview {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review")
     private List<ReviewLike> reviewLikes = new ArrayList<>();
 
-    public BookReview(String content, float rating, Long isbn, LocalDateTime now, User user) {
-        this.content = content;
-        this.rating = rating;
-        this.isbn = isbn;
-        this.reviewDate = now;
-        this.user = user;
-    }
-
     public static BookReview createBookReview(BookReviewDto dto, User user) {
-        return new BookReview(dto.getContent(), dto.getRating(), dto.getIsbn(), LocalDateTime.now(), user);
+        return BookReview.builder()
+                .content(dto.getContent())
+                .rating(dto.getRating())
+                .isbn(dto.getIsbn())
+                .reviewDate(LocalDateTime.now())
+                .user(user)
+                .build();
     }
 
     public void patch(BookReviewDto dto) {

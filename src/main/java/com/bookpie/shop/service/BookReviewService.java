@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,6 +33,7 @@ public class BookReviewService {
         // 회원 객체 생성
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+
 
         // 책 리뷰 엔티티 생성
         BookReview bookReview = BookReview.createBookReview(dto, user);
@@ -70,7 +70,8 @@ public class BookReviewService {
     }
 
     // 해당 도서의 리뷰 전체 조회
-    public Page<BookReviewDto> getReview(Long isbn, String page, String size, Long user_id) {
+    public Page<BookReviewDto> getReview(Long isbn, String page, String size, String userId) {
+        Long user_id = Long.parseLong(userId);
         // page와 size 값을 int로 변환 (디폴트값 동시 설정)
         int realPage = 0;
         int realSize = 4;

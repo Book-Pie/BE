@@ -55,6 +55,7 @@ public class PointService {
             jsonObject.put("Authorization", realToken.get("access_token"));
             // 2-2. callApi 함수를 호출하여 결제정보 받아오기
             JSONObject info = callApi(jsonObject, type, uri);
+            if (info == null) throw new IllegalArgumentException("결제 정보가 없습니다.");
             log.info("결제 정보 : " + info);
             JSONObject amount = (JSONObject) info.get("response");
             log.info("금액 정보 : " +amount.get("amount"));
@@ -128,7 +129,6 @@ public class PointService {
                     sb.append(line);
                 }
                 br.close();
-
                 // 받아온 값을 JSON형태로 파싱
                 JSONParser parser = new JSONParser();
                 response = (JSONObject) parser.parse(sb.toString());
@@ -152,6 +152,7 @@ public class PointService {
 
     // 포인트 환불
     public String cancel(PointDto dto) {
+        log.info("환불처리중 dto : " + dto);
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
@@ -197,7 +198,7 @@ public class PointService {
 
             // 4. 아임포트 서버로 결제환불 요청
             // 4-1. 받아온 주문 정보에서의 금액과 유저가 요청한 금액이 맞는지 확인
-            if (amount.get("amount").toString().equals(cancelDto.getCancelAmount()+"")) {
+            if (amount.get("amount").toString().equals(dto.getCancelAmount()+"")) {
                 uri = "https://api.iamport.kr/payments/cancel";
                 type = "POST";
                 jsonObject.put("imp_uid", cancelDto.getImpUid());
