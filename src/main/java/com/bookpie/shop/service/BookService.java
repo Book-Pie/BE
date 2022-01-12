@@ -37,19 +37,15 @@ public class BookService {
 
     // 카테고리 추가
     public String addCategory(BookCategoryDto dto) {
-
-        if (dto.getParent_id() == null) {  // 부모 카테고리 추가
-            BookCategory category = BookCategory.createParentCategory(dto);
-            bookCategoryRepository.save(category);
-        } else {  // 자식 카테고리 추가
-            // 부모 카테고리
-            BookCategory parentCategory = bookCategoryRepository.findById(dto.getParent_id())
+        BookCategory parentCategory = null;
+        if (dto.getParentId() != null) {
+            parentCategory = bookCategoryRepository.findById(dto.getParentId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 부모 카테고리는 존재하지 않습니다."));
+        }
+        BookCategory subCategory = BookCategory.createCategory(dto, parentCategory);
+        bookCategoryRepository.save(subCategory);
 
-            // 자식 카테고리
-            BookCategory subCategory = BookCategory.createSubCategory(dto, parentCategory);
-            bookCategoryRepository.save(subCategory);
-
+        if (dto.getParentId() != null) {
             // 연관 관계 매핑 (자식태그 -> 부모태그)
             List<BookCategory> subList = parentCategory.getSubCategory();
             subList.add(subCategory);
