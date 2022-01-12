@@ -2,9 +2,11 @@ package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.book.BookCategoryDto;
 import com.bookpie.shop.domain.enums.Category;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -14,6 +16,8 @@ import java.util.List;
 @Entity(name = "book_category")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Slf4j
 public class BookCategory {
     @Id
     @Column(name = "book_category_id")
@@ -25,30 +29,21 @@ public class BookCategory {
     @JoinColumn(name = "parent_category_id")
     private BookCategory parentCategory;
 
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookCategory> subCategory = new ArrayList<>();
+
 
     public void setId(Long id) {
         this.Id = id;
     }
 
-    // 부모 카테고리 생성자
-    public BookCategory(Long category_id, String categoryName) {
+    public BookCategory(Long category_id, String categoryName, BookCategory parentCategory) {
         this.Id = category_id;
         this.categoryName = categoryName;
+        this.parentCategory = parentCategory;
     }
-    public static BookCategory createParentCategory(BookCategoryDto dto) {
-        return new BookCategory(dto.getCategory_id(), dto.getCategoryName());
-    }
-
-    // 자식 카테고리 생성자
-    public BookCategory(Long category_id, String categoryName, BookCategory bookCategory) {
-        this.Id = category_id;
-        this.categoryName = categoryName;
-        this.parentCategory = bookCategory;
-    }
-    public static BookCategory createSubCategory(BookCategoryDto dto, BookCategory bookCategory) {
-        return new BookCategory(dto.getCategory_id(), dto.getCategoryName(), bookCategory);
+    public static BookCategory createCategory(BookCategoryDto dto, BookCategory parentCategory) {
+        return new BookCategory(dto.getCategoryId(), dto.getCategoryName(), parentCategory);
     }
 
 }
