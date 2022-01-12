@@ -3,7 +3,6 @@ package com.bookpie.shop.domain.dto.board;
 import com.bookpie.shop.domain.Board;
 import com.bookpie.shop.domain.enums.BoardType;
 import lombok.*;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
+@Builder
 public class BoardDto {
     // 게시글 작성 시 필요한 값
     private Long boardId;
@@ -27,8 +27,16 @@ public class BoardDto {
     private int view;
 
     public static BoardDto createBoardDto(Board board) {
-        return new BoardDto(board.getId(), board.getTitle(), board.getContent(),
-                board.getPrice(), board.getBoardType(), board.getUser().getId(),
-                board.getUser().getNickName(), board.getBoardDate(), board.getView());
+        return BoardDto.builder()
+                .boardId(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .price(board.getPrice())
+                .boardType(board.getBoardType())
+                .userId(board.getUser().getId())
+                .nickName(board.getUser().getNickName())
+                .boardDate(board.getBoardDate())
+                .view(board.getView())
+                .build();
     }
 }
