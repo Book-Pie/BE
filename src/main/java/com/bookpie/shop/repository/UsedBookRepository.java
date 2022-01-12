@@ -2,6 +2,7 @@ package com.bookpie.shop.repository;
 
 
 import com.bookpie.shop.domain.QUsedBook;
+import com.bookpie.shop.domain.QUser;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
 import com.bookpie.shop.domain.enums.BookState;
@@ -84,7 +85,29 @@ public class UsedBookRepository {
         return query.select(qUsedBook.count())
                 .from(qUsedBook)
                 .fetchOne();
+    }
 
+    public Long count(Long userId){
+        QUsedBook qUsedBook = QUsedBook.usedBook;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.select(qUsedBook.count())
+                          .from(qUsedBook)
+                          .where(qUsedBook.seller.id.eq(userId))
+                          .fetchOne();
+    }
+
+    public List<UsedBook> findAllByUserId(Long id,int offset,int limit){
+        QUsedBook qUsedBook = QUsedBook.usedBook;
+        QUser qUser = QUser.user;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.select(qUsedBook)
+                .from(qUsedBook,qUser)
+                .join(qUsedBook.seller,QUser.user)
+                .fetchJoin()
+                .where(qUsedBook.seller.id.eq(id))
+                .limit(limit)
+                .offset(offset)
+                .fetch();
     }
 
     public List<Tuple> groupCount(){

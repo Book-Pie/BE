@@ -21,6 +21,9 @@ public class UsedBookListDto {
     private String image;
     private LocalDateTime uploadDate;
     private LocalDateTime modifiedDate;
+    private SaleState state;
+    private int likeCount;
+    private int replyCount;
 
     public UsedBookListDto(UsedBook usedBook){
         this.id= usedBook.getId();
@@ -29,5 +32,8 @@ public class UsedBookListDto {
         this.image = usedBook.getThumbnail();
         this.uploadDate = usedBook.getUploadDate();
         this.modifiedDate = usedBook.getModifiedDate();
+        this.likeCount = usedBook.getLikeCount();
+        this.replyCount = usedBook.getReplyCount();
+        this.state = usedBook.getSaleState();
     }
 }
