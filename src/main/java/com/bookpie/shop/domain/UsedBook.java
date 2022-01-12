@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class UsedBook {
     private int price;
     private int view;
     private LocalDateTime uploadDate;
+    private LocalDateTime modifiedDate;
     private String thumbnail;
     private String isbn;
     @Enumerated(EnumType.STRING)
@@ -63,6 +65,9 @@ public class UsedBook {
     @OneToMany(mappedBy = "usedBook", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
+    @Formula("(select count(1) from used_book_like l where l.used_id = ")
+    private int likeCount;
+
     @Builder
     public UsedBook(User seller,String content,String title,int price,LocalDateTime uploadDate,BookState bookState,
                     SaleState saleState,Category first,Category second,String isbn){
@@ -71,6 +76,7 @@ public class UsedBook {
         this.title = title;
         this.price = price;
         this.uploadDate = uploadDate;
+        this.modifiedDate = uploadDate;
         this.bookState = bookState;
         this.saleState = saleState;
         this.fstCategory = first;
@@ -115,10 +121,14 @@ public class UsedBook {
         this.order = order;
     }
 
+    public void updateModifiedDate(){
+        this.modifiedDate = LocalDateTime.now();
+    }
     //주문에 따른 판매상태 변경
     public void trading(){
         this.saleState = SaleState.TRADING;
     }
+    
     public void cancel(){
         this.order = null;
         this.saleState = SaleState.SALE;

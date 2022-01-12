@@ -64,6 +64,7 @@ public class UsedBookService {
         return usedBookRepository.save(usedBook);
     }
 
+
     //중고도서 상세조회
     public UsedBookDto getUsedBook(Long id){
         UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));

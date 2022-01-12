@@ -20,6 +20,7 @@ public class UsedBookDto {
     private String title;
     private String content;
     private LocalDateTime uploadDate;
+    private LocalDateTime modifiedDate;
     private int view;
     private BookState bookState;
     private SaleState saleState;
@@ -38,6 +39,7 @@ public class UsedBookDto {
         dto.setTitle(usedBook.getTitle());
         dto.setContent(usedBook.getContent());
         dto.setUploadDate(usedBook.getUploadDate());
+        dto.setModifiedDate(usedBook.getModifiedDate());
         dto.setBookState(usedBook.getBookState());
         dto.setView(usedBook.getView());
         dto.setSaleState(usedBook.getSaleState());

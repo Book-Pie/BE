@@ -64,7 +64,7 @@ public class UsedBookRepository {
         JPAQueryFactory query = new JPAQueryFactory(em);
         OrderSpecifier condition = null;
         if(dto.getSort().equals("date")){
-            condition = qUsedBook.uploadDate.desc();
+            condition = qUsedBook.modifiedDate.desc();
         }else if (dto.getSort().equals("view")){
             condition = qUsedBook.view.desc();
         }
