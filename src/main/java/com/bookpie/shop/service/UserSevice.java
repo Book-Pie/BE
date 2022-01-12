@@ -44,7 +44,6 @@ public class UserSevice {
     public String login(LoginDto loginDto){
         User user = userRepository.findByEmailAllgrade(loginDto.getEmail())
                 .orElseThrow(()->new UsernameNotFoundException("가입되지 않은 이메일입니다."));
-        log.debug(user.toString());
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
