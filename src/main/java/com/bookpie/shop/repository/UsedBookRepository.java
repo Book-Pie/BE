@@ -107,6 +107,7 @@ public class UsedBookRepository {
                 .where(qUsedBook.seller.id.eq(id))
                 .limit(limit)
                 .offset(offset)
+                .orderBy(qUsedBook.modifiedDate.desc())
                 .fetch();
     }
 
