@@ -47,7 +47,8 @@ public class BookReviewController {
     // 해당 도서에 대한 도서 리뷰 조회
     @GetMapping("/{isbn}")
     public ResponseEntity getReview(@PathVariable Long isbn, @RequestParam(required = false) String page,
-                                    @RequestParam(required = false) String size, @RequestParam String userId) {
+                                    @RequestParam(required = false) String size, @RequestParam(required = false) String userId) {
+        log.info("컨트롤러 userId = " + userId );
         return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, userId)), HttpStatus.OK);
     }
 

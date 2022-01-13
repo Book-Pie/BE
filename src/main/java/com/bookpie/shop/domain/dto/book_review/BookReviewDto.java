@@ -44,6 +44,8 @@ public class BookReviewDto {
 
     // 해당 회원이 좋아요를 눌렀는지 안눌렀는지 확인
     private static Boolean likeCheck(BookReview bookReview, Long user_id) {
+        if (user_id == 0L) return false;
+
         List<ReviewLike> reviewLikeList = bookReview.getReviewLikes();
         for(ReviewLike reviewLike : reviewLikeList) {
             if (reviewLike.getUser().getId() == user_id) return true;

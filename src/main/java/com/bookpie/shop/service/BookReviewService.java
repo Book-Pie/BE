@@ -71,7 +71,9 @@ public class BookReviewService {
 
     // 해당 도서의 리뷰 전체 조회
     public Page<BookReviewDto> getReview(Long isbn, String page, String size, String userId) {
-        Long user_id = Long.parseLong(userId);
+        Long user_id = 0L;
+        if (userId != null) user_id = Long.parseLong(userId);
+
         // page와 size 값을 int로 변환 (디폴트값 동시 설정)
         int realPage = 0;
         int realSize = 4;
@@ -85,7 +87,8 @@ public class BookReviewService {
         PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
         Page<BookReview> bookReviewPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest);  // 페이징 처리
 
-        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, user_id));
+        Long finalUser_id = user_id;
+        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
     }
 
 
