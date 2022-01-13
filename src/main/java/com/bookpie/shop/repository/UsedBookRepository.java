@@ -98,12 +98,9 @@ public class UsedBookRepository {
 
     public List<UsedBook> findAllByUserId(Long id,int offset,int limit){
         QUsedBook qUsedBook = QUsedBook.usedBook;
-        QUser qUser = QUser.user;
         JPAQueryFactory query = new JPAQueryFactory(em);
         return query.select(qUsedBook)
-                .from(qUsedBook,qUser)
-                .innerJoin(qUsedBook.seller,QUser.user)
-                .fetchJoin()
+                .from(qUsedBook)
                 .where(qUsedBook.seller.id.eq(id))
                 .orderBy(qUsedBook.modifiedDate.desc())
                 .offset(offset)
