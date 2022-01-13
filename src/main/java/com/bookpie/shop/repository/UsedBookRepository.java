@@ -102,7 +102,7 @@ public class UsedBookRepository {
         JPAQueryFactory query = new JPAQueryFactory(em);
         return query.select(qUsedBook)
                 .from(qUsedBook,qUser)
-                .leftJoin(qUsedBook.seller,QUser.user)
+                .innerJoin(qUsedBook.seller,QUser.user)
                 .fetchJoin()
                 .where(qUsedBook.seller.id.eq(id))
                 .orderBy(qUsedBook.modifiedDate.desc())
