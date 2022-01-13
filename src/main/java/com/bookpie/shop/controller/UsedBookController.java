@@ -49,6 +49,7 @@ public class UsedBookController {
         if(usedBookCreateDto.getPrice() == 0) throw new IllegalArgumentException("가격을 입력해주세요");
         return new ResponseEntity(success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images)), HttpStatus.OK);
     }
+
     //중고도서 상세정보 조회
     @GetMapping("/{id}")
     public ResponseEntity getUsedBookDetail(@PathVariable("id")Long id){
@@ -83,9 +84,13 @@ public class UsedBookController {
     }
 
     //회원이 올린 중고도서 검색
-    @GetMapping("/user/{id}")
-    public ResponseEntity getMyUpload(@PathVariable("id") Long id){
-        return new ResponseEntity(success(usedBookService.getUserUpload(id)),HttpStatus.OK);
+    @GetMapping("/user")
+    public ResponseEntity getMyUpload(@RequestParam("userId") Long userId,
+                                      @RequestParam(value = "page",required = false,defaultValue = "1")int page,
+                                      @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
+                                      @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
+        int offset = (page*limit)-limit;
+        return new ResponseEntity(success(usedBookService.getUserUpload(userId,offset,limit,pageCount)),HttpStatus.OK);
     }
 
 

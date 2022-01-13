@@ -1,4 +1,4 @@
-package com.bookpie.shop.domain.dto;
+package com.bookpie.shop.utils;
 
 import lombok.Getter;
 import lombok.Setter;
