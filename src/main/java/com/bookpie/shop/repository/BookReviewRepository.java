@@ -11,8 +11,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
-
+    // 내가 쓴 도서리뷰 조회
     Page<BookReview> findAllByUserId(@Param("user_id") Long user_id, @Param("pageable") Pageable pageable);
-
+    // 해당 책에 대한 도서리뷰 조회
     Page<BookReview> findAllByIsbn(@Param("isbn") Long isbn, Pageable pageable);
+    // 해당 책에 대한 나의 도서리뷰 조회
+    @Query(value = "select * from book_review b where b.isbn = :isbn and b.user_id = :user_id", nativeQuery = true)
+    BookReview findMyReview(@Param("isbn") Long isbn, @Param("user_id") Long user_id);
 }

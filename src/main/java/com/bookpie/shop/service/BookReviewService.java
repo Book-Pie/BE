@@ -7,6 +7,8 @@ import com.bookpie.shop.repository.BookRepository;
 import com.bookpie.shop.repository.BookReviewRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,7 +72,10 @@ public class BookReviewService {
     }
 
     // 해당 도서의 리뷰 전체 조회
-    public Page<BookReviewDto> getReview(Long isbn, String page, String size, String userId) {
+    public JSONObject getReview(Long isbn, String page, String size, String userId) {
+        // 반환할 제이슨 객체
+        JSONObject response = new JSONObject();
+
         Long user_id = 0L;
         if (userId != null) user_id = Long.parseLong(userId);
 
@@ -80,15 +85,27 @@ public class BookReviewService {
 
         // page, size 디폴트값 설정
         if (page != null) { realPage = Integer.parseInt(page); }
-
         if (size != null) { realSize = Integer.parseInt(size); }
 
 
         PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
-        Page<BookReview> bookReviewPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest);  // 페이징 처리
 
         Long finalUser_id = user_id;
-        return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
+        // Page<BookReview>객체를 Page<BookReviewDto> 객체로 변환
+        Page<BookReviewDto> bookReviewDtoPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest)
+                .map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
+
+        // content, pageable, myCommentCheck를 JSON 객체에 담기
+        response.put("content", bookReviewDtoPage.stream().toArray());
+        response.put("pageable", bookReviewDtoPage.getPageable());
+        // 해당 책에 내가 작성한 도서리뷰가 있는지 확인하고 있으면 true, 없으면 false
+        if (myReview(isbn, userId) != null) {
+            response.put("myCommentCheck", true);
+        } else {
+            response.put("myCommentCheck", false);
+        }
+
+        return response;
     }
 
 
@@ -115,5 +132,22 @@ public class BookReviewService {
         List<BookReview> reviewList = user.getBookReviews();
 
         return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, userId));
+    }
+
+    // 해당 책에 내가 쓴 도서리뷰
+    public BookReviewDto myReview(Long isbn, String userId) {
+        Long user_id = 0L;
+        if (userId != null) {
+            user_id = Long.parseLong(userId);
+        } else {
+            return null;
+        }
+
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+        BookReview bookReview = bookReviewRepository.findMyReview(isbn, user_id);
+        if (bookReview == null) return null;
+
+        return BookReviewDto.createDto(bookReview, user_id);
     }
 }
