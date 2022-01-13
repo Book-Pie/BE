@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.xml.transform.OutputKeys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +124,12 @@ public class UsedBookController {
     public ResponseEntity gruopCount() {
         Map<SaleState,Long> groupCount = usedBookService.getGroupCount();
         return new ResponseEntity(success(groupCount),HttpStatus.OK);
+    }
+
+    //중고도서 끌어올리기 (up)
+    @PutMapping("/date/{id}")
+    public ResponseEntity updateModifiedDate(@PathVariable("id") Long id){
+        return new ResponseEntity(success(usedBookService.updateModifiedDate(id)),HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){

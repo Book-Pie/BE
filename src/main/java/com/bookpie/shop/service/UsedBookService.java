@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -119,5 +120,12 @@ public class UsedBookService {
         return result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
     }
 
+    //중고도서 끌어올리기 (up)
+    @Transactional
+    public LocalDateTime updateModifiedDate(Long id){
+        UsedBook usedBook = usedBookRepository.findById(id).orElseThrow(()->new EntityNotFoundException("중고도서를 찾을 수 없습니다."));
+        usedBook.updateModifiedDate();
+        return usedBook.getModifiedDate();
+    }
 
 }
