@@ -45,12 +45,6 @@ public class BookService {
         BookCategory subCategory = BookCategory.createCategory(dto, parentCategory);
         bookCategoryRepository.save(subCategory);
 
-        if (dto.getParentId() != null) {
-            // 연관 관계 매핑 (자식태그 -> 부모태그)
-            List<BookCategory> subList = parentCategory.getSubCategory();
-            subList.add(subCategory);
-        }
-
         return dto.getCategoryName() + " 카테고리 추가";
     }
 
