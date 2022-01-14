@@ -48,6 +48,7 @@ public class OrderRepository {
     public List<Order> findByBuyer(Long id){
         return em.createQuery("select o from Order o " +
                                     " join fetch o.buyer b " +
+                                    " join fetch o.book ub" +
                                     " where b.id= :id",Order.class)
                 .setParameter("id",id)
                 .getResultList();
