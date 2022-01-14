@@ -27,6 +27,11 @@ public class UserRepository {
         return Optional.ofNullable((em.find(User.class,id)));
     }
 
+    public boolean remove(User user){
+        em.remove(user);
+        return true;
+    }
+
     public Optional<User> findByNickName(String nickName){
         List<User> users = em.createQuery("select u from User u where u.nickName= :nickName and u.grade<> :grade", User.class)
                 .setParameter("nickName", nickName)
