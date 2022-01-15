@@ -18,7 +18,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,17 +55,13 @@ public class PointService {
             // 2-2. callApi 함수를 호출하여 결제정보 받아오기
             JSONObject info = callApi(jsonObject, type, uri);
             if (info == null) throw new IllegalArgumentException("결제 정보가 없습니다.");
-            log.info("결제 정보 : " + info);
             JSONObject amount = (JSONObject) info.get("response");
-            log.info("금액 정보 : " +amount.get("amount"));
 
             // 3. 포인트 충전
             // 3-1. 아임포트로부터 받아온 결제정보에서의 충전금액과 사용자가 입력한 충전금액이 일치하는지 화인
             if (amount.get("amount").toString().equals(dto.getAmount()+"")) {
                 // 결제가 완료됐으면
                 if (amount.get("status").toString().equals("paid")) {
-                    log.info("user_id : " + dto.getUserId());
-                    log.info("status : " + amount.get("status").toString());
                     response.put("message", "일반 결제 성공");
 
                     // 3-2. DB에 정보 금액 저장
@@ -92,7 +87,6 @@ public class PointService {
             cancel(dto);
         }
 
-        log.info("data : " + response.toString());
         return response;
     }
 
@@ -115,7 +109,6 @@ public class PointService {
             // body값 넘기기 (get 방식에서는 필요 없음)
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             bw.write(param.toJSONString());
-            log.info("제이슨 타입 값 : " + param.toJSONString());
             bw.flush();
             bw.close();
 
@@ -152,7 +145,6 @@ public class PointService {
 
     // 포인트 환불
     public String cancel(PointDto dto) {
-        log.info("환불처리중 dto : " + dto);
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
@@ -245,7 +237,6 @@ public class PointService {
             }
             return "취소 성공";
         }
-
 
 
         return "환불 성공";
