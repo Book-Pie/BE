@@ -91,4 +91,12 @@ public class BoardController {
                                   @RequestParam(required = false) String size) {
         return new ResponseEntity(success(boardService.getMyBoard(userId, page, size)), HttpStatus.OK);
     }
+
+    // 게시글 검색
+    @GetMapping("/search")
+    public ResponseEntity search(@RequestParam(required = false, defaultValue = "") String keyWord, @RequestParam(required = false, defaultValue = "0") String page,
+                                 @RequestParam(required = false, defaultValue = "10") String size,
+                                 @RequestParam(required = false) BoardType boardType) {
+        return new ResponseEntity(success(boardService.search(keyWord, page, size, boardType)), HttpStatus.OK);
+    }
 }
