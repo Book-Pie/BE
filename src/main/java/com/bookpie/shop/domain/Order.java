@@ -1,5 +1,6 @@
 package com.bookpie.shop.domain;
 
+import com.bookpie.shop.domain.enums.OrderState;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,12 +33,16 @@ public class Order {
     @OneToOne(fetch = FetchType.LAZY)
     private UserReview review;
 
+    @Enumerated(value = EnumType.STRING)
+    OrderState orderState;
+
     @Builder
     public Order(User buyer,UsedBook usedBook,Address address,LocalDateTime orderDate){
         this.book = usedBook;
         this.buyer = buyer;
         this.address = address;
         this.orderDate = orderDate;
+        this.orderState = OrderState.TRADING;
     }
 
     public static Order createOrder(User user,Address address,UsedBook usedBook){

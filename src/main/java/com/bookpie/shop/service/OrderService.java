@@ -5,6 +5,7 @@ import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.OrderCreateDto;
 import com.bookpie.shop.domain.dto.OrderDto;
+import com.bookpie.shop.domain.dto.OrderListDto;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,18 @@ public class OrderService {
     @Transactional
     public boolean removeOrder(Long id){
         return orderRepository.remove(id);
+    }
+
+    public List<OrderListDto> getOrdersByBuyer(Long userId){
+        List<Order> orders = orderRepository.findByBuyer(userId);
+        List<OrderListDto> result = orders.stream().map(o -> new OrderListDto(o)).collect(Collectors.toList());
+        return result;
+    }
+
+    public List<OrderListDto> getOrdersBySeller(Long userId){
+        List<Order> orders = orderRepository.findBySeller(userId);
+        List<OrderListDto> result = orders.stream().map(o -> new OrderListDto(o)).collect(Collectors.toList());
+        return result;
     }
 
     public OrderDto getOrderDetail(Long id){

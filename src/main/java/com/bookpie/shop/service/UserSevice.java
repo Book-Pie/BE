@@ -4,6 +4,7 @@ import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.domain.enums.Grade;
+import com.bookpie.shop.domain.enums.LoginType;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -80,8 +81,11 @@ public class UserSevice {
     @Transactional
     public boolean deleteAccount(Long id,String reason){
         User user = userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        user.deleteAccount(reason);
-        return true;
+        if(user.getLoginType() == LoginType.LOCAL) {
+            user.deleteAccount(reason);
+            return true;
+        }
+        return userRepository.remove(user);
     }
 
     public boolean checkPassword(Long id, String password){

@@ -37,6 +37,16 @@ public class OrderController {
         return new ResponseEntity(success(orderService.removeOrder(orderId)),HttpStatus.OK);
     }
 
+    @GetMapping("/seller/{id}")
+    public ResponseEntity getOrdersBySeller(@PathVariable("id") Long id){
+        return new ResponseEntity(success(orderService.getOrdersBySeller(id)),HttpStatus.OK);
+    }
+
+    @GetMapping("/buyer/{id}")
+    public ResponseEntity getOrdersByBuyer(@PathVariable("id") Long id){
+        return new ResponseEntity(success(orderService.getOrdersByBuyer(id)),HttpStatus.OK);
+    }
+
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
