@@ -53,6 +53,28 @@ class UserReviewServiceTest {
         assertEquals(4.0f,user1.getRating());
     }
 
+    @Test
+    public void UserReviewDeleteTest() throws Exception{
+        //given
+
+        User user1 = user1();
+        User user2 = user2();
+        UsedBook usedBook = book(user1);
+        userRepository.save(user1);
+        userRepository.save(user2);
+        usedBookRepository.save(usedBook);
+        Order order = order(user2,usedBook);
+        orderRepository.save(order);
+        UserReviewCreateDto dto = new UserReviewCreateDto(order.getId(),"리뷰",4.0f);
+        Long id = userReviewService.uploadUserReview(dto,user2.getId());
+        //when
+        UserReview review = userReviewRepository.findById(id).get();
+
+        //then
+        assertThrows(IllegalArgumentException.class,()->userReviewService.deleteUserReview(id,user1.getId()));
+        assertEquals(true,userReviewService.deleteUserReview(id,user2.getId()));
+    }
+
 
     User user1(){
         return User.builder()
