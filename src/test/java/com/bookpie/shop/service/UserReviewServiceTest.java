@@ -50,7 +50,7 @@ class UserReviewServiceTest {
         UserReview review = userReviewRepository.findById(id).get();
         assertEquals(id,review.getId());
         assertEquals(order.getReview(),review);
-        assertEquals(4.0f,user2.getRating());
+        assertEquals(4.0f,user1.getRating());
     }
 
 

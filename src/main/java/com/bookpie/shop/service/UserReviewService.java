@@ -26,8 +26,8 @@ public class UserReviewService {
     public Long uploadUserReview(UserReviewCreateDto dto,Long userId){
         Order order = orderRepository.findDetailById(dto.getOrderId()).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
         UserReview userReview = UserReview.createUserReview(dto,order);
-        User user = order.getBuyer();
-        if (user.getId() != userId){
+        User user = order.getBook().getSeller();
+        if (order.getBuyer().getId()!= userId){
             throw new IllegalArgumentException("주문을 한 회원이 아닙니다.");
         }
         user.addRating(dto.getRating());
