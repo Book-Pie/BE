@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.domain.enums.LoginType;
 import com.bookpie.shop.domain.enums.Role;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,6 +75,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<OrderPoint> orderPoint = new ArrayList<>();
 
+    @Formula("(select count(1) from user_review r where r.order_id in (select o.id from orders o join used_book u on o.book_id = u.used_id where u.user_id = user_id))")
+    private int reviewCount;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
@@ -141,6 +145,16 @@ public class User implements UserDetails {
         this.withDraw = reason;
         this.grade = Grade.WITH_DRAW;
     }
+
+    public void addRating(float rating){
+        this.rating = ( (this.rating*this.reviewCount) + rating)/(reviewCount+1);
+    }
+
+    public void removeRating(float rating){
+        this.rating = ( (this.rating*this.reviewCount) - rating)/(reviewCount-1);
+    }
+
+
     public void changeNickname(String nickName){
         this.nickName = nickName;
     }

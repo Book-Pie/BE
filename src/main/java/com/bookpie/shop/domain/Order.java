@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -57,5 +58,15 @@ public class Order {
         usedBook.setOrder(order);
         return order;
     }
+
+    public void addReview(UserReview review){
+        this.review = review;
+        review.addOrder(this);
+    }
+
+    public void removeReview(){
+        this.review = null;
+    }
+
 
 }
