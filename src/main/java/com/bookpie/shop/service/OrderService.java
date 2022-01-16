@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.OrderCreateDto;
 import com.bookpie.shop.domain.dto.OrderDto;
 import com.bookpie.shop.domain.dto.OrderListDto;
+import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
@@ -35,6 +36,14 @@ public class OrderService {
                                   .orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         UsedBook usedBook = usedBookRepository.findById(orderCreateDto.getUsedBookId())
                                               .orElseThrow(()->new IllegalArgumentException("중고도서를 찾을 수 없습니다."));
+        if(usedBook.getSaleState() != SaleState.SALE){
+            throw new IllegalArgumentException("주문할 수 없는 상품입니다.");
+        }
+        if (user.getPoint().getHoldPoint()<usedBook.getPrice()){
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        usedBook.trading();
+        user.getPoint().usePoint(usedBook.getPrice());
         Order order = Order.createOrder(user, orderCreateDto.getAddress(),usedBook);
         return orderRepository.save(order);
 
@@ -42,7 +51,10 @@ public class OrderService {
 
     @Transactional
     public boolean removeOrder(Long id){
-        return orderRepository.remove(id);
+        Order order = orderRepository.findDetailById(id).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
+        order.getBook().cancel();
+        order.getBuyer().getPoint().rollback(order.getBook().getPrice());
+        return orderRepository.remove(order);
     }
 
     public List<OrderListDto> getOrdersByBuyer(Long userId){

@@ -22,6 +22,10 @@ public class Point {
         totalPoint+=point;
     }
 
+    public void rollback(int point){
+        usedPoint-=point;
+        holdPoint+=point;
+    }
     public void usePoint(int point){
         if(holdPoint>=point){
             usedPoint+=point;
