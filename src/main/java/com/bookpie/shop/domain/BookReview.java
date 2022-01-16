@@ -34,7 +34,7 @@ public class BookReview {
     private User user;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review", cascade = CascadeType.ALL)
     private List<ReviewLike> reviewLikes = new ArrayList<>();
 
     public static BookReview createBookReview(BookReviewDto dto, User user) {

@@ -23,6 +23,7 @@ public class Board {
     private Long id;
 
     private String title;
+    @Lob
     private String content;
     @Column(name = "board_date")
     private LocalDateTime boardDate;
