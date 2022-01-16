@@ -1,9 +1,7 @@
 package com.bookpie.shop.repository;
 
 
-import com.bookpie.shop.domain.QUsedBook;
-import com.bookpie.shop.domain.QUser;
-import com.bookpie.shop.domain.UsedBook;
+import com.bookpie.shop.domain.*;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
 import com.bookpie.shop.domain.enums.BookState;
 import com.bookpie.shop.domain.enums.Category;
@@ -53,12 +51,13 @@ public class UsedBookRepository {
     public Optional<UsedBook> findByIdDetail(Long id){
         return em.createQuery("select distinct ub from UsedBook ub" +
                                     " join fetch ub.seller s" +
-                                    " join fetch ub.tags bt" +
-                                    " join fetch bt.tag t" +
+                                    " left outer join fetch ub.tags bt" +
+                                    " left outer join fetch bt.tag t" +
                                     " where ub.id= :id",UsedBook.class)
                 .setParameter("id",id)
                 .getResultList().stream().findAny();
     }
+
 
     public List<UsedBook> findAll(FindUsedBookDto dto){
         QUsedBook qUsedBook= QUsedBook.usedBook;
