@@ -87,22 +87,18 @@ public class BookService {
         if (size != null) realSize = Integer.parseInt(size);
 
         String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=Bestseller" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101";
+                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101?Cover=Big";
 
         return callApi(uri);
     }
 
     // 도서 상세 조회
-    public JSONObject bookDetail(String isbn13, String isbn) {
+    public JSONObject bookDetail(String isbn) {
         String itemType = "ISBN13";
-        String realISBN = isbn13;
-        if (isbn13 == null) {
-            itemType = "ISBN";
-            realISBN = isbn;
-        }
+        if (isbn.length() < 13) itemType = "ISBN";
 
-        String uri = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey="+apiConfig.getAladinAPI()+"&itemIdType="+itemType+"&ItemId="+realISBN+"" +
-                "&output=js&Version=20131101&OptResult=authors,reviewList,fulldescription";
+        String uri = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey="+apiConfig.getAladinAPI()+"&itemIdType="+itemType+"&ItemId="+isbn+"" +
+                "&output=js&Version=20131101&Cover=Big&OptResult=authors,reviewList,fulldescription";
 
         return callApi(uri);
     }
@@ -115,7 +111,7 @@ public class BookService {
         if (size != null) realSize = Integer.parseInt(size);
 
         String uri = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey="+apiConfig.getAladinAPI()+"&Query="+keyword+"&QueryType="+queryType+"" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101";
+                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
 
         return callApi(uri);
     }
@@ -128,7 +124,7 @@ public class BookService {
         if (size != null) realSize = Integer.parseInt(size);
 
         String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=ItemEditorChoice" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&CategoryId="+category_id+"&output=js&Version=20131101";
+                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&CategoryId="+category_id+"&output=js&Version=20131101&Cover=Big";
 
         return callApi(uri);
     }
