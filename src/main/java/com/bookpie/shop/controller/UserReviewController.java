@@ -23,6 +23,11 @@ public class UserReviewController {
         return new ResponseEntity(success(userReviewService.uploadUserReview(userReviewCreateDto,getCurrentUserId())), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id){
+        return new ResponseEntity(success(userReviewService.deleteUserReview(id,getCurrentUserId())),HttpStatus.OK);
+    }
+
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();

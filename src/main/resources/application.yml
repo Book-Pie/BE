@@ -21,7 +21,7 @@ spring:
       hibernate:
         default_batch_fetch_size: 30
         format_sql: true
-    defer-datasource-initialization: false
+    defer-datasource-initialization: true
   sql:
     init:
       mode: embedded

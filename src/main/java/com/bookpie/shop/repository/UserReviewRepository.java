@@ -21,6 +21,17 @@ public class UserReviewRepository {
 
     //회원 리뷰 조회
     public Optional<UserReview> findById(Long id){
-        return Optional.ofNullable(em.find(UserReview.class,id));
+        return em.createQuery("select r from UserReview r " +
+                " join fetch r.order o " +
+                " join fetch o.book b " +
+                " join fetch b.seller s " +
+                " where r.id= :id").setParameter("id",id)
+                .getResultList().stream().findAny();
+    }
+
+    //회원 리뷰 삭제
+    public boolean remove(UserReview userReview){
+        em.remove(userReview);
+        return true;
     }
 }
