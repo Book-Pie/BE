@@ -78,7 +78,7 @@ public class UsedBookService {
     public PageDto getUsedBookList(FindUsedBookDto findUsedBookDto){
         List<UsedBook> result = usedBookRepository.findAll(findUsedBookDto);
         if(findUsedBookDto.getPageCount() == 0){
-            findUsedBookDto.setPageCount(usedBookRepository.count());
+            findUsedBookDto.setPageCount(usedBookRepository.count(findUsedBookDto));
         }
         Long pageCount =findUsedBookDto.getPageCount()/findUsedBookDto.getLimit();
         if (findUsedBookDto.getPageCount()% findUsedBookDto.getLimit() !=0){pageCount++;}
