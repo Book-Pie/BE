@@ -87,7 +87,7 @@ public class BookService {
         if (size != null) realSize = Integer.parseInt(size);
 
         String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=Bestseller" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101?Cover=Big";
+                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
 
         return callApi(uri);
     }
