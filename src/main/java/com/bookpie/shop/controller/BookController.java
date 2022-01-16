@@ -55,10 +55,9 @@ public class BookController {
     }
 
     // 도서 상세 조회 (알라딘 api 호출)
-    @GetMapping("/api/book")
-    public ResponseEntity bookDetail (@RequestParam(required = false) String isbn13,
-                                      @RequestParam(required = false) String isbn) {
-        return new ResponseEntity(success(bookService.bookDetail(isbn13, isbn)), HttpStatus.OK);
+    @GetMapping("/api/book/{isbn}")
+    public ResponseEntity bookDetail (@PathVariable String isbn) {
+        return new ResponseEntity(success(bookService.bookDetail(isbn)), HttpStatus.OK);
     }
 
     // 도서 키워드로 검색 (알라딘 api 호출)

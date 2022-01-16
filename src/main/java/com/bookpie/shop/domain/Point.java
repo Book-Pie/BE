@@ -20,6 +20,7 @@ public class Point {
 
     public void chargePoint(int point){
         totalPoint+=point;
+        holdPoint+=point;
     }
 
     public void rollback(int point){
