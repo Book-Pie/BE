@@ -79,11 +79,14 @@ public class UsedBookRepository {
                 .orderBy(condition)
                 .fetch();
     }
-    public Long count(){
+    public Long count(FindUsedBookDto dto){
         QUsedBook qUsedBook = QUsedBook.usedBook;
         JPAQueryFactory query = new JPAQueryFactory(em);
         return query.select(qUsedBook.count())
                 .from(qUsedBook)
+                .where(eqTitle(dto.getTitle()),
+                        eqFstCategory(dto.getFstCategory()),
+                        eqSndCategory(dto.getSndCategory()))
                 .fetchOne();
     }
 
