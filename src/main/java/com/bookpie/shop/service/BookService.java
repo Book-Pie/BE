@@ -93,8 +93,15 @@ public class BookService {
     }
 
     // 도서 상세 조회
-    public JSONObject bookDetail(Long isbn) {
-        String uri = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey="+apiConfig.getAladinAPI()+"&itemIdType=ISBN13&ItemId="+isbn+"" +
+    public JSONObject bookDetail(String isbn13, String isbn) {
+        String itemType = "ISBN13";
+        String realISBN = isbn13;
+        if (isbn13 == null) {
+            itemType = "ISBN";
+            realISBN = isbn;
+        }
+
+        String uri = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey="+apiConfig.getAladinAPI()+"&itemIdType="+itemType+"&ItemId="+realISBN+"" +
                 "&output=js&Version=20131101&OptResult=authors,reviewList,fulldescription";
 
         return callApi(uri);

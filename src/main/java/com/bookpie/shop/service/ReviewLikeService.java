@@ -4,6 +4,7 @@ import com.bookpie.shop.domain.BookReview;
 import com.bookpie.shop.domain.ReviewLike;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import com.bookpie.shop.domain.dto.book_review.ReviewLikeDto;
 import com.bookpie.shop.repository.BookReviewRepository;
 import com.bookpie.shop.repository.ReviewLikeRepository;
 import com.bookpie.shop.repository.UserRepository;
@@ -23,7 +24,7 @@ public class ReviewLikeService {
     @Autowired
     private UserRepository userRepository;
 
-    public String like(BookReviewDto dto) {
+    public ReviewLikeDto like(BookReviewDto dto) {
         // 해당 리뷰가 있는지 확인
         BookReview bookReview = bookReviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
@@ -36,7 +37,7 @@ public class ReviewLikeService {
         for (ReviewLike reviewLike : reviewLikeList) {
             if (reviewLike.getUser().getId() == user.getId()) {
                 reviewLikeRepository.delete(reviewLike);
-                return "좋아요 삭제";
+                return ReviewLikeDto.createDto(reviewLike, false);
             }
         }
 
@@ -46,6 +47,6 @@ public class ReviewLikeService {
 
         ReviewLike created = reviewLikeRepository.save(reviewLike);
 
-        return "좋아요 추가";
+        return ReviewLikeDto.createDto(created, true);
     }
 }

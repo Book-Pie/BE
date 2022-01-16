@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -98,6 +99,11 @@ public class BookReviewService {
         // content, pageable, myCommentCheck를 JSON 객체에 담기
         response.put("content", bookReviewDtoPage.stream().toArray());
         response.put("pageable", bookReviewDtoPage.getPageable());
+        response.put("last", bookReviewDtoPage.isLast());
+        response.put("totalElements", bookReviewDtoPage.getTotalElements());
+        response.put("totalPages", bookReviewDtoPage.getTotalPages());
+        response.put("first", bookReviewDtoPage.isFirst());
+        response.put("empty", bookReviewDtoPage.isEmpty());
         // 해당 책에 내가 작성한 도서리뷰가 있는지 확인하고 있으면 true, 없으면 false
         if (myReview(isbn, userId) != null) {
             response.put("myCommentCheck", true);
@@ -146,7 +152,7 @@ public class BookReviewService {
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
         BookReview bookReview = bookReviewRepository.findMyReview(isbn, user_id);
-        if (bookReview == null) return null;
+        if (bookReview == null) throw new EntityNotFoundException("도서 리뷰가 존재하지 않습니다.");
 
         return BookReviewDto.createDto(bookReview, user_id);
     }

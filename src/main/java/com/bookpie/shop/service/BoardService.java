@@ -122,4 +122,14 @@ public class BoardService {
     public void viewPlus(Long boardId) {
         boardRepository.viewPlus(boardId);
     }
+
+    // 제목으로 검색
+    public Page<BoardDto> search(String keyWord, String page, String size, BoardType boardType) {
+        String type = boardType.name();
+        keyWord = keyWord.replaceAll(" ", "");
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("board_date").descending());
+        Page<Board> boardPage = boardRepository.findByKeyword(keyWord, type, pageable);
+
+        return boardPage.map(board -> BoardDto.createBoardDto(board));
+    }
 }
