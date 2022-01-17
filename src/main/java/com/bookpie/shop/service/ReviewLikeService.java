@@ -33,8 +33,8 @@ public class ReviewLikeService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
         // 해당 회원이 좋아요를 눌렀는지 안눌렀는지 확인
-        List<ReviewLike> reviewLikeList = bookReview.getReviewLikes();
-        for (ReviewLike reviewLike : reviewLikeList) {
+        List<ReviewLike> reviewLikes = reviewLikeRepository.findAllByReviewId(dto.getReviewId());
+        for (ReviewLike reviewLike : reviewLikes) {
             if (reviewLike.getUser().getId() == user.getId()) {
                 reviewLikeRepository.delete(reviewLike);
                 return ReviewLikeDto.createDto(reviewLike, false);
@@ -46,7 +46,6 @@ public class ReviewLikeService {
         bookReview.getReviewLikes().add(reviewLike);
 
         ReviewLike created = reviewLikeRepository.save(reviewLike);
-
         return ReviewLikeDto.createDto(created, true);
     }
 }
