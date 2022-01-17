@@ -128,4 +128,13 @@ public class UsedBookService {
         return usedBook.getModifiedDate();
     }
 
+    //중도도서 조회수 증가
+    @Transactional
+    public int increseViewCount(Long id){
+        UsedBook usedBook = usedBookRepository.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("등록된 중고도서가 없습니다."));
+        usedBook.increaseView();
+        return usedBook.getView();
+    }
+
 }

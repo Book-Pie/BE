@@ -100,7 +100,9 @@ public class UsedBook {
         image.setBook(this);
     }
 
-
+    public void increaseView(){
+        this.view++;
+    }
 
     public void setThumbnail(String fileName){
         thumbnail=fileName;

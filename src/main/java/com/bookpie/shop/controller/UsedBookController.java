@@ -132,6 +132,12 @@ public class UsedBookController {
         return new ResponseEntity(success(usedBookService.updateModifiedDate(id)),HttpStatus.OK);
     }
 
+    //중고도서 조회수 증가
+    @PostMapping("/view/{id}")
+    public ResponseEntity increaseViewCount(@PathVariable("id") Long id){
+        return new ResponseEntity(success(usedBookService.increseViewCount(id)),HttpStatus.OK);
+    }
+
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
