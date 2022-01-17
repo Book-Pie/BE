@@ -54,8 +54,7 @@ public class OrderRepository {
                 .getResultList();
     }
 
-    public boolean remove(Long id){
-        Order order = findById(id).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
+    public boolean remove(Order order){
         em.remove(order);
         return true;
     }

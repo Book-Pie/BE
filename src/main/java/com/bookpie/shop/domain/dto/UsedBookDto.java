@@ -26,6 +26,8 @@ public class UsedBookDto {
     private SaleState saleState;
     private String fstCategory;
     private String sndCategory;
+    private int likeCount;
+    private int replyCount;
 
     private List<String> tags = new ArrayList<>();
     private List<String> images = new ArrayList<>();
@@ -46,6 +48,8 @@ public class UsedBookDto {
         dto.setView(usedBook.getView());
         dto.setFstCategory(usedBook.getFstCategory().getKr());
         dto.setSndCategory(usedBook.getSndCategory().getKr());
+        dto.setLikeCount(usedBook.getLikeCount());
+        dto.setReplyCount(usedBook.getReplyCount());
         List<Image> images = usedBook.getImages();
         images.stream().forEach(image -> dto.images.add(image.getFileName()));
         usedBook.getTags().stream()
