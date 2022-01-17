@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class BookReviewDto {
     private Long reviewId;
-    private Long isbn;
+    private String isbn;
     private Long userId;
     private String content;
     private float rating;

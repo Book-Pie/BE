@@ -46,7 +46,7 @@ public class BookReviewController {
 
     // 해당 도서에 대한 도서 리뷰 조회
     @GetMapping("/{isbn}")
-    public ResponseEntity getReview(@PathVariable Long isbn, @RequestParam(required = false) String page,
+    public ResponseEntity getReview(@PathVariable String isbn, @RequestParam(required = false) String page,
                                     @RequestParam(required = false) String size, @RequestParam(required = false) String userId) {
         return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, userId)), HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class BookReviewController {
 
     // 해당 도서에 내가 쓴 도서리뷰
     @GetMapping("/my/{isbn}")
-    public ResponseEntity myReview(@PathVariable Long isbn, @RequestParam(required = false) String userId) {
+    public ResponseEntity myReview(@PathVariable String isbn, @RequestParam(required = false) String userId) {
         return new ResponseEntity(success(bookReviewService.myReview(isbn, userId)), HttpStatus.OK);
     }
 

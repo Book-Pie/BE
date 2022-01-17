@@ -73,7 +73,7 @@ public class BookReviewService {
     }
 
     // 해당 도서의 리뷰 전체 조회
-    public JSONObject getReview(Long isbn, String page, String size, String userId) {
+    public JSONObject getReview(String isbn, String page, String size, String userId) {
         // 반환할 제이슨 객체
         JSONObject response = new JSONObject();
 
@@ -92,6 +92,7 @@ public class BookReviewService {
         PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
 
         Long finalUser_id = user_id;
+        log.info("repository로 들어가기 직전");
         // Page<BookReview>객체를 Page<BookReviewDto> 객체로 변환
         Page<BookReviewDto> bookReviewDtoPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest)
                 .map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
@@ -141,7 +142,7 @@ public class BookReviewService {
     }
 
     // 해당 책에 내가 쓴 도서리뷰
-    public BookReviewDto myReview(Long isbn, String userId) {
+    public BookReviewDto myReview(String isbn, String userId) {
         Long user_id = 0L;
         if (userId != null) {
             user_id = Long.parseLong(userId);
