@@ -38,11 +38,15 @@ public class UsedBookRepository {
         return true;
     }
 
+    public Optional<UsedBook> findByIdWithUser(Long id){
+        return em.createQuery("select ub from UsedBook  ub" +
+                                " join fetch  ub.seller s" +
+                                " where ub.id= :id").setParameter("id",id).getResultList().stream().findAny();
+    }
+
     public List<UsedBook> findByUserId(Long userId){
         return em.createQuery("select ub from UsedBook  ub" +
                                 " join fetch ub.seller s" +
-                                //" join fetch ub.tags t" +
-                                //" join fetch ub.images" +
                                 " where s.id= : userId",UsedBook.class)
                 .setParameter("userId",userId)
                 .getResultList();
