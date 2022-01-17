@@ -92,7 +92,6 @@ public class BookReviewService {
         PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
 
         Long finalUser_id = user_id;
-        log.info("repository로 들어가기 직전");
         // Page<BookReview>객체를 Page<BookReviewDto> 객체로 변환
         Page<BookReviewDto> bookReviewDtoPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest)
                 .map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
@@ -153,7 +152,7 @@ public class BookReviewService {
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
         BookReview bookReview = bookReviewRepository.findMyReview(isbn, user_id);
-        if (bookReview == null) throw new EntityNotFoundException("도서 리뷰가 존재하지 않습니다.");
+        if (bookReview == null) return null;
 
         return BookReviewDto.createDto(bookReview, user_id);
     }
