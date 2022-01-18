@@ -36,6 +36,16 @@ public class OrderRepository {
                 .getResultList().stream().findAny();
     }
 
+    public Optional<Order> findByBookId(Long bookId){
+        return em.createQuery("select o from Order o " +
+                                    " join fetch o.buyer u" +
+                                    " join fetch o.book b " +
+                                    " join fetch b.seller s" +
+                                    " where b.id= : bookId")
+                .setParameter("bookId",bookId)
+                .getResultList().stream().findAny();
+    }
+
     public List<Order> findBySeller(Long id){
         return em.createQuery("select o from Order o" +
                                     " join fetch o.book b" +

@@ -24,7 +24,6 @@ public class UserReviewService {
 
     private final UserReviewRepository userReviewRepository;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public Long uploadUserReview(UserReviewCreateDto dto,Long userId){

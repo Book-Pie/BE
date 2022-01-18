@@ -77,4 +77,10 @@ public class OrderService {
         return orderDto;
     }
 
+    public OrderDto getOrderByBookId(Long bookId){
+        Order order = orderRepository.findByBookId(bookId).orElseThrow(() -> new EntityNotFoundException("주문을 찾을 수 없습니다."));
+        OrderDto orderDto = new OrderDto(order);
+        return orderDto;
+    }
+
 }
