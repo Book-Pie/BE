@@ -13,6 +13,7 @@ public class OrderDto {
     private OrderUserDto buyer;
     private OrderUserDto seller;
     private OrderBookDto book;
+    private String deliveryRequest;
 
     @Builder
     public OrderDto(Order order){
@@ -21,5 +22,6 @@ public class OrderDto {
         this.buyer = new OrderUserDto(order.getBuyer());
         this.seller = new OrderUserDto(order.getBook().getSeller());
         this.book = new OrderBookDto(order.getBook());
+        this.deliveryRequest = order.getDeliveryRequest();
     }
 }
