@@ -18,7 +18,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     // 중고도서 댓글 조회
     @Query(value = "select r.reply_id, r.content, r.reply_date, r.used_id," +
-            " coalesce(r.parent_reply_id, 0) as parent_reply_id, coalesce(r.board_id, 0) as board_id, r.user_id" +
+            " coalesce(r.parent_reply_id, 0) as parent_reply_id, coalesce(r.board_id, 0) as board_id, r.user_id, r.secret" +
             " from reply r where r.used_id = :used_id", nativeQuery = true)
     Page<Reply> findAllByUsedBook(@Param("used_id") Long used_id, @Param("pageable") Pageable pageable);
 }
