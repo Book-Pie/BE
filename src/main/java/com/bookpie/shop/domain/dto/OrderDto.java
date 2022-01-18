@@ -19,7 +19,7 @@ public class OrderDto {
     public OrderDto(Order order){
         this.orderId = order.getId();
         this.orderDate = order.getOrderDate();
-        this.buyer = new OrderUserDto(order.getBuyer());
+        this.buyer = new OrderUserDto(order.getBuyer(),order.getAddress());
         this.seller = new OrderUserDto(order.getBook().getSeller());
         this.book = new OrderBookDto(order.getBook());
         this.deliveryRequest = order.getDeliveryRequest();
