@@ -37,6 +37,7 @@ public class UserReviewController {
     public ResponseEntity findUserReviewToMe(){
         return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId())),HttpStatus.OK);
     }
+
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();

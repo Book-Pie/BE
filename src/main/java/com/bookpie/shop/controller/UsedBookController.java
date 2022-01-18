@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.bookpie.shop.utils.ApiUtil.error;
 import static com.bookpie.shop.utils.ApiUtil.success;
 
 @RestController
@@ -41,7 +43,7 @@ public class UsedBookController {
     //중고도서 등록
     @PostMapping("")
     public ResponseEntity upload(@RequestPart("images")List<MultipartFile> images,
-                                 @Valid @RequestParam("usedBook")String request) throws JsonProcessingException {
+                                 @Valid @RequestParam("usedBook")String request) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         UsedBookCreateDto usedBookCreateDto = objectMapper.readValue(request, new TypeReference<UsedBookCreateDto>() {});
         log.debug(usedBookCreateDto.toString());
