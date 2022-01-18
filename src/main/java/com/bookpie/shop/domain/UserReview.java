@@ -46,5 +46,6 @@ public class UserReview {
     public void update(String content,float rating){
         this.content = content;
         this.rating = rating;
+        this.reviewDate = LocalDateTime.now();
     }
 }
