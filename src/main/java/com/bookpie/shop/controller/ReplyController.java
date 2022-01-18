@@ -63,22 +63,22 @@ public class ReplyController {
     }
 
     // 중고도서 댓글 작성
-    @PostMapping("/usedBook")
+    @PostMapping("/usedbook")
     public ResponseEntity replyOnUsedBook(@RequestBody UsedBookReplyDto dto) {
         return new ResponseEntity(success(replyService.replyOnUsedBook(dto)), HttpStatus.OK);
     }
     // 중고도서 댓글 수정
-    @PutMapping("/usedBook")
+    @PutMapping("/usedbook")
     public ResponseEntity updateReplyOnUsedBook(@RequestBody UsedBookReplyDto dto) {
         return new ResponseEntity(success(replyService.updateReplyOnUsedBook(dto)), HttpStatus.OK);
     }
     // 중고도서 댓글 삭제
-    @DeleteMapping("/usedBook/{replyId}")
+    @DeleteMapping("/usedbook/{replyId}")
     public ResponseEntity deleteReplyOnUsedBook(@PathVariable Long replyId) {
         return new ResponseEntity(success(replyService.deleteReplyOnUsedBook(replyId)), HttpStatus.OK);
     }
     // 중고도서 댓글 리스트 조회
-    @GetMapping("/usedBook/{usedBookId}")
+    @GetMapping("/usedbook/{usedBookId}")
     public ResponseEntity usedBookReplyList(@PathVariable Long usedBookId,
                                             @RequestParam(required = false) String page, @RequestParam(required = false) String size) {
         return new ResponseEntity(success(replyService.usedBookReplyList(usedBookId, page, size)), HttpStatus.OK);
