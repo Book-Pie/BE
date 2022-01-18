@@ -41,6 +41,9 @@ public class Reply {
     @JoinColumn(name = "used_id")
     private UsedBook usedBook;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean secret;
+
     // 게시글 댓글 생성
     public Reply(String content, User user, Board board) {
         this.content = content;
@@ -65,10 +68,12 @@ public class Reply {
 
     // 중고도서 댓글
     public static Reply createReplyUsedBook(UsedBookReplyDto dto, User user, UsedBook usedBook) {
-        return new Reply(dto.getContent(), user, usedBook);
+        return new Reply(dto.getContent(), dto.getSecret(), user, usedBook);
     }
-    public Reply(String content, User user, UsedBook usedBook) {
+    public Reply(String content, Boolean secret, User user, UsedBook usedBook) {
+        this.replyDate = LocalDateTime.now();
         this.content = content;
+        this.secret = secret;
         this.user = user;
         this.usedBook = usedBook;
     }
