@@ -42,4 +42,9 @@ public class UserReview {
     public void addOrder(Order order){
         this.order = order;
     }
+
+    public void update(String content,float rating){
+        this.content = content;
+        this.rating = rating;
+    }
 }

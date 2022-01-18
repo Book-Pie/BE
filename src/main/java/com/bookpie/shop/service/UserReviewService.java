@@ -5,6 +5,7 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.UserReview;
 import com.bookpie.shop.domain.dto.UserReviewCreateDto;
 import com.bookpie.shop.domain.dto.UserReviewDto;
+import com.bookpie.shop.domain.dto.UserReviewUpdateDto;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.repository.UserReviewRepository;
@@ -48,6 +49,17 @@ public class UserReviewService {
         return userReviewRepository.remove(userReview);
     }
 
+    @Transactional
+    public UserReviewDto updateUserReview(UserReviewUpdateDto userReviewUpdateDto, Long userId){
+        UserReview userReview = userReviewRepository.findById(userReviewUpdateDto.getUserReviewId()).orElseThrow(() -> new EntityNotFoundException("등록된 리뷰가 없습니다."));
+        if(userReview.getOrder().getBuyer().getId() != userId){
+            throw new IllegalArgumentException("리뷰 수정 권한이 없습니다.");
+        }
+
+        userReview.getOrder().getBook().getSeller().fixRating(userReview.getRating(),userReviewUpdateDto.getRating());
+        userReview.update(userReviewUpdateDto.getContent(),userReviewUpdateDto.getRating());
+        return new UserReviewDto(userReview);
+    }
     public List<UserReviewDto> getUserReviewsByWriter(Long userId){
         List<UserReview> result = userReviewRepository.findByWriter(userId);
         return result.stream().map(UserReviewDto::new).collect(Collectors.toList());
