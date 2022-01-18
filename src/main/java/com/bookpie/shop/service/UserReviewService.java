@@ -52,4 +52,9 @@ public class UserReviewService {
         List<UserReview> result = userReviewRepository.findByWriter(userId);
         return result.stream().map(UserReviewDto::new).collect(Collectors.toList());
     }
+
+    public List<UserReviewDto> getUserReviewsByReader(Long userId){
+        List<UserReview> result = userReviewRepository.findByReader(userId);
+        return result.stream().map(UserReviewDto::new).collect(Collectors.toList());
+    }
 }

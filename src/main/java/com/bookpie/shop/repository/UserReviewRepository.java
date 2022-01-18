@@ -37,7 +37,7 @@ public class UserReviewRepository {
         return em.createQuery("select r from UserReview r" +
                             " join fetch r.order o" +
                             " join fetch o.book b" +
-                            " join fetch b.seller" +
+                            " join fetch b.seller s" +
                             " join fetch o.buyer bu" +
                             " where bu.id= : userId")
                 .setParameter("userId",userId)
@@ -45,6 +45,17 @@ public class UserReviewRepository {
 
     }
 
+    //내게 달린 리뷰 조회
+    public List<UserReview> findByReader(Long userId){
+        return em.createQuery("select r from UserReview r" +
+                                " join fetch r.order o" +
+                                " join fetch o.book b" +
+                                " join fetch b.seller s" +
+                                " join fetch o.buyer bu" +
+                                " where s.id= :userId")
+                .setParameter("userId",userId)
+                .getResultList();
+    }
 
     //회원 리뷰 삭제
     public boolean remove(UserReview userReview){
