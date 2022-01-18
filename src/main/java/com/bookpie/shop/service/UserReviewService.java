@@ -4,6 +4,7 @@ import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.UserReview;
 import com.bookpie.shop.domain.dto.UserReviewCreateDto;
+import com.bookpie.shop.domain.dto.UserReviewDto;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.repository.UserReviewRepository;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +46,10 @@ public class UserReviewService {
         }
         userReview.getOrder().removeReview();
         return userReviewRepository.remove(userReview);
+    }
+
+    public List<UserReviewDto> getUserReviewsByWriter(Long userId){
+        List<UserReview> result = userReviewRepository.findByWriter(userId);
+        return result.stream().map(UserReviewDto::new).collect(Collectors.toList());
     }
 }

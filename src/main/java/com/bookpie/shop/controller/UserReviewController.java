@@ -28,8 +28,13 @@ public class UserReviewController {
         return new ResponseEntity(success(userReviewService.deleteUserReview(id,getCurrentUserId())),HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity findMyUserReview(){
+        return new ResponseEntity(success(userReviewService.getUserReviewsByWriter(getCurrentUserId())),HttpStatus.OK);
+    }
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
     }
+
 }
