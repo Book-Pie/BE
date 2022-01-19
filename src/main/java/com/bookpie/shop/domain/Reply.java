@@ -1,6 +1,7 @@
 package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.reply.BoardReplyDto;
+import com.bookpie.shop.domain.dto.reply.SubReplyDto;
 import com.bookpie.shop.domain.dto.reply.UsedBookReplyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,20 +51,22 @@ public class Reply {
         this.user = user;
         this.board = board;
         this.replyDate = LocalDateTime.now();
+        this.secret = false;
     }
     public static Reply createReplyBoard(BoardReplyDto dto, User user, Board board) {
         return new Reply(dto.getContent(), user, board);
     }
 
     // 대댓글 생성
-    public Reply(String content, User user, Reply parentReply) {
+    public Reply(String content, User user, Reply parentReply, Boolean secret) {
         this.content = content;
+        this.secret = secret;
         this.user = user;
         this.parentReply = parentReply;
         this.replyDate = LocalDateTime.now();
     }
-    public static Reply createSubReplyBoard(BoardReplyDto dto, User user, Reply parentReply) {
-        return new Reply(dto.getContent(), user, parentReply);
+    public static Reply createSubReplyBoard(SubReplyDto dto, User user, Reply parentReply, Boolean secret) {
+        return new Reply(dto.getContent(), user, parentReply, secret);
     }
 
     // 중고도서 댓글
@@ -93,4 +96,5 @@ public class Reply {
             this.replyDate = LocalDateTime.now();
         }
     }
+
 }
