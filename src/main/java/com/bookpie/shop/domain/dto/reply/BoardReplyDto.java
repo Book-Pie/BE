@@ -43,4 +43,22 @@ public class BoardReplyDto {
                 reply.getContent(), reply.getReplyDate(), reply.getSubReply(), reply.getBoard().getId());
     }
 
+    // 댓글 작성 후 반환값
+    public static  BoardReplyDto createReplyDto(Reply reply, List<Reply> subReplies) {
+        return new BoardReplyDto(reply.getId(), reply.getUser().getId(), reply.getUser().getNickName(),
+                reply.getContent(), reply.getReplyDate(), reply.getBoard().getId(), subReplies);
+    }
+
+    public BoardReplyDto(Long replyId, Long userId, String nickName, String content,
+                         LocalDateTime replyDate, Long boardId, List<Reply> subReplies) {
+        this.replyId = replyId;
+        this.userId = userId;
+        this.nickName = nickName;
+        this.content = content;
+        this.replyDate = replyDate;
+        this.boardId = boardId;
+        if (subReplies.size() != 0) {
+            this.subReply = subReplies.stream().map(reply -> SubReplyDto.createDto(reply)).collect(Collectors.toList());
+        }
+    }
 }
