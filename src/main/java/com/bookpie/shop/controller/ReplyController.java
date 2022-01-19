@@ -40,13 +40,13 @@ public class ReplyController {
     @GetMapping("/board/{boardId}")
     public ResponseEntity boardReplyList(@PathVariable Long boardId, @RequestParam(required = false) String page,
                                  @RequestParam(required = false) String size) {
-        log.info("page : " + page + ", size : " + size);
         return new ResponseEntity(success(replyService.getAll(boardId, page, size)), HttpStatus.OK);
     }
 
+
     // 대댓글 달기
     @PostMapping("")
-    public ResponseEntity createSubReply(@RequestBody BoardReplyDto dto) {
+    public ResponseEntity createSubReply(@RequestBody SubReplyDto dto) {
         return new ResponseEntity(success(replyService.createSubReply(dto)), HttpStatus.OK);
     }
 

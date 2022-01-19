@@ -11,6 +11,7 @@ import com.bookpie.shop.repository.BoardRepository;
 import com.bookpie.shop.repository.ReplyRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class ReplyService {
     @Autowired
     private ReplyRepository replyRepository;
@@ -36,7 +38,7 @@ public class ReplyService {
     private BoardRepository boardRepository;
 
     // 게시글에 댓글 작성
-    public String create(BoardReplyDto dto) {
+    public BoardReplyDto create(BoardReplyDto dto) {
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
@@ -51,14 +53,14 @@ public class ReplyService {
             user.getReplies().add(reply);
             board.getReplies().add(reply);
         } else {
-            return "댓글 저장 실패";
+            throw new IllegalArgumentException("게시글에 댓글 저장 실패");
         }
 
-        return "댓글 저장 성공";
+        return BoardReplyDto.createReplyDto(reply, reply.getSubReply());
     }
 
     // 게시글 댓글 수정
-    public String update(BoardReplyDto dto) {
+    public BoardReplyDto update(BoardReplyDto dto) {
         String response = "";
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
@@ -69,12 +71,8 @@ public class ReplyService {
 
         // 댓글 수정
         reply.patch(dto);
-        if (replyRepository.save(reply) != null) {
-            response = "댓글 수정 완료";
-        } else {
-            response = "댓글 수정 실패";
-        }
-        return response;
+
+        return BoardReplyDto.createReplyDto(replyRepository.save(reply), reply.getSubReply());
     }
 
     // 게시글 댓글 삭제
@@ -105,22 +103,30 @@ public class ReplyService {
         return replies.map(reply -> BoardReplyDto.createDto(reply));
     }
     // 대댓글 작성
-    public String createSubReply(BoardReplyDto dto) {
+    public SubReplyDto createSubReply(SubReplyDto dto) {
         // 댓글 유효성 검사
         Reply reply = replyRepository.findById(dto.getParentReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+        Reply subReply = null;
 
-        Reply subReply = Reply.createSubReplyBoard(dto, user, reply);
+        if (reply.getSecret()) { // 해당 댓글이 비밀댓글이면
+            subReply = Reply.createSubReplyBoard(dto, user, reply, true);
+        } else {
+            subReply = Reply.createSubReplyBoard(dto, user, reply, false);
+        }
+
+
         if (replyRepository.save(subReply) != null){
             reply.getSubReply().add(subReply);
             user.getReplies().add(subReply);
         } else {
-            return "대댓글 작성 실패";
+            throw new IllegalArgumentException("게시판에 대댓글 작성 실패");
         }
-        return "대댓글 작성 완료";
+
+        return SubReplyDto.createDto(subReply);
     }
     // 대댓글 삭제
     public String deleteSubReply(Long replyId) {
@@ -134,7 +140,7 @@ public class ReplyService {
         return "대댓글 삭제 완료 " + subReply.getContent();
     }
     // 대댓글 수정
-    public String updateSubReply(BoardReplyDto dto) {
+    public SubReplyDto updateSubReply(BoardReplyDto dto) {
         Reply subReply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 대댓글은 존재하지 않습니다."));
         if (subReply.getParentReply() == null) {
@@ -142,11 +148,11 @@ public class ReplyService {
         }
 
         subReply.patch(dto);
-        return "대댓글 수정 완료 " + subReply.getContent();
+        return SubReplyDto.createDto(subReply);
     }
 
     // 중고도서에 댓글 작성
-    public String replyOnUsedBook(UsedBookReplyDto dto) {
+    public UsedBookReplyDto replyOnUsedBook(UsedBookReplyDto dto) {
         // 중고도서 유효성 검사
         UsedBook usedBook = usedBookRepository.findById(dto.getUsedBookId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 중고도서는 존재하지 않습니다."));
@@ -159,25 +165,26 @@ public class ReplyService {
         Reply reply = Reply.createReplyUsedBook(dto, user, usedBook);
 
         // DB에 저장
-        if (replyRepository.save(reply) == null) {
-            return "댓글 작성 실패";
+        if (replyRepository.save(reply) != null) {
+            usedBook.getReplies().add(reply);
+            user.getReplies().add(reply);
+        } else {
+            throw new IllegalArgumentException("중고도서에 댓글 작성 실패");
         }
-        usedBook.getReplies().add(reply);
-        user.getReplies().add(reply);
 
-        return "댓글 작성 완료 : " + reply.getContent();
+        return UsedBookReplyDto.createReplyDto(reply, reply.getSubReply());
     }
     // 중고도서 댓글 수정
-    public String updateReplyOnUsedBook(UsedBookReplyDto dto) {
+    public UsedBookReplyDto updateReplyOnUsedBook(UsedBookReplyDto dto) {
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
         reply.patchUsedBook(dto);
-        if (replyRepository.save(reply) == null) return "댓글 수정 실패";
+        if (replyRepository.save(reply) == null) throw new IllegalArgumentException("중고도서 댓글 수정 실패");
 
-        return "댓글 수정 완료 : " + reply.getContent();
+        return UsedBookReplyDto.createReplyDto(reply, reply.getSubReply());
     }
 
     public String deleteReplyOnUsedBook(Long replyId) {
@@ -188,7 +195,7 @@ public class ReplyService {
         replyRepository.delete(reply);
         return "댓글 삭제 완료 : " + reply.getContent();
     }
-
+    // 중고도서 댓글 조회
     public Page<UsedBookReplyDto> usedBookReplyList(Long usedBookId, String page, String size) {
         UsedBook usedBook = usedBookRepository.findById(usedBookId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 중고도서는 존재하지 않습니다."));
