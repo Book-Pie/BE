@@ -8,4 +8,5 @@ public class OrderCreateDto {
     private Long userId;
     private Long usedBookId;
     private Address address;
+    private String deliveryRequest;
 }

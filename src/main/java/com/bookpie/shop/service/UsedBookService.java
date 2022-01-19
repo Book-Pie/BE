@@ -12,12 +12,14 @@ import com.bookpie.shop.utils.PageUtil.PageDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ public class UsedBookService {
 
     // 중고도서 등록
     @Transactional
-    public Long uploadUsedBook(Long id, UsedBookCreateDto dto,List<MultipartFile> files){
+    public Long uploadUsedBook(Long id, UsedBookCreateDto dto,List<MultipartFile> files) throws Exception{
         User user = userRepository.findById(id).get();
         UsedBook usedBook = UsedBook.createUsedBook(user,dto);
         List<Tag> tags = dto.getTags().stream().map(t -> new Tag(t)).collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.bookpie.shop.domain;
 
+import com.bookpie.shop.domain.dto.OrderCreateDto;
 import com.bookpie.shop.domain.enums.OrderState;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class Order {
     @Id @GeneratedValue
     private Long id;
 
+    private String deliveryRequest;
     @Embedded
     private Address address;
     private LocalDateTime orderDate;
@@ -38,20 +40,22 @@ public class Order {
     OrderState orderState;
 
     @Builder
-    public Order(User buyer,UsedBook usedBook,Address address,LocalDateTime orderDate){
+    public Order(User buyer,UsedBook usedBook,Address address,LocalDateTime orderDate,String deliveryRequest){
         this.book = usedBook;
         this.buyer = buyer;
         this.address = address;
         this.orderDate = orderDate;
         this.orderState = OrderState.TRADING;
+        this.deliveryRequest = deliveryRequest;
     }
 
-    public static Order createOrder(User user,Address address,UsedBook usedBook){
+    public static Order createOrder(User user, OrderCreateDto dto, UsedBook usedBook){
         Order order = Order.builder()
                            .usedBook(usedBook)
                            .buyer(user)
-                           .address(address)
+                           .address(dto.getAddress())
                            .orderDate(LocalDateTime.now())
+                            .deliveryRequest(dto.getDeliveryRequest())
                            .build();
         user.addOrder(order);
         usedBook.trading();

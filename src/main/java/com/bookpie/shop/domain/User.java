@@ -154,7 +154,9 @@ public class User implements UserDetails {
         this.rating = ( (this.rating*this.reviewCount) - rating)/(reviewCount-1);
     }
 
-
+    public void fixRating(float preRating,float updateRating){
+        this.rating = ((this.rating*this.reviewCount)-preRating+updateRating)/reviewCount;
+    }
     public void changeNickname(String nickName){
         this.nickName = nickName;
     }

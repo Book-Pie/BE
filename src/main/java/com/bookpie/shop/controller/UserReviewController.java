@@ -2,6 +2,7 @@ package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.UserReviewCreateDto;
+import com.bookpie.shop.domain.dto.UserReviewUpdateDto;
 import com.bookpie.shop.service.UserReviewService;
 import com.bookpie.shop.utils.ApiUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,28 @@ public class UserReviewController {
         return new ResponseEntity(success(userReviewService.uploadUserReview(userReviewCreateDto,getCurrentUserId())), HttpStatus.OK);
     }
 
+    @PutMapping("")
+    public ResponseEntity update(@RequestBody UserReviewUpdateDto userReviewUpdateDto){
+        return new ResponseEntity(success(userReviewService.updateUserReview(userReviewUpdateDto,getCurrentUserId())),HttpStatus.OK);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id){
         return new ResponseEntity(success(userReviewService.deleteUserReview(id,getCurrentUserId())),HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity findMyUserReview(){
+        return new ResponseEntity(success(userReviewService.getUserReviewsByWriter(getCurrentUserId())),HttpStatus.OK);
+    }
+
+    @GetMapping("/to-me")
+    public ResponseEntity findUserReviewToMe(){
+        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId())),HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
     }
+
 }

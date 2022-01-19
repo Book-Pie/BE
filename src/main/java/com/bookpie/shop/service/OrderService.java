@@ -32,6 +32,7 @@ public class OrderService {
 
     @Transactional
     public Long saveOrder(OrderCreateDto orderCreateDto){
+        log.debug(orderCreateDto.toString());
         User user = userRepository.findById(orderCreateDto.getUserId())
                                   .orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         UsedBook usedBook = usedBookRepository.findByIdWithUser(orderCreateDto.getUsedBookId())
@@ -45,7 +46,7 @@ public class OrderService {
 
         usedBook.trading();
         user.getPoint().usePoint(usedBook.getPrice());
-        Order order = Order.createOrder(user, orderCreateDto.getAddress(),usedBook);
+        Order order = Order.createOrder(user,orderCreateDto,usedBook);
         return orderRepository.save(order);
 
     }
@@ -72,6 +73,12 @@ public class OrderService {
 
     public OrderDto getOrderDetail(Long id){
         Order order = orderRepository.findDetailById(id).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
+        OrderDto orderDto = new OrderDto(order);
+        return orderDto;
+    }
+
+    public OrderDto getOrderByBookId(Long bookId){
+        Order order = orderRepository.findByBookId(bookId).orElseThrow(() -> new EntityNotFoundException("주문을 찾을 수 없습니다."));
         OrderDto orderDto = new OrderDto(order);
         return orderDto;
     }
