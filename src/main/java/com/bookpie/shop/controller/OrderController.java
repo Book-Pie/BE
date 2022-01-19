@@ -38,20 +38,24 @@ public class OrderController {
     }
 
     @GetMapping("/seller/{id}")
-    public ResponseEntity getOrdersBySeller(@PathVariable("id") Long id){
-        return new ResponseEntity(success(orderService.getOrdersBySeller(id)),HttpStatus.OK);
+    public ResponseEntity getOrdersBySeller(@PathVariable("id") Long orderId){
+        return new ResponseEntity(success(orderService.getOrdersBySeller(orderId)),HttpStatus.OK);
     }
 
     @GetMapping("/buyer/{id}")
-    public ResponseEntity getOrdersByBuyer(@PathVariable("id") Long id){
-        return new ResponseEntity(success(orderService.getOrdersByBuyer(id)),HttpStatus.OK);
+    public ResponseEntity getOrdersByBuyer(@PathVariable("id") Long orderId){
+        return new ResponseEntity(success(orderService.getOrdersByBuyer(orderId)),HttpStatus.OK);
     }
 
     @GetMapping("/book/{id}")
-    public ResponseEntity getOrderDetailByBookId(@PathVariable("id") Long id){
-        return new ResponseEntity(success(orderService.getOrderByBookId(id)),HttpStatus.OK);
+    public ResponseEntity getOrderDetailByBookId(@PathVariable("id") Long bookId){
+        return new ResponseEntity(success(orderService.getOrderByBookId(bookId)),HttpStatus.OK);
     }
 
+    @PostMapping("/end/{id}")
+    public ResponseEntity finishOrder(@PathVariable("id") Long orderId){
+        return new ResponseEntity(success(orderService.orderEnd(orderId,getCurrentUserId())),HttpStatus.OK);
+    }
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
