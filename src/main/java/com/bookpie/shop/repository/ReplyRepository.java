@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
     // 게시글의 댓글 조회
     @Query(value = "select r.reply_id, r.content, r.reply_date, r.board_id," +
-            " coalesce(r.parent_reply_id, 0) as parent_reply_id, coalesce(r.used_id, 0) as used_id, r.user_id" +
+            " coalesce(r.parent_reply_id, 0) as parent_reply_id, coalesce(r.used_id, 0) as used_id, r.user_id, r.secret" +
             " from reply r where r.board_id = :board_id", nativeQuery = true)
     Page<Reply> findAllByBoard(@Param("board_id") Long board_id, @Param("pageable") Pageable pageable);
 
