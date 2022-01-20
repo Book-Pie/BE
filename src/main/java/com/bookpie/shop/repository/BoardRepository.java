@@ -25,6 +25,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 제목으로 검색
     @Query(value = "select * from board where board_type = :type " +
-            "and replace(title, ' ', '') like %:keyWord%", nativeQuery = true)
+            "and replace(title, ' ', '') like %:keyWord%",
+            countQuery = "select count(*) from bookpie.board", nativeQuery = true)
     Page<Board> findByKeyword(@Param("keyWord") String keyWord, @Param("type") String type, Pageable pageable);
 }
