@@ -8,6 +8,7 @@ import com.bookpie.shop.domain.dto.book_review.ReviewLikeDto;
 import com.bookpie.shop.repository.BookReviewRepository;
 import com.bookpie.shop.repository.ReviewLikeRepository;
 import com.bookpie.shop.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,11 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ReviewLikeService {
-    @Autowired
-    private ReviewLikeRepository reviewLikeRepository;
-    @Autowired
-    private BookReviewRepository bookReviewRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final BookReviewRepository bookReviewRepository;
+    private final UserRepository userRepository;
 
     public ReviewLikeDto like(BookReviewDto dto) {
         // 해당 리뷰가 있는지 확인

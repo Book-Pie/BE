@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.point.PointDto;
 import com.bookpie.shop.repository.OrderPointRepository;
 import com.bookpie.shop.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,13 +24,11 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class PointService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderPointRepository orderPointRepository;
-    @Autowired
-    private ApiConfig apiConfig;
+    private final UserRepository userRepository;
+    private final OrderPointRepository orderPointRepository;
+    private final ApiConfig apiConfig;
 
     // 포인트 충전
     public JSONObject charge(PointDto dto) {
@@ -150,7 +149,7 @@ public class PointService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
         // 금액이 맞지 않을 경우 환불 불가
-        if (user.getPoint().getTotalPoint() < dto.getCancelAmount()) {
+        if (user.getPoint().getHoldPoint() < dto.getCancelAmount()) {
             throw new IllegalArgumentException("금액이 부족하여 환불하실 수 없습니다.");
         }
         // 아임포트 서버로 보낼 JSONObject 생성

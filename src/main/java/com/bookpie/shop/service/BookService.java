@@ -7,6 +7,7 @@ import com.bookpie.shop.domain.dto.book.BookCategoryDto;
 import com.bookpie.shop.domain.dto.book.BookDto;
 import com.bookpie.shop.repository.BookCategoryRepository;
 import com.bookpie.shop.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.json.simple.JSONArray;
@@ -27,13 +28,11 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 public class BookService {
-    @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private BookCategoryRepository bookCategoryRepository;
-    @Autowired
-    private ApiConfig apiConfig;
+    private final BookRepository bookRepository;
+    private final BookCategoryRepository bookCategoryRepository;
+    private final ApiConfig apiConfig;
 
     // 카테고리 추가
     public String addCategory(BookCategoryDto dto) {

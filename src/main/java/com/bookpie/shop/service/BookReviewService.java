@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
 import com.bookpie.shop.repository.BookRepository;
 import com.bookpie.shop.repository.BookReviewRepository;
 import com.bookpie.shop.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,13 +24,11 @@ import java.util.List;
 @Service
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 public class BookReviewService {
-    @Autowired
-    private BookReviewRepository bookReviewRepository;
-    @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final BookReviewRepository bookReviewRepository;
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
     // 도서 리뷰 작성
     public BookReviewDto create(BookReviewDto dto) {

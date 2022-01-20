@@ -11,6 +11,7 @@ import com.bookpie.shop.repository.BoardRepository;
 import com.bookpie.shop.repository.ReplyRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,15 +28,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class ReplyService {
-    @Autowired
-    private ReplyRepository replyRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UsedBookRepository usedBookRepository;
-    @Autowired
-    private BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
+    private final UserRepository userRepository;
+    private final UsedBookRepository usedBookRepository;
+    private final BoardRepository boardRepository;
 
     // 게시글에 댓글 작성
     public BoardReplyDto create(BoardReplyDto dto) {

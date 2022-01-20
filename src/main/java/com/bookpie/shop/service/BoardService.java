@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.dto.board.BoardDto;
 import com.bookpie.shop.domain.enums.BoardType;
 import com.bookpie.shop.repository.BoardRepository;
 import com.bookpie.shop.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,12 +19,11 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 @Slf4j
 public class BoardService {
-    @Autowired
-    private BoardRepository boardRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     // 게시글 작성
     public BoardDto create(BoardDto dto) {
