@@ -29,7 +29,7 @@ public class ControllerExceptionHandler {
         return new ResponseEntity(error(e, HttpStatus.NOT_FOUND),HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, JsonProcessingException.class})
+    @ExceptionHandler({IllegalArgumentException.class, JsonProcessingException.class,IllegalStateException.class})
     protected ResponseEntity handleIllegalArgumenException(Exception e){
         log.debug(e.getMessage());
         return new ResponseEntity(error(e,HttpStatus.BAD_REQUEST),HttpStatus.BAD_REQUEST);

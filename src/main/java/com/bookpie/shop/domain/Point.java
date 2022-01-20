@@ -27,11 +27,15 @@ public class Point {
         usedPoint-=point;
         holdPoint+=point;
     }
-    public void usePoint(int point){
-        if(holdPoint>=point){
-            usedPoint+=point;
-            holdPoint-=point;
+    public void usePoint(int point) {
+        if (holdPoint >= point) {
+            usedPoint += point;
+            holdPoint -= point;
         }
+    }
+
+    public void addSalePoint(int point){
+        holdPoint+=point;
     }
     public static Point createDefaultPoint(){
         return new Point(0,0,0);

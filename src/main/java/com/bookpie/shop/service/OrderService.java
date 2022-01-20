@@ -6,6 +6,7 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.OrderCreateDto;
 import com.bookpie.shop.domain.dto.OrderDto;
 import com.bookpie.shop.domain.dto.OrderListDto;
+import com.bookpie.shop.domain.enums.OrderState;
 import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
@@ -54,6 +55,9 @@ public class OrderService {
     @Transactional
     public boolean removeOrder(Long id){
         Order order = orderRepository.findDetailById(id).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
+        if (order.getOrderState() == OrderState.SOLD_OUT){
+            throw new IllegalStateException("이미 완료된 주문은 취소할 수 없습니다.");
+        }
         order.getBook().cancel();
         order.getBuyer().getPoint().rollback(order.getBook().getPrice());
         return orderRepository.remove(order);
@@ -83,4 +87,11 @@ public class OrderService {
         return orderDto;
     }
 
+    @Transactional
+    public boolean orderEnd(Long orderId,Long userId){
+        Order order = orderRepository.findDetailById(orderId).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
+        if (order.getBuyer().getId() != userId) throw new IllegalArgumentException("구매자가 아닙니다.");
+        order.end();
+        return true;
+    }
 }

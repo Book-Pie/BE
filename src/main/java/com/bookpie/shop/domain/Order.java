@@ -68,6 +68,12 @@ public class Order {
         review.addOrder(this);
     }
 
+    public void end(){
+        this.orderState = OrderState.SOLD_OUT;
+        this.book.soldout();
+        int price = this.book.getPrice();
+        this.book.getSeller().getPoint().addSalePoint(price);
+    }
     public void removeReview(){
         this.review = null;
     }
