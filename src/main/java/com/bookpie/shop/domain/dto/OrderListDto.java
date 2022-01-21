@@ -13,6 +13,8 @@ public class OrderListDto {
     private String title;
     private String image;
     private int price;
+    private String sellerNickName;
+    private String buyerNickName;
     private OrderState state;
     private LocalDateTime orderDate;
 
@@ -24,5 +26,7 @@ public class OrderListDto {
         this.price = order.getBook().getPrice();
         this.state = order.getOrderState();
         this.orderDate = order.getOrderDate();
+        this.sellerNickName = order.getBook().getSeller().getNickName();
+        this.buyerNickName = order.getBuyer().getNickName();
     }
 }
