@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class OrderListDto {
     private Long orderId;
     private Long bookId;
+    private Long reviewId;
     private String title;
     private String image;
     private int price;
@@ -28,5 +29,8 @@ public class OrderListDto {
         this.orderDate = order.getOrderDate();
         this.sellerNickName = order.getBook().getSeller().getNickName();
         this.buyerNickName = order.getBuyer().getNickName();
+        if(order.getReview() != null){
+            this.reviewId = order.getReview().getId();
+        }
     }
 }
