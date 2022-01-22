@@ -50,6 +50,8 @@ public class OrderRepository {
         return em.createQuery("select o from Order o" +
                                     " join fetch o.book b" +
                                     " join fetch b.seller s " +
+                                    " join fetch o.buyer bu" +
+                                    " left join fetch o.review r" +
                                     " where s.id= :id",Order.class)
                 .setParameter("id",id)
                 .getResultList();
@@ -59,6 +61,8 @@ public class OrderRepository {
         return em.createQuery("select o from Order o " +
                                     " join fetch o.buyer b " +
                                     " join fetch o.book ub" +
+                                    " join fetch ub.seller s" +
+                                    " left join fetch o.review r" +
                                     " where b.id= :id",Order.class)
                 .setParameter("id",id)
                 .getResultList();
