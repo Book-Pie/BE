@@ -38,8 +38,9 @@ public class ReplyController {
 
     // 게시글 댓글 조회 (페이징 기능)
     @GetMapping("/board/{boardId}")
-    public ResponseEntity boardReplyList(@PathVariable Long boardId, @RequestParam(required = false) String page,
-                                 @RequestParam(required = false) String size) {
+    public ResponseEntity boardReplyList(@PathVariable Long boardId,
+                                         @RequestParam(required = false, defaultValue = "0") String page,
+                                         @RequestParam(required = false, defaultValue = "10") String size) {
         return new ResponseEntity(success(replyService.getAll(boardId, page, size)), HttpStatus.OK);
     }
 
@@ -80,7 +81,8 @@ public class ReplyController {
     // 중고도서 댓글 리스트 조회
     @GetMapping("/usedbook/{usedBookId}")
     public ResponseEntity usedBookReplyList(@PathVariable Long usedBookId,
-                                            @RequestParam(required = false) String page, @RequestParam(required = false) String size) {
+                                            @RequestParam(required = false, defaultValue = "0") String page,
+                                            @RequestParam(required = false, defaultValue = "10") String size) {
         return new ResponseEntity(success(replyService.usedBookReplyList(usedBookId, page, size)), HttpStatus.OK);
     }
 }

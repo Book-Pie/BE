@@ -80,13 +80,8 @@ public class BookService {
 
     // 알라딘 api 베스트 셀러 조회
     public JSONObject best(String page, String size) {
-        int realPage = 1;
-        int realSize = 8;
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-
         String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=Bestseller" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
+                "&MaxResults="+size+"&start="+page+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
 
         return callApi(uri);
     }
@@ -104,26 +99,16 @@ public class BookService {
 
     // 키워드로 검색색
     public JSONObject searchKeyword(String queryType, String keyword, String page, String size) {
-        int realPage = 1;
-        int realSize = 16;
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-
         String uri = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey="+apiConfig.getAladinAPI()+"&Query="+keyword+"&QueryType="+queryType+"" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
+                "&MaxResults="+size+"&start="+page+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
 
         return callApi(uri);
     }
 
     // 카테고리로 조회
     public JSONObject byCategory(Long category_id, String page, String size) {
-        int realPage = 1;
-        int realSize = 16;
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-
         String uri = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey="+apiConfig.getAladinAPI()+"&QueryType=ItemEditorChoice" +
-                "&MaxResults="+realSize+"&start="+realPage+"&SearchTarget=Book&CategoryId="+category_id+"&output=js&Version=20131101&Cover=Big";
+                "&MaxResults="+size+"&start="+page+"&SearchTarget=Book&CategoryId="+category_id+"&output=js&Version=20131101&Cover=Big";
 
         return callApi(uri);
     }

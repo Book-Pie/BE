@@ -49,8 +49,8 @@ public class BookController {
 
     // 베스트 셀러 조회 (알라딘 api 호출)
     @GetMapping("/api/book/bestseller")
-    public ResponseEntity best(@RequestParam(value = "page", required = false) String page,
-                               @RequestParam(value="size", required = false) String size) {
+    public ResponseEntity best(@RequestParam(required = false, defaultValue = "1") String page,
+                               @RequestParam(required = false, defaultValue = "8") String size) {
         return new ResponseEntity(success(bookService.best(page, size)), HttpStatus.OK);
     }
 
@@ -63,14 +63,16 @@ public class BookController {
     // 도서 키워드로 검색 (알라딘 api 호출)
     @GetMapping("/api/book/search")
     public ResponseEntity searchKeyword(@RequestParam String QueryType, @RequestParam String keyword,
-                                        @RequestParam(required = false) String page, @RequestParam(required = false) String size) {
+                                        @RequestParam(required = false, defaultValue = "1") String page,
+                                        @RequestParam(required = false, defaultValue = "16") String size) {
         return new ResponseEntity(success(bookService.searchKeyword(QueryType, keyword, page, size)), HttpStatus.OK);
     }
 
     // 도서 카테고리별 조회 (알라딘 api 호출)
     @GetMapping("/api/book/byCategory")
-    public ResponseEntity byCategory(@RequestParam Long categoryId, @RequestParam(required = false) String page,
-                                     @RequestParam(required = false) String size) {
+    public ResponseEntity byCategory(@RequestParam Long categoryId,
+                                     @RequestParam(required = false, defaultValue = "1") String page,
+                                     @RequestParam(required = false, defaultValue = "16") String size) {
         return new ResponseEntity(success(bookService.byCategory(categoryId, page, size)), HttpStatus.OK);
     }
 

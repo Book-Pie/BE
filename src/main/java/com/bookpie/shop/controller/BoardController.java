@@ -43,15 +43,15 @@ public class BoardController {
 
     // 게시글 전체 조회(카테고리별)
     @GetMapping("/getAll")
-    public ResponseEntity getAll(@RequestParam BoardType boardType, @RequestParam(required = false) String page,
-                                 @RequestParam(required = false) String size) {
+    public ResponseEntity getAll(@RequestParam BoardType boardType,
+                                 @RequestParam(required = false, defaultValue = "0") String page,
+                                 @RequestParam(required = false, defaultValue = "10") String size) {
         return new ResponseEntity(success(boardService.getAll(boardType, page, size)), HttpStatus.OK);
     }
 
     // 게시글 상세 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity get(@PathVariable Long boardId, HttpServletRequest req,
-                         HttpServletResponse rep) {
+    public ResponseEntity get(@PathVariable Long boardId,HttpServletRequest req,HttpServletResponse rep) {
         Cookie oldCookie = null;
         Cookie cookies[] = req.getCookies();
 
@@ -87,14 +87,16 @@ public class BoardController {
 
     // 회원이 작성한 게시글 보기
     @GetMapping("/my/{userId}")
-    public ResponseEntity myBoard(@PathVariable Long userId, @RequestParam(required = false) String page,
-                                  @RequestParam(required = false) String size) {
+    public ResponseEntity myBoard(@PathVariable Long userId,
+                                  @RequestParam(required = false, defaultValue = "0") String page,
+                                  @RequestParam(required = false, defaultValue = "10") String size) {
         return new ResponseEntity(success(boardService.getMyBoard(userId, page, size)), HttpStatus.OK);
     }
 
     // 게시글 검색
     @GetMapping("/search")
-    public ResponseEntity search(@RequestParam(required = false, defaultValue = "") String keyWord, @RequestParam(required = false, defaultValue = "0") String page,
+    public ResponseEntity search(@RequestParam(required = false, defaultValue = "") String keyWord,
+                                 @RequestParam(required = false, defaultValue = "0") String page,
                                  @RequestParam(required = false, defaultValue = "10") String size,
                                  @RequestParam(required = false) BoardType boardType) {
         return new ResponseEntity(success(boardService.search(keyWord, page, size, boardType)), HttpStatus.OK);

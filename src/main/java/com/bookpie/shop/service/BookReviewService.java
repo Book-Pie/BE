@@ -79,16 +79,7 @@ public class BookReviewService {
         Long user_id = 0L;
         if (userId != null) user_id = Long.parseLong(userId);
 
-        // page와 size 값을 int로 변환 (디폴트값 동시 설정)
-        int realPage = 0;
-        int realSize = 4;
-
-        // page, size 디폴트값 설정
-        if (page != null) { realPage = Integer.parseInt(page); }
-        if (size != null) { realSize = Integer.parseInt(size); }
-
-
-        PageRequest pageRequest = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());  // 페이징 정보
+        PageRequest pageRequest = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reviewDate").descending());  // 페이징 정보
 
         Long finalUser_id = user_id;
         // Page<BookReview>객체를 Page<BookReviewDto> 객체로 변환
@@ -120,15 +111,8 @@ public class BookReviewService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
-        // page, size 값 디폴트
-        int realPage = 0;
-        int realSize = 5;
-
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-
         // 페이징 데이터
-        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("reviewDate").descending());
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reviewDate").descending());
 
         // 해당 회원이 작성한 도서 리뷰 조회
         Page<BookReview> bookReviewPage = bookReviewRepository.findAllByUserId(userId, pageable);

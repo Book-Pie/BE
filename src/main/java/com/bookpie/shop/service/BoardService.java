@@ -75,15 +75,8 @@ public class BoardService {
         if (BoardType.valueOf(boardType.name()) == null)
             throw new IllegalArgumentException("존재하지 않는 카테고리입니다.");
 
-        // page, size 디폴트값
-        int realPage = 0;
-        int realSize = 10;
-
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-
         // 게시글 조회
-        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("boardDate").descending());  // 페이징 정보
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("boardDate").descending());  // 페이징 정보
 
         Page<Board> boardPage = boardRepository.findByBoardType(boardType, pageable);
         return boardPage.map(board -> BoardDto.createBoardDto(board));
@@ -103,14 +96,7 @@ public class BoardService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
 
-        // page, size 디폴트값
-        int realPage = 0;
-        int realSize = 10;
-
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-
-        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("boardDate").descending());
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("boardDate").descending());
 
         // 해당 유저가 작성한 게시글
         Page<Board> boardList = boardRepository.findAllByUserId(user.getId(), pageable);

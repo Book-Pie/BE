@@ -88,12 +88,8 @@ public class ReplyService {
         // 게시글 유효성 검사
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
-        // Pageable 생성
-        int realPage = 0;
-        int realSize = 10;
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
-        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("reply_date").descending());
+
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reply_date").descending());
 
         // DB에서 해당 게시글의 댓글 리스트 조회
         Page<Reply> replies = replyRepository.findAllByBoard(boardId, pageable);
@@ -197,12 +193,8 @@ public class ReplyService {
     public Page<UsedBookReplyDto> usedBookReplyList(Long usedBookId, String page, String size) {
         UsedBook usedBook = usedBookRepository.findById(usedBookId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 중고도서는 존재하지 않습니다."));
-        int realPage = 0;
-        int realSize = 10;
-        if (page != null) realPage = Integer.parseInt(page);
-        if (size != null) realSize = Integer.parseInt(size);
 
-        Pageable pageable = PageRequest.of(realPage, realSize, Sort.by("reply_date").descending());
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reply_date").descending());
 
         Page<Reply> replies = replyRepository.findAllByUsedBook(usedBookId, pageable);
 
