@@ -88,7 +88,7 @@ class OrderRepositoryTest {
         orderRepository.save(order1);
         orderRepository.save(order2);
         //then
-        List<Order> bySeller = orderRepository.findBySeller(user.getId());
+        List<Order> bySeller = orderRepository.findBySeller(user.getId(),1,10);
         assertEquals(2,bySeller.size());
     }
 }

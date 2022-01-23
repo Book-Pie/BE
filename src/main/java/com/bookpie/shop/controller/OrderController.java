@@ -3,7 +3,6 @@ package com.bookpie.shop.controller;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.OrderCreateDto;
 import com.bookpie.shop.service.OrderService;
-import com.bookpie.shop.utils.ApiUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,14 +36,20 @@ public class OrderController {
         return new ResponseEntity(success(orderService.removeOrder(orderId)),HttpStatus.OK);
     }
 
-    @GetMapping("/seller/{id}")
-    public ResponseEntity getOrdersBySeller(@PathVariable("id") Long orderId){
-        return new ResponseEntity(success(orderService.getOrdersBySeller(orderId)),HttpStatus.OK);
+    @GetMapping("/seller")
+    public ResponseEntity getOrdersBySeller(@RequestParam(value = "id") Long userId,
+                                            @RequestParam(value = "page",required = false,defaultValue = "1") int page,
+                                            @RequestParam(value = "limit",required = false,defaultValue = "5") int limit,
+                                            @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
+        return new ResponseEntity(success(orderService.getOrdersBySeller(userId,page,limit,pageCount)),HttpStatus.OK);
     }
 
-    @GetMapping("/buyer/{id}")
-    public ResponseEntity getOrdersByBuyer(@PathVariable("id") Long orderId){
-        return new ResponseEntity(success(orderService.getOrdersByBuyer(orderId)),HttpStatus.OK);
+    @GetMapping("/buyer")
+    public ResponseEntity getOrdersByBuyer(@RequestParam(value = "id") Long userId,
+                                           @RequestParam(value = "page",required = false,defaultValue = "1") int page,
+                                           @RequestParam(value = "limit",required = false,defaultValue = "5") int limit,
+                                           @RequestParam(value = "pageCount",required = false,defaultValue = "0") Long pageCount){
+        return new ResponseEntity(success(orderService.getOrdersByBuyer(userId,page,limit,pageCount)),HttpStatus.OK);
     }
 
     @GetMapping("/book/{id}")

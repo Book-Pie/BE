@@ -11,6 +11,7 @@ import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
+import com.bookpie.shop.utils.PageUtil.PageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,16 +64,28 @@ public class OrderService {
         return orderRepository.remove(order);
     }
 
-    public List<OrderListDto> getOrdersByBuyer(Long userId){
-        List<Order> orders = orderRepository.findByBuyer(userId);
+    public PageDto getOrdersByBuyer(Long userId, int page, int limit, Long pageCount){
+        if (pageCount == 0){
+            Long total = orderRepository.countByBuyer(userId);
+            pageCount = total/limit;
+            if(total%limit != 0) pageCount++;
+        }
+        int offset = page*limit - limit;
+        List<Order> orders = orderRepository.findByBuyer(userId,limit,offset);
         List<OrderListDto> result = orders.stream().map(o -> new OrderListDto(o)).collect(Collectors.toList());
-        return result;
+        return new PageDto(pageCount,result);
     }
 
-    public List<OrderListDto> getOrdersBySeller(Long userId){
-        List<Order> orders = orderRepository.findBySeller(userId);
+    public PageDto getOrdersBySeller(Long userId, int page, int limit, Long pageCount){
+        if (pageCount == 0){
+            Long total = orderRepository.countBySeller(userId);
+            pageCount = total/limit;
+            if (total%limit != 0) pageCount++;
+        }
+        int offset = page*limit - limit;
+        List<Order> orders = orderRepository.findBySeller(userId,limit,offset);
         List<OrderListDto> result = orders.stream().map(o -> new OrderListDto(o)).collect(Collectors.toList());
-        return result;
+        return new PageDto(pageCount,result);
     }
 
     public OrderDto getOrderDetail(Long id){
