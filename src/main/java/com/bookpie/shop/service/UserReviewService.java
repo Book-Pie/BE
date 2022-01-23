@@ -7,8 +7,8 @@ import com.bookpie.shop.domain.dto.UserReviewCreateDto;
 import com.bookpie.shop.domain.dto.UserReviewDto;
 import com.bookpie.shop.domain.dto.UserReviewUpdateDto;
 import com.bookpie.shop.repository.OrderRepository;
-import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.repository.UserReviewRepository;
+import com.bookpie.shop.utils.PageUtil.PageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,13 +59,27 @@ public class UserReviewService {
         userReview.update(userReviewUpdateDto.getContent(),userReviewUpdateDto.getRating());
         return new UserReviewDto(userReview);
     }
-    public List<UserReviewDto> getUserReviewsByWriter(Long userId){
-        List<UserReview> result = userReviewRepository.findByWriter(userId);
-        return result.stream().map(UserReviewDto::new).collect(Collectors.toList());
+    public PageDto getUserReviewsByWriter(Long userId, int page, int limit, Long pageCount){
+        if(pageCount == 0 ){
+            Long total = userReviewRepository.countByWriter(userId);
+            pageCount = total/limit;
+            if(total % limit !=0) pageCount++;
+        }
+        int offset = page*limit - limit;
+        List<UserReview> result = userReviewRepository.findByWriter(userId,limit,offset);
+        List<UserReviewDto> reviews = result.stream().map(UserReviewDto::new).collect(Collectors.toList());
+        return new PageDto(pageCount,reviews);
     }
 
-    public List<UserReviewDto> getUserReviewsByReader(Long userId){
-        List<UserReview> result = userReviewRepository.findByReader(userId);
-        return result.stream().map(UserReviewDto::new).collect(Collectors.toList());
+    public PageDto getUserReviewsByReader(Long userId, int page, int limit, Long pageCount){
+        if(pageCount == 0){
+            Long total = userReviewRepository.countByReader(userId);
+            pageCount = total/limit;
+            if(total%limit != 0 ) pageCount++;
+        }
+        int offset = page*limit - limit;
+        List<UserReview> result = userReviewRepository.findByReader(userId,limit,offset);
+        List<UserReviewDto> reviews = result.stream().map(UserReviewDto::new).collect(Collectors.toList());
+        return new PageDto(pageCount,reviews);
     }
 }

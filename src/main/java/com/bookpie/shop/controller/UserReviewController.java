@@ -4,7 +4,6 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.UserReviewCreateDto;
 import com.bookpie.shop.domain.dto.UserReviewUpdateDto;
 import com.bookpie.shop.service.UserReviewService;
-import com.bookpie.shop.utils.ApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +33,17 @@ public class UserReviewController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity findMyUserReview(){
-        return new ResponseEntity(success(userReviewService.getUserReviewsByWriter(getCurrentUserId())),HttpStatus.OK);
+    public ResponseEntity findMyUserReview(@RequestParam(value = "page",required = false,defaultValue = "1")int page,
+                                           @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
+                                           @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
+        return new ResponseEntity(success(userReviewService.getUserReviewsByWriter(getCurrentUserId(),page,limit,pageCount)),HttpStatus.OK);
     }
 
     @GetMapping("/to-me")
-    public ResponseEntity findUserReviewToMe(){
-        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId())),HttpStatus.OK);
+    public ResponseEntity findUserReviewToMe(@RequestParam(value = "page",required = false,defaultValue = "1")int page,
+                                             @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
+                                             @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
+        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId(),page,limit,pageCount)),HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){
