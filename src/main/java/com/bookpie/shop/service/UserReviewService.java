@@ -38,14 +38,15 @@ public class UserReviewService {
     }
 
     @Transactional
-    public boolean deleteUserReview(Long reviewId,Long userId){
+    public Long deleteUserReview(Long reviewId,Long userId){
         UserReview userReview = userReviewRepository.findById(reviewId)
                                                     .orElseThrow(()->new EntityNotFoundException("등록된 리뷰가 없습니다."));
         if(userReview.getOrder().getBuyer().getId() != userId){
             throw new IllegalArgumentException("리뷰 등록자가 아닙니다.");
         }
         userReview.getOrder().removeReview();
-        return userReviewRepository.remove(userReview);
+        userReviewRepository.remove(userReview);
+        return reviewId;
     }
 
     @Transactional
