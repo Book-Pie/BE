@@ -10,6 +10,8 @@ public class UserReviewDto {
     private Long userReviewId;
     private Long sellerId;
     private String sellerName;
+    private Long buyerId;
+    private String buyerName;
     private Long usedBookId;
     private String usedBookTitle;
     private String content;
@@ -25,6 +27,8 @@ public class UserReviewDto {
         this.content = userReview.getContent();
         this.rating = userReview.getRating();
         this.reviewDate = userReview.getReviewDate();
+        this.buyerId = userReview.getOrder().getBuyer().getId();
+        this.buyerName = userReview.getOrder().getBuyer().getNickName();
     }
 
 }
