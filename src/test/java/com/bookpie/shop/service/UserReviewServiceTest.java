@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -45,7 +47,8 @@ class UserReviewServiceTest {
         orderRepository.save(order);
         //when
         UserReviewCreateDto dto = new UserReviewCreateDto(order.getId(),"리뷰",4.0f);
-        Long id = userReviewService.uploadUserReview(dto,user2.getId());
+        Map<String,Long> map = userReviewService.uploadUserReview(dto,user2.getId());
+        Long id = map.get("reviewId");
         //then
         UserReview review = userReviewRepository.findById(id).get();
         assertEquals(id,review.getId());
@@ -66,8 +69,9 @@ class UserReviewServiceTest {
         Order order = order(user2,usedBook);
         orderRepository.save(order);
         UserReviewCreateDto dto = new UserReviewCreateDto(order.getId(),"리뷰",4.0f);
-        Long id = userReviewService.uploadUserReview(dto,user2.getId());
+        Map<String,Long> map = userReviewService.uploadUserReview(dto,user2.getId());
         //when
+        Long id = map.get("reviewId");
         UserReview review = userReviewRepository.findById(id).get();
 
         //then

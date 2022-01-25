@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +28,7 @@ public class UserReviewService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    public Long uploadUserReview(UserReviewCreateDto dto,Long userId){
+    public Map<String, Long> uploadUserReview(UserReviewCreateDto dto, Long userId){
         Order order = orderRepository.findDetailById(dto.getOrderId()).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
         UserReview userReview = UserReview.createUserReview(dto,order);
         User user = order.getBook().getSeller();
@@ -34,7 +36,11 @@ public class UserReviewService {
             throw new IllegalArgumentException("주문을 한 회원이 아닙니다.");
         }
         user.addRating(dto.getRating());
-        return userReviewRepository.save(userReview);
+        Long reviewId = userReviewRepository.save(userReview);
+        Map<String,Long> map = new HashMap<>();
+        map.put("reviewId",reviewId);
+        map.put("orderId",order.getId());
+        return map;
     }
 
     @Transactional
