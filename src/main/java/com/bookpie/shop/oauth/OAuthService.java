@@ -49,7 +49,7 @@ public class OAuthService {
         String name = (String) kakaoProfile.get("nickname");
         String email = (String) kakaoAccount.get("email");
         User user = oauthSaveAndGet(email,name,LoginType.KAKAO);
-        return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
+        return jwtTokenProvider.createToken(user.getEmail(),user.getRoles());
     }
 
     @Transactional
