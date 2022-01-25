@@ -17,6 +17,8 @@ public class UserReviewDto {
     private String content;
     private float rating;
     private LocalDateTime reviewDate;
+    private String image;
+    private int price;
 
     public UserReviewDto(UserReview userReview){
         this.userReviewId = userReview.getId();
@@ -29,6 +31,8 @@ public class UserReviewDto {
         this.reviewDate = userReview.getReviewDate();
         this.buyerId = userReview.getOrder().getBuyer().getId();
         this.buyerName = userReview.getOrder().getBuyer().getNickName();
+        this.image = userReview.getOrder().getBook().getThumbnail();
+        this.price = userReview.getOrder().getBook().getPrice();
     }
 
 }
