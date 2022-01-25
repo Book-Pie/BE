@@ -59,6 +59,7 @@ public class OrderController {
 
     @PostMapping("/end/{id}")
     public ResponseEntity finishOrder(@PathVariable("id") Long orderId){
+        log.debug("order end controller");
         return new ResponseEntity(success(orderService.orderEnd(orderId,getCurrentUserId())),HttpStatus.OK);
     }
     private Long getCurrentUserId(){
