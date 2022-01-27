@@ -36,7 +36,12 @@ public class UsedBookRepository {
         em.remove(usedBook);
         return true;
     }
-
+    public List<UsedBook> findByIsbn(String isbn){
+        return em.createQuery("select ub from UsedBook ub" +
+                                    " where ub.isbn= :isbn")
+                .setParameter("isbn",isbn)
+                .getResultList();
+    }
     public Optional<UsedBook> findByIdWithUser(Long id){
         return em.createQuery("select ub from UsedBook  ub" +
                                 " join fetch  ub.seller s" +

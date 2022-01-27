@@ -86,7 +86,11 @@ public class UsedBookService {
         return new PageDto(pageCount,collect);
     }
 
-
+    //isbn으로 중고도서 검색
+    public List<UsedBookListDto> getUsedBookListByIsbn(String isbn){
+        List<UsedBook> books = usedBookRepository.findByIsbn(isbn);
+        return books.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+    }
 
     //중고도서 삭제
     @Transactional

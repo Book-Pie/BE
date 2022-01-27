@@ -93,6 +93,11 @@ public class UsedBookController {
         return new ResponseEntity(success(usedBookService.getUserUpload(userId,offset,limit,pageCount)),HttpStatus.OK);
     }
 
+    //isbn으로 중고도서 검색
+    @GetMapping("/isbn/{isbn}")
+    public ResponseEntity getBooksByIsbn(@PathVariable("isbn")String isbn){
+        return new ResponseEntity(success(usedBookService.getUsedBookListByIsbn(isbn)),HttpStatus.OK);
+    }
 
     //좋아요
     @PostMapping("/like/{bookId}")
