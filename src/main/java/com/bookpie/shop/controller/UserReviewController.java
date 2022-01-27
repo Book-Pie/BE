@@ -32,6 +32,13 @@ public class UserReviewController {
         return new ResponseEntity(success(userReviewService.deleteUserReview(id,getCurrentUserId())),HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity findByUserReviews(@PathVariable("id")Long userId,
+                                            @RequestParam(value = "page",required = false,defaultValue = "1")int page,
+                                            @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
+                                            @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
+        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(userId,page,limit,pageCount)),HttpStatus.OK);
+    }
     @GetMapping("/me")
     public ResponseEntity findMyUserReview(@RequestParam(value = "page",required = false,defaultValue = "1")int page,
                                            @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
