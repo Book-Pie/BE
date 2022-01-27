@@ -1,9 +1,9 @@
 package com.bookpie.shop.repository;
 
 
-import com.bookpie.shop.domain.*;
+import com.bookpie.shop.domain.QUsedBook;
+import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
-import com.bookpie.shop.domain.enums.BookState;
 import com.bookpie.shop.domain.enums.Category;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +61,16 @@ public class UsedBookRepository {
                 .getResultList().stream().findAny();
     }
 
+    public List<UsedBook> findRelated(Category category,List<Long> tags){
+        return em.createQuery("select distinct ub from UsedBook ub" +
+                        " left outer join fetch ub.tags bt" +
+                        " left outer join fetch bt.tag t " +
+                        " where t.id in :tags and ub.fstCategory= :category",UsedBook.class)
+                .setParameter("tags",tags)
+                .setParameter("category",category)
+                .getResultList();
+
+    }
 
     public List<UsedBook> findAll(FindUsedBookDto dto){
         QUsedBook qUsedBook= QUsedBook.usedBook;

@@ -7,19 +7,16 @@ import com.bookpie.shop.repository.TagRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
-import com.bookpie.shop.utils.PageUtil;
 import com.bookpie.shop.utils.PageUtil.PageDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -130,7 +127,7 @@ public class UsedBookService {
         return usedBook.getModifiedDate();
     }
 
-    //중도도서 조회수 증가
+    //중고도서 조회수 증가
     @Transactional
     public int increseViewCount(Long id){
         UsedBook usedBook = usedBookRepository.findById(id)
@@ -139,4 +136,13 @@ public class UsedBookService {
         return usedBook.getView();
     }
 
+    //연관 중고도서 추천
+    public List<UsedBookListDto> getRelatedUsedBook(RelatedUsedBookDto dto){
+        List<Long> tags = dto.getTags().stream().map(t -> tagRepository.findByName(t))
+                                .filter(tag -> tag.isPresent())
+                                .map(t -> t.get().getId())
+                                .collect(Collectors.toList());
+        List<UsedBook> usedBooks = usedBookRepository.findRelated(dto.getCategory(), tags);
+        return usedBooks.stream().map(UsedBookListDto::new).collect(Collectors.toList());
+    }
 }
