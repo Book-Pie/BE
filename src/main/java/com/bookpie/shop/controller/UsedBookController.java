@@ -143,7 +143,7 @@ public class UsedBookController {
     }
 
     //연관 중고도서 추천
-    @GetMapping("/recommendation")
+    @PostMapping("/recommendation")
     public ResponseEntity getRecommendatedBook(@RequestBody RelatedUsedBookDto relatedUsedBookDto){
         log.info(relatedUsedBookDto.toString());
         return new ResponseEntity(success(usedBookService.getRelatedUsedBook(relatedUsedBookDto)),HttpStatus.OK);
