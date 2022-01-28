@@ -78,7 +78,7 @@ public class BookController {
 
     // 해당 도서에 대한 추천 도서 (도서관 정보나루 api)
     @GetMapping("/api/book/recommend")
-    public ResponseEntity recommend(@RequestParam Long isbn) {
+    public ResponseEntity recommend(@RequestParam String isbn) {
         return new ResponseEntity(success(bookService.recommend(isbn)), HttpStatus.OK);
     }
 }

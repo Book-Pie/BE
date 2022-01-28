@@ -114,7 +114,7 @@ public class BookService {
     }
 
     // 추천 도서 (정보나루 api)
-    public JSONArray recommend(Long isbn) {
+    public JSONArray recommend(String isbn) {
         String uri = "http://data4library.kr/api/recommandList?authKey="+apiConfig.getJungboAPI()+"&isbn13="+isbn+"&format=json";
         JSONObject object = null;
         JSONArray jsonArray = new JSONArray();
@@ -126,17 +126,21 @@ public class BookService {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             line = br.readLine();
-
+            log.info("line : " + line);
             JSONParser jsonParser = new JSONParser();
             object = (JSONObject) jsonParser.parse(line);
 
             // 받은 json데이터에서 response 객체를 꺼내고 docs List 생성
             JSONObject response = (JSONObject) object.get("response");
-            JSONArray docs = (JSONArray) response.get("docs");
+            String resultNum = response.get("resultNum").toString();
 
-            // 기본 값으로 200개의 데이터를 줌. 10개만 넘길거임
-            for (int i = 0; i < 10; i++) {
-                jsonArray.add(docs.get(i));
+            if (!resultNum.equals("0")) {
+                JSONArray docs = (JSONArray) response.get("docs");
+
+                // 기본 값으로 200개의 데이터를 줌. 10개만 넘길거임
+                for (int i = 0; i < 10; i++) {
+                    jsonArray.add(docs.get(i));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
