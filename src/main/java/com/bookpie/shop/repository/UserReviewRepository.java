@@ -32,6 +32,7 @@ public class UserReviewRepository {
                 .getResultList().stream().findAny();
     }
 
+
     //내가 쓴 리뷰 조회
     public List<UserReview> findByWriter(Long userId,int limit,int offset){
         return em.createQuery("select r from UserReview r" +

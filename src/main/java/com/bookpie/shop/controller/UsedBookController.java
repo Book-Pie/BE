@@ -2,18 +2,17 @@ package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
+import com.bookpie.shop.domain.dto.RelatedUsedBookDto;
 import com.bookpie.shop.domain.dto.UsedBookCreateDto;
 import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.service.UsedBookLikeService;
 import com.bookpie.shop.service.UsedBookService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.xml.transform.OutputKeys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.bookpie.shop.utils.ApiUtil.error;
 import static com.bookpie.shop.utils.ApiUtil.success;
 
 @RestController
@@ -96,6 +93,11 @@ public class UsedBookController {
         return new ResponseEntity(success(usedBookService.getUserUpload(userId,offset,limit,pageCount)),HttpStatus.OK);
     }
 
+    //isbn으로 중고도서 검색
+    @GetMapping("/isbn/{isbn}")
+    public ResponseEntity getBooksByIsbn(@PathVariable("isbn")String isbn){
+        return new ResponseEntity(success(usedBookService.getUsedBookListByIsbn(isbn)),HttpStatus.OK);
+    }
 
     //좋아요
     @PostMapping("/like/{bookId}")
@@ -140,6 +142,12 @@ public class UsedBookController {
         return new ResponseEntity(success(usedBookService.increseViewCount(id)),HttpStatus.OK);
     }
 
+    //연관 중고도서 추천
+    @GetMapping("/recommendation")
+    public ResponseEntity getRecommendatedBook(@RequestBody RelatedUsedBookDto relatedUsedBookDto){
+        log.info(relatedUsedBookDto.toString());
+        return new ResponseEntity(success(usedBookService.getRelatedUsedBook(relatedUsedBookDto)),HttpStatus.OK);
+    }
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
