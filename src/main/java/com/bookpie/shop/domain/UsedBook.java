@@ -27,7 +27,7 @@ public class UsedBook {
     private Long id;
 
     private String title;
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 1000)
     private String content;
     private int price;
     private int view;
