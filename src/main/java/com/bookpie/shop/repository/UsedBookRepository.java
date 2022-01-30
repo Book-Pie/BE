@@ -1,6 +1,8 @@
 package com.bookpie.shop.repository;
 
 
+import com.bookpie.shop.domain.QBookTag;
+import com.bookpie.shop.domain.QTag;
 import com.bookpie.shop.domain.QUsedBook;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
@@ -66,15 +68,27 @@ public class UsedBookRepository {
                 .getResultList().stream().findAny();
     }
 
-    public List<UsedBook> findRelated(Category category,List<Long> tags){
-        return em.createQuery("select distinct ub from UsedBook ub" +
-                        " left outer join fetch ub.tags bt" +
-                        " left outer join fetch bt.tag t " +
-                        " where t.id in :tags and ub.fstCategory= :category",UsedBook.class)
-                .setParameter("tags",tags)
-                .setParameter("category",category)
-                .getResultList();
 
+    public List<UsedBook> findRelated(Category category,List<Long> tags){
+        QUsedBook qUsedBook = QUsedBook.usedBook;
+        QBookTag qBookTag = QBookTag.bookTag;
+        QTag qTag = QTag.tag;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.selectDistinct(qUsedBook)
+                .from(qUsedBook)
+                .leftJoin(qUsedBook.tags,qBookTag)
+                .fetchJoin()
+                .leftJoin(qBookTag.tag, qTag)
+                .fetchJoin()
+                .where(eqFstCategory(category),containTag(tags))
+                .fetch();
+    }
+    public BooleanExpression containTag(List<Long> tagIds){
+        if (tagIds.isEmpty()){
+            return null;
+        }else{
+            return QTag.tag.id.in(tagIds);
+        }
     }
 
     public List<UsedBook> findAll(FindUsedBookDto dto){
@@ -106,6 +120,7 @@ public class UsedBookRepository {
                         eqSndCategory(dto.getSndCategory()))
                 .fetchOne();
     }
+
 
     public Long count(Long userId){
         QUsedBook qUsedBook = QUsedBook.usedBook;

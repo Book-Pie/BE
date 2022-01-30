@@ -12,8 +12,10 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,6 +27,7 @@ public class UsedBook {
     private Long id;
 
     private String title;
+    @Column(length = 1000)
     private String content;
     private int price;
     private int view;
@@ -90,10 +93,27 @@ public class UsedBook {
         this.view = 0;
     }
 
+    public void update(UsedBookCreateDto dto){
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.price = dto.getPrice();
+        this.modifiedDate = LocalDateTime.now();
+        this.bookState = dto.getState();
+        this.fstCategory = dto.getFstCategory();
+        this.sndCategory = dto.getSndCategory();
+        this.isbn = dto.getIsbn();
+    }
+
     public void addBookTag(BookTag tag){
         tags.add(tag);
         tag.setBook(this);
     }
+
+    public void initUpdate(){
+        this.images = new ArrayList<>();
+        this.tags = new HashSet<>();
+    }
+
 
     public void addImage(Image image){
         images.add(image);

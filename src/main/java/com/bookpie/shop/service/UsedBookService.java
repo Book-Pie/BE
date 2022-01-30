@@ -3,6 +3,7 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.domain.*;
 import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.domain.enums.SaleState;
+import com.bookpie.shop.repository.BookTagAndImageRepository;
 import com.bookpie.shop.repository.TagRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
@@ -29,6 +30,7 @@ public class UsedBookService {
     private final UsedBookRepository usedBookRepository;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
+    private final BookTagAndImageRepository bookTagAndImageRepository;
 
     @Value("${path.image.dev}")
     private String filePath;
@@ -52,7 +54,7 @@ public class UsedBookService {
             }
             return null;
         }).collect(Collectors.toList());
-        ;
+
         for (String fileName : fileNames){
             log.debug(fileName);
             if (fileName != null){
@@ -64,6 +66,52 @@ public class UsedBookService {
         return usedBookRepository.save(usedBook);
     }
 
+    //중고도서 수정
+    @Transactional
+    public UsedBook updateUsedBook(Long userId,Long bookId,UsedBookCreateDto dto,List<MultipartFile> files) throws Exception{
+        UsedBook usedBook = usedBookRepository.findByIdDetail(bookId).orElseThrow(()-> new EntityNotFoundException("중고도서를 찾을 수 없습니다."));
+        if (usedBook.getSeller().getId() != userId){
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+        if(usedBook.getSaleState() != SaleState.SALE){
+            throw new IllegalArgumentException("판매중이거나 판매완료 상품은 수정할 수 없습니다.");
+        }
+        usedBook.getImages().stream().forEach(i->{
+            try {
+                FileUtil.delete(filePath, i.getFileName());
+                bookTagAndImageRepository.removeImage(i);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+        usedBook.getTags().stream().forEach(t->bookTagAndImageRepository.removeBookTag(t));
+        usedBook.initUpdate();
+        usedBook.update(dto);
+        List<Tag> tags = dto.getTags().stream().map(t -> new Tag(t)).collect(Collectors.toList());
+        Set<Tag> tagSet = tagRepository.saveAll(tags);
+        Set<BookTag> bookTags = tagSet.stream().map(t -> BookTag.createBookTag(t)).collect(Collectors.toSet());
+        for(BookTag bookTag: bookTags){
+            usedBook.addBookTag(bookTag);
+        }
+        List<String> fileNames = files.stream().map(file -> {
+            try {
+                return FileUtil.save(filePath, file);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toList());
+
+        for (String fileName : fileNames){
+            log.debug(fileName);
+            if (fileName != null){
+                Image image = new Image(fileName);
+                usedBook.addImage(image);
+            }
+        }
+        if(!fileNames.isEmpty()) usedBook.setThumbnail(fileNames.get(0));
+        return usedBook;
+    }
 
     //중고도서 상세조회
     public UsedBookDto getUsedBook(Long id){
