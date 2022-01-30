@@ -73,7 +73,9 @@ public class UsedBookService {
         if (usedBook.getSeller().getId() != userId){
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-
+        if(usedBook.getSaleState() != SaleState.SALE){
+            throw new IllegalArgumentException("판매중이거나 판매완료 상품은 수정할 수 없습니다.");
+        }
         usedBook.getImages().stream().forEach(i->{
             try {
                 FileUtil.delete(filePath, i.getFileName());
