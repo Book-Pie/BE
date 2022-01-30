@@ -1,10 +1,7 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.FindUserDto;
-import com.bookpie.shop.domain.dto.LoginDto;
-import com.bookpie.shop.domain.dto.UserCreateDto;
-import com.bookpie.shop.domain.dto.UserUpdateDto;
+import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.service.UserSevice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +61,17 @@ public class UserController {
         return new ResponseEntity(success(userSevice.emailValidation(email)),HttpStatus.OK);
     }
 
+    // 회원 이메일 확인
+    @PostMapping("/email")
+    public ResponseEntity emailCheck(@RequestBody EmailDto dto) {
+        log.info("이메일1 : " + dto.getEmail());
+        return new ResponseEntity(success(userSevice.emailCheck(dto.getEmail())), HttpStatus.OK);
+    }
+    // 이메일 코드 확인
+    @PostMapping("/email/code")
+    public ResponseEntity emailCodeCheck(@RequestBody EmailDto dto) {
+        return new ResponseEntity(success(userSevice.emailCodeCheck(dto)), HttpStatus.OK);
+    }
     //닉네임 변경
     @PutMapping("nickname/{nickname}")
     public ResponseEntity nickNameUpdate(@PathVariable("nickname") String nickname){

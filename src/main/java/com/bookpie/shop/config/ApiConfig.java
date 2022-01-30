@@ -1,10 +1,7 @@
 package com.bookpie.shop.config;
 
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Configuration
 public class ApiConfig {
@@ -23,6 +20,9 @@ public class ApiConfig {
     @Value("${external.iamport.secret}")
     private String iamportSecret;
 
+    @Value("${spring.mail.username}")
+    private String adminMail;
+
     public String getAladinAPI() {
         return this.aladinAPI;
     }
@@ -38,4 +38,5 @@ public class ApiConfig {
     public String getIamportSecret() {
         return this.iamportSecret;
     }
+    public String getAdminMail() {return this.adminMail;}
 }

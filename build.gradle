@@ -56,6 +56,9 @@ dependencies {
 	// JSONObject
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
+	// email 인증
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 test {

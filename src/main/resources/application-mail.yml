@@ -1,0 +1,12 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bookpie2022@gmail.com
+    password: ^4jy0#aaw7
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

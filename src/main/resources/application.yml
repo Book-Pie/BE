@@ -1,7 +1,9 @@
 
 spring:
   profiles:
-    include: oauth
+    include:
+      - oauth
+      - mail
     default: local
   datasource:
     driver-class-name : com.mysql.cj.jdbc.Driver
@@ -26,6 +28,7 @@ spring:
     init:
       mode: embedded
 
+
 logging:
   level:
     org.hibernate.SQL: debug
@@ -42,7 +45,7 @@ spring:
     hibernate:
       ddl-auto: update
 path:
-  base: http://localhost:8080
+  base: http://localhost:9090
   image:
     dev: C:\bookpie_image\
 
@@ -54,7 +57,7 @@ spring:
       on-profile: release
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
 path:
   base: http://bookpie.tk:8080
