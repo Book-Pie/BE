@@ -1,9 +1,11 @@
 package com.bookpie.shop.controller;
 
+import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.FindUsedBookDto;
 import com.bookpie.shop.domain.dto.RelatedUsedBookDto;
 import com.bookpie.shop.domain.dto.UsedBookCreateDto;
+import com.bookpie.shop.domain.dto.UsedBookDto;
 import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.UsedBookRepository;
@@ -50,6 +52,20 @@ public class UsedBookController {
         return new ResponseEntity(success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images)), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity update(@PathVariable("id") Long bookId,
+                                @RequestPart("images")List<MultipartFile> images,
+                                 @Valid @RequestParam("usedBook")String request) throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        UsedBookCreateDto usedBookCreateDto = objectMapper.readValue(request, new TypeReference<UsedBookCreateDto>() {});
+        log.info(usedBookCreateDto.toString());
+        if(!StringUtils.hasText(usedBookCreateDto.getTitle())) throw new IllegalArgumentException("제목을 입력해주세요.");
+        if(!StringUtils.hasText(usedBookCreateDto.getContent())) throw new IllegalArgumentException("내용을 입력해주세요.");
+        if(usedBookCreateDto.getPrice() == 0) throw new IllegalArgumentException("가격을 입력해주세요");
+        UsedBook usedBook = usedBookService.updateUsedBook(getCurrentUserId(),bookId,usedBookCreateDto,images);
+        UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
+        return new ResponseEntity(success(usedBookDto),HttpStatus.OK);
+    }
     //중고도서 상세정보 조회
     @GetMapping("/{id}")
     public ResponseEntity getUsedBookDetail(@PathVariable("id")Long id){

@@ -93,10 +93,27 @@ public class UsedBook {
         this.view = 0;
     }
 
+    public void update(UsedBookCreateDto dto){
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.price = dto.getPrice();
+        this.modifiedDate = LocalDateTime.now();
+        this.bookState = dto.getState();
+        this.fstCategory = dto.getFstCategory();
+        this.sndCategory = dto.getSndCategory();
+        this.isbn = dto.getIsbn();
+    }
+
     public void addBookTag(BookTag tag){
         tags.add(tag);
         tag.setBook(this);
     }
+
+    public void initUpdate(){
+        this.images = new ArrayList<>();
+        this.tags = new HashSet<>();
+    }
+
 
     public void addImage(Image image){
         images.add(image);
