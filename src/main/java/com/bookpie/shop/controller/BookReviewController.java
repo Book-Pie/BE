@@ -67,4 +67,11 @@ public class BookReviewController {
         return new ResponseEntity(success(bookReviewService.myReview(isbn, userId)), HttpStatus.OK);
     }
 
+    // 해당 도서에서 베스트 리뷰 2개
+    @GetMapping("/bestReview/{isbn}")
+    public ResponseEntity bestReview(@PathVariable String isbn,
+                                     @RequestParam(required = false) String userId) {
+        return new ResponseEntity(success(bookReviewService.bestReview(isbn, userId)), HttpStatus.OK);
+    }
+
 }

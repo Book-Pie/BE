@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -27,7 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookReviewService {
     private final BookReviewRepository bookReviewRepository;
-    private final BookRepository bookRepository;
     private final UserRepository userRepository;
 
     // 도서 리뷰 작성
@@ -138,5 +138,16 @@ public class BookReviewService {
         if (bookReview == null) return null;
 
         return BookReviewDto.createDto(bookReview, user_id);
+    }
+    // 해당 책에서 베스트 리뷰 2개
+    public List<BookReviewDto> bestReview(String isbn, String userId) {
+        Long user_id = Long.parseLong(userId);
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+
+        List<BookReview> reviewList = bookReviewRepository.bestReview(isbn);
+        return reviewList.stream()
+                .map(bookReview -> BookReviewDto.createDto(bookReview, user_id))
+                .collect(Collectors.toList());
     }
 }
