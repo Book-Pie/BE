@@ -32,6 +32,7 @@ public class BookReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    private int likeCnt;
 
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review", cascade = CascadeType.ALL)
@@ -46,7 +47,7 @@ public class BookReview {
                 .user(user)
                 .build();
     }
-
+    // 리뷰 수정
     public void patch(BookReviewDto dto) {
         // 예외 발생
         if (this.id != dto.getReviewId())
