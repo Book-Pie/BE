@@ -8,11 +8,11 @@ import com.bookpie.shop.repository.BoardRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,10 +26,10 @@ public class BoardService {
     private final UserRepository userRepository;
 
     // 게시글 작성
-    public BoardDto create(BoardDto dto) {
+    public BoardDto create(BoardDto dto, Long userId) {
         // 유저 유효성 검사
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 게시글 엔티티 생성
         Board board = Board.createBoard(dto, user);
@@ -94,7 +94,7 @@ public class BoardService {
     // 해당 회원이 작성한 게시글 전체 보기 (페이징 처리함)
     public Page<BoardDto> getMyBoard(Long userId, String page, String size) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("boardDate").descending());
 

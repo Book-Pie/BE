@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,7 @@ public class ReplyService {
     public BoardReplyDto create(BoardReplyDto dto) {
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 해당 게시글 존재하는지 확인
         Board board = boardRepository.findById(dto.getBoardId())
@@ -62,7 +63,7 @@ public class ReplyService {
         String response = "";
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         // 댓글 유효성 검사
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
@@ -103,7 +104,7 @@ public class ReplyService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         Reply subReply = null;
 
         if (reply.getSecret()) { // 해당 댓글이 비밀댓글이면
@@ -153,7 +154,7 @@ public class ReplyService {
 
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 댓글 엔티티 생성
         Reply reply = Reply.createReplyUsedBook(dto, user, usedBook);
@@ -173,7 +174,7 @@ public class ReplyService {
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         reply.patchUsedBook(dto);
         if (replyRepository.save(reply) == null) throw new IllegalArgumentException("중고도서 댓글 수정 실패");

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -34,7 +35,7 @@ public class BookReviewService {
     public BookReviewDto create(BookReviewDto dto) {
         // 회원 객체 생성
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
 
         // 책 리뷰 엔티티 생성
@@ -109,7 +110,7 @@ public class BookReviewService {
     public Page<BookReviewDto> getMyReview(Long userId, String page, String size) {
         // 회원 객체 생성
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 페이징 데이터
         Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reviewDate").descending());
@@ -133,7 +134,7 @@ public class BookReviewService {
         }
 
         User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         BookReview bookReview = bookReviewRepository.findMyReview(isbn, user_id);
         if (bookReview == null) return null;
 
@@ -143,7 +144,7 @@ public class BookReviewService {
     public List<BookReviewDto> bestReview(String isbn, String userId) {
         Long user_id = Long.parseLong(userId);
         User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         List<BookReview> reviewList = bookReviewRepository.bestReview(isbn);
         return reviewList.stream()

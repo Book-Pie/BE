@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +66,7 @@ public class PointService {
 
                     // 3-2. DB에 정보 금액 저장
                     User user = userRepository.findById(dto.getUserId())
-                            .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                            .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
                     user.getPoint().chargePoint(dto.getAmount());
 
@@ -134,7 +135,7 @@ public class PointService {
     // 포인트 결제 내역 조회
     public List<PointDto> getPointList(Long user_id) {
         User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         List<OrderPoint> pointList = user.getOrderPoint();
 
@@ -146,7 +147,7 @@ public class PointService {
     public String cancel(PointDto dto) {
         // 유저 유효성 검사
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 금액이 맞지 않을 경우 환불 불가
         if (user.getPoint().getHoldPoint() < dto.getCancelAmount()) {
