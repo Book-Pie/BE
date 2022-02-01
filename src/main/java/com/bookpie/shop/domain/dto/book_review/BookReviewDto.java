@@ -25,6 +25,7 @@ public class BookReviewDto {
     private String nickName;
     private int reviewLikeCount;
     private LocalDateTime reviewDate;
+    private String category;
     @Builder.Default
     private Boolean likeCheck = false;
 
@@ -38,6 +39,7 @@ public class BookReviewDto {
                 .isbn(bookReview.getIsbn())
                 .reviewLikeCount(bookReview.getReviewLikes().size())
                 .reviewDate(bookReview.getReviewDate())
+                .category(bookReview.getCategory())
                 .likeCheck(likeCheck(bookReview, user_id))
                 .build();
     }

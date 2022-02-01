@@ -33,6 +33,7 @@ public class BookReview {
     @JoinColumn(name = "user_id")
     private User user;
     private int likeCnt;
+    private String category;
 
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review", cascade = CascadeType.ALL)
@@ -43,6 +44,7 @@ public class BookReview {
                 .content(dto.getContent())
                 .rating(dto.getRating())
                 .isbn(dto.getIsbn())
+                .category(dto.getCategory())
                 .reviewDate(LocalDateTime.now())
                 .user(user)
                 .build();
