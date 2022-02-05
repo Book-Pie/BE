@@ -26,9 +26,9 @@ public class BoardService {
     private final UserRepository userRepository;
 
     // 게시글 작성
-    public BoardDto create(BoardDto dto, Long userId) {
+    public BoardDto create(BoardDto dto) {
         // 유저 유효성 검사
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 게시글 엔티티 생성
