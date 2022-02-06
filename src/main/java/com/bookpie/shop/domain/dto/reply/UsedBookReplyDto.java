@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class UsedBookReplyDto {
         this.parentReplyId = parentReplyId;
         if (parentReplyId == 0) {
             this.subReply = replies.stream().map(reply -> SubReplyDto.createDto(reply)).collect(Collectors.toList());
+            this.subReply.sort(Comparator.comparing(SubReplyDto::getReplyDate).reversed());
         }
         this.secret = secret;
     }
@@ -61,6 +63,7 @@ public class UsedBookReplyDto {
         this.secret = secret;
         if (subReplies.size() != 0){
             this.subReply = subReplies.stream().map(reply -> SubReplyDto.createDto(reply)).collect(Collectors.toList());
+            this.subReply.sort(Comparator.comparing(SubReplyDto::getReplyDate).reversed());
         }
     }
 
