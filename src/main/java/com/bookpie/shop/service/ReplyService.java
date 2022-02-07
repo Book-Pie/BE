@@ -37,9 +37,9 @@ public class ReplyService {
     private final BoardRepository boardRepository;
 
     // 게시글에 댓글 작성
-    public BoardReplyDto create(BoardReplyDto dto) {
+    public BoardReplyDto create(BoardReplyDto dto, Long userId) {
         // 유저 유효성 검사
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 해당 게시글 존재하는지 확인
@@ -59,15 +59,15 @@ public class ReplyService {
     }
 
     // 게시글 댓글 수정
-    public BoardReplyDto update(BoardReplyDto dto) {
-        String response = "";
-        // 유저 유효성 검사
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    public BoardReplyDto update(BoardReplyDto dto, Long userId) {
         // 댓글 유효성 검사
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
+        // 유저 유효성 검사
+        if (reply.getUser().getId() != userId) {
+            throw new IllegalArgumentException("댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
+        }
         // 댓글 수정
         reply.patch(dto);
 
@@ -75,15 +75,20 @@ public class ReplyService {
     }
 
     // 게시글 댓글 삭제
-   public String delete(Long replyId) {
+   public String delete(Long replyId, Long userId) {
         // 댓글 유효성 검사
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
+
+        // 유저 유효성 검사
+        if (reply.getUser().getId() != userId) throw new IllegalArgumentException("게시글 삭제 실패! 회원 정보가 일치하지 않습니다.");
+
         if (reply.getUsedBook() != null) throw new IllegalArgumentException("중고도서에 대한 댓글입니다.");
 
         replyRepository.delete(reply);
         return "댓글 삭제 완료 " + reply.getContent();
     }
+
     // 게시글의 댓글 리스트 조회 (페이징 기능)
     public Page<BoardReplyDto> getAll(Long boardId, String page, String size) {
         // 게시글 유효성 검사
@@ -97,14 +102,16 @@ public class ReplyService {
         // 댓글 리스트들을 Dto로 변환 후 전달
         return replies.map(reply -> BoardReplyDto.createDto(reply));
     }
+
     // 대댓글 작성
-    public SubReplyDto createSubReply(SubReplyDto dto) {
+    public SubReplyDto createSubReply(SubReplyDto dto, Long userId) {
         // 댓글 유효성 검사
         Reply reply = replyRepository.findById(dto.getParentReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
         Reply subReply = null;
 
         if (reply.getSecret()) { // 해당 댓글이 비밀댓글이면
@@ -112,7 +119,6 @@ public class ReplyService {
         } else {
             subReply = Reply.createSubReplyBoard(dto, user, reply, false);
         }
-
 
         if (replyRepository.save(subReply) != null){
             reply.getSubReply().add(subReply);
@@ -124,9 +130,13 @@ public class ReplyService {
         return SubReplyDto.createDto(subReply);
     }
     // 대댓글 삭제
-    public String deleteSubReply(Long replyId) {
+    public String deleteSubReply(Long replyId, Long userId) {
         Reply subReply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 대댓글은 존재하지 않습니다."));
+
+        if (subReply.getUser().getId() != userId)
+            throw new IllegalArgumentException("대댓글 삭제 실패! 회원 정보가 일치하지 않습니다.");
+
         if (subReply.getParentReply() == null) {
             throw new IllegalArgumentException("대댓글이 아닙니다.");
         }
@@ -135,9 +145,13 @@ public class ReplyService {
         return "대댓글 삭제 완료 " + subReply.getContent();
     }
     // 대댓글 수정
-    public SubReplyDto updateSubReply(BoardReplyDto dto) {
+    public SubReplyDto updateSubReply(BoardReplyDto dto, Long userId) {
         Reply subReply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 대댓글은 존재하지 않습니다."));
+
+        if (subReply.getUser().getId() != userId)
+            throw new IllegalArgumentException("대댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
+
         if (subReply.getParentReply() == null) {
             throw new IllegalArgumentException("대댓글이 아닙니다.");
         }
@@ -147,13 +161,13 @@ public class ReplyService {
     }
 
     // 중고도서에 댓글 작성
-    public UsedBookReplyDto replyOnUsedBook(UsedBookReplyDto dto) {
+    public UsedBookReplyDto replyOnUsedBook(UsedBookReplyDto dto, Long userId) {
         // 중고도서 유효성 검사
         UsedBook usedBook = usedBookRepository.findById(dto.getUsedBookId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 중고도서는 존재하지 않습니다."));
 
         // 유저 유효성 검사
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 댓글 엔티티 생성
@@ -169,27 +183,37 @@ public class ReplyService {
 
         return UsedBookReplyDto.createReplyDto(reply, reply.getSubReply());
     }
+
     // 중고도서 댓글 수정
-    public UsedBookReplyDto updateReplyOnUsedBook(UsedBookReplyDto dto) {
+    public UsedBookReplyDto updateReplyOnUsedBook(UsedBookReplyDto dto, Long userId) {
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        if (reply.getUser().getId() != userId)
+            throw new IllegalArgumentException("중고도서 댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
 
         reply.patchUsedBook(dto);
-        if (replyRepository.save(reply) == null) throw new IllegalArgumentException("중고도서 댓글 수정 실패");
+        if (replyRepository.save(reply) == null)
+            throw new IllegalArgumentException("중고도서 댓글 수정 실패");
 
         return UsedBookReplyDto.createReplyDto(reply, reply.getSubReply());
     }
 
-    public String deleteReplyOnUsedBook(Long replyId) {
+    // 중고도서 댓글 삭제
+    public String deleteReplyOnUsedBook(Long replyId, Long userId) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
-        if (reply.getBoard() != null) throw new IllegalArgumentException("게시글에 대한 댓글입니다.");
+
+        if (reply.getBoard() != null)
+            throw new IllegalArgumentException("게시글에 대한 댓글입니다.");
+
+        if (reply.getUser().getId() != userId)
+            throw new IllegalArgumentException("중고도서 댓글 삭제 실패! 회원 정보가 일치하지 않습니다.");
 
         replyRepository.delete(reply);
         return "댓글 삭제 완료 : " + reply.getContent();
     }
+
     // 중고도서 댓글 조회
     public Page<UsedBookReplyDto> usedBookReplyList(Long usedBookId, String page, String size) {
         UsedBook usedBook = usedBookRepository.findById(usedBookId)
