@@ -1,5 +1,6 @@
 package com.bookpie.shop.controller;
 
+import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.board.BoardDto;
 import com.bookpie.shop.domain.enums.BoardType;
 import com.bookpie.shop.service.BoardService;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,7 +28,7 @@ public class BoardController {
     // 게시글 작성
     @PostMapping("")
     public ResponseEntity create(@RequestBody BoardDto dto) {
-        return new ResponseEntity(success(boardService.create(dto)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.create(dto, getCurrentUserId())), HttpStatus.OK);
     }
 
     // 게시글 수정
@@ -100,5 +102,9 @@ public class BoardController {
                                  @RequestParam(required = false, defaultValue = "10") String size,
                                  @RequestParam(required = false) BoardType boardType) {
         return new ResponseEntity(success(boardService.search(keyWord, page, size, boardType)), HttpStatus.OK);
+    }
+    private Long getCurrentUserId(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getId();
     }
 }
