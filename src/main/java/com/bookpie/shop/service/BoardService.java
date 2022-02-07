@@ -32,7 +32,7 @@ public class BoardService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 게시글 엔티티 생성
-        Board board = Board.createBoard(dto, user);
+        Board board = Board.createBoard(dto, user, userId);
 
         // 게시글 DB에 저장
         Board createdBoard = boardRepository.save(board);
@@ -44,13 +44,13 @@ public class BoardService {
     }
 
     // 게시글 수정
-    public BoardDto update(BoardDto dto) {
+    public BoardDto update(BoardDto dto, Long userId) {
         // 게시글 조회 및 예외 발생
-        Board board = boardRepository.findById(dto.getBoardId())
+        Board board = boardRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
         // 게시글 수정
-        board.patch(dto);
+        board.patch(dto, userId);
 
         // DB 저장
         Board updatedBoard = boardRepository.save(board);
@@ -59,10 +59,14 @@ public class BoardService {
     }
 
     // 게시글 삭제
-    public boolean delete(Long boardId) {
+    public boolean delete(Long boardId, Long userId) {
         // 게시글 조회 및 예외 발생
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+
+        if (userId != board.getUser().getId())
+            throw new IllegalArgumentException("게시글 삭제 실패! 작성한 유저가 아닙니다.");
+
         // 게시글 삭제
         boardRepository.delete(board);
 

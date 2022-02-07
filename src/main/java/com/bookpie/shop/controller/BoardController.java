@@ -34,13 +34,13 @@ public class BoardController {
     // 게시글 수정
     @PutMapping("")
     public ResponseEntity update(@RequestBody BoardDto dto) {
-        return new ResponseEntity(success(boardService.update(dto)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.update(dto, getCurrentUserId())), HttpStatus.OK);
     }
 
     // 게시글 삭제
     @DeleteMapping("/{boardId}")
     public ResponseEntity delete(@PathVariable Long boardId) {
-        return new ResponseEntity(success(boardService.delete(boardId)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.delete(boardId, getCurrentUserId())), HttpStatus.OK);
     }
 
     // 게시글 전체 조회(카테고리별)
@@ -88,11 +88,10 @@ public class BoardController {
     }
 
     // 회원이 작성한 게시글 보기
-    @GetMapping("/my/{userId}")
-    public ResponseEntity myBoard(@PathVariable Long userId,
-                                  @RequestParam(required = false, defaultValue = "0") String page,
+    @GetMapping("/my")
+    public ResponseEntity myBoard(@RequestParam(required = false, defaultValue = "0") String page,
                                   @RequestParam(required = false, defaultValue = "10") String size) {
-        return new ResponseEntity(success(boardService.getMyBoard(userId, page, size)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.getMyBoard(getCurrentUserId(), page, size)), HttpStatus.OK);
     }
 
     // 게시글 검색
@@ -105,6 +104,7 @@ public class BoardController {
     }
     private Long getCurrentUserId(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("유저 정보 : " + user.getId()+", "+user.getName());
         return user.getId();
     }
 }
