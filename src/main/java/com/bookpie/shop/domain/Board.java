@@ -59,9 +59,9 @@ public class Board {
                 .build();
     }
 
-    public void patch(BoardDto dto, Long userId) {
+    public void patch(BoardDto dto) {
         // 예외 발생
-        if (this.id != userId)
+        if (this.id != dto.getBoardId())
             throw new IllegalArgumentException("게시글이 일치하지 않습니다.");
 
         // 게시글 수정
