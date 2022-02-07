@@ -46,11 +46,14 @@ public class BoardService {
     // 게시글 수정
     public BoardDto update(BoardDto dto, Long userId) {
         // 게시글 조회 및 예외 발생
-        Board board = boardRepository.findById(userId)
+        Board board = boardRepository.findById(dto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
+        if (board.getUser().getId() != userId)
+            throw new IllegalArgumentException("게시글 수정 실패! 회원 정보가 일치하지 않습니다.");
+
         // 게시글 수정
-        board.patch(dto, userId);
+        board.patch(dto);
 
         // DB 저장
         Board updatedBoard = boardRepository.save(board);
