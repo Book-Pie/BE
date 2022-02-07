@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/usedbook/like/**").hasRole("USER")
                 .antMatchers("/api/usedbook/date/**").hasRole("USER")
                 .antMatchers("/api/board/my/**").hasRole("USER")
+                .antMatchers("/api/book-review/like/**").hasRole("USER")
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
