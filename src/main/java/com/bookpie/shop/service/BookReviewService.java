@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,6 +88,10 @@ public class BookReviewService {
         Page<BookReviewDto> bookReviewDtoPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest)
                 .map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
 
+        // 해당 책에 대한 리뷰 평점
+        Double averageRating = bookReviewRepository.averageRating(isbn);
+        averageRating = Math.round(averageRating * 100) / 100.0;
+
         // content, pageable, myCommentCheck를 JSON 객체에 담기
         response.put("content", bookReviewDtoPage.stream().toArray());
         response.put("pageable", bookReviewDtoPage.getPageable());
@@ -95,6 +100,7 @@ public class BookReviewService {
         response.put("totalPages", bookReviewDtoPage.getTotalPages());
         response.put("first", bookReviewDtoPage.isFirst());
         response.put("empty", bookReviewDtoPage.isEmpty());
+        response.put("averageRating", averageRating);
         // 해당 책에 내가 작성한 도서리뷰가 있는지 확인하고 있으면 true, 없으면 false
         if (myReview(isbn, userId) != null) {
             response.put("myCommentCheck", true);
@@ -150,5 +156,25 @@ public class BookReviewService {
         return reviewList.stream()
                 .map(bookReview -> BookReviewDto.createDto(bookReview, user_id))
                 .collect(Collectors.toList());
+    }
+
+    public List<JSONObject> myCategory(String userId) {
+        Long user_id = Long.parseLong(userId);
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        List<JSONObject> myCategoryList = bookReviewRepository.myCategory(user_id);
+
+        List<JSONObject> resultObjs = new ArrayList<>();
+
+        for (int i = 0; i < myCategoryList.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("id", myCategoryList.get(i).get("category"));
+            jsonObject.put("label", myCategoryList.get(i).get("category"));
+            jsonObject.put("value", myCategoryList.get(i).get("count"));
+            resultObjs.add(jsonObject);
+        }
+
+        return resultObjs;
     }
 }

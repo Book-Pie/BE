@@ -74,4 +74,10 @@ public class BookReviewController {
         return new ResponseEntity(success(bookReviewService.bestReview(isbn, userId)), HttpStatus.OK);
     }
 
+
+    // 회원이 가장 많은 리뷰를 남긴 카테고리 top 5
+    @GetMapping("/myCategory")
+    public ResponseEntity myCategory(@RequestParam String userId) {
+        return new ResponseEntity(success(bookReviewService.myCategory(userId)), HttpStatus.OK);
+    }
 }
