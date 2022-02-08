@@ -26,13 +26,13 @@ public class BoardService {
     private final UserRepository userRepository;
 
     // 게시글 작성
-    public BoardDto create(BoardDto dto) {
+    public BoardDto create(BoardDto dto, Long userId) {
         // 유저 유효성 검사
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 게시글 엔티티 생성
-        Board board = Board.createBoard(dto, user);
+        Board board = Board.createBoard(dto, user, userId);
 
         // 게시글 DB에 저장
         Board createdBoard = boardRepository.save(board);
@@ -44,10 +44,13 @@ public class BoardService {
     }
 
     // 게시글 수정
-    public BoardDto update(BoardDto dto) {
+    public BoardDto update(BoardDto dto, Long userId) {
         // 게시글 조회 및 예외 발생
         Board board = boardRepository.findById(dto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+
+        if (board.getUser().getId() != userId)
+            throw new IllegalArgumentException("게시글 수정 실패! 회원 정보가 일치하지 않습니다.");
 
         // 게시글 수정
         board.patch(dto);
@@ -59,10 +62,14 @@ public class BoardService {
     }
 
     // 게시글 삭제
-    public boolean delete(Long boardId) {
+    public boolean delete(Long boardId, Long userId) {
         // 게시글 조회 및 예외 발생
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+
+        if (userId != board.getUser().getId())
+            throw new IllegalArgumentException("게시글 삭제 실패! 작성한 유저가 아닙니다.");
+
         // 게시글 삭제
         boardRepository.delete(board);
 

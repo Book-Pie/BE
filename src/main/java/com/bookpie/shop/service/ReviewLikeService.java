@@ -24,18 +24,18 @@ public class ReviewLikeService {
     private final BookReviewRepository bookReviewRepository;
     private final UserRepository userRepository;
 
-    public ReviewLikeDto like(BookReviewDto dto) {
+    public ReviewLikeDto like(BookReviewDto dto, Long userId) {
         // 해당 리뷰가 있는지 확인
         BookReview bookReview = bookReviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 해당 회원이 좋아요를 눌렀으면 취소하는 메서드
         List<ReviewLike> reviewLikes = reviewLikeRepository.findAllByReviewId(dto.getReviewId());
         for (ReviewLike reviewLike : reviewLikes) {
-            if (reviewLike.getUser().getId() == user.getId()) {
+            if (reviewLike.getUser().getId() == userId) {
                 reviewLikeRepository.delete(reviewLike);
                 bookReviewRepository.decreaseLikeCnt(dto.getReviewId());
                 return ReviewLikeDto.createDto(reviewLike, false);

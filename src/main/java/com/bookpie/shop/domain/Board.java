@@ -42,9 +42,9 @@ public class Board {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
-    public static Board createBoard(BoardDto dto, User user) {
+    public static Board createBoard(BoardDto dto, User user, Long userId) {
         // 예외 처리
-        if (dto.getUserId() != user.getId())
+        if (userId != user.getId())
             throw new IllegalArgumentException("게시글 작성 실패! 회원이 일치하지 않습니다.");
         if (dto == null)
             throw new IllegalArgumentException("게시글 작성 실패! 게시글이 존재하지 않습니다.");

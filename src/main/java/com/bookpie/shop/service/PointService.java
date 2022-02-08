@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +31,7 @@ public class PointService {
     private final ApiConfig apiConfig;
 
     // 포인트 충전
-    public JSONObject charge(PointDto dto) {
+    public JSONObject charge(PointDto dto, Long userId) {
         // 응답할 JSON객체 생성
         JSONObject response = new JSONObject();
         try {
@@ -46,7 +45,6 @@ public class PointService {
             JSONObject token = callApi(jsonObject, type, uri);
 
             // 2. imp_uid로 아임포트 서버에서 결제 정보 조회
-            //JSONObject jsonObject1 = new JSONObject();
             uri = "https://api.iamport.kr/payments/" + dto.getImpUid();
             type = "GET";
             // 2-1. 가져온 token값에서 access_token값만을 추출
@@ -65,7 +63,7 @@ public class PointService {
                     response.put("message", "일반 결제 성공");
 
                     // 3-2. DB에 정보 금액 저장
-                    User user = userRepository.findById(dto.getUserId())
+                    User user = userRepository.findById(userId)
                             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
                     user.getPoint().chargePoint(dto.getAmount());
@@ -84,7 +82,7 @@ public class PointService {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             // 주문 취소
-            cancel(dto);
+            cancel(dto, userId);
         }
 
         return response;
@@ -132,21 +130,10 @@ public class PointService {
         return response;
     }
 
-    // 포인트 결제 내역 조회
-    public List<PointDto> getPointList(Long user_id) {
-        User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-
-        List<OrderPoint> pointList = user.getOrderPoint();
-
-        return pointList.stream().map(orderPoint -> PointDto.createDto(orderPoint))
-                .collect(Collectors.toList());
-    }
-
     // 포인트 환불
-    public String cancel(PointDto dto) {
+    public String cancel(PointDto dto, Long userId) {
         // 유저 유효성 검사
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 금액이 맞지 않을 경우 환불 불가
@@ -240,5 +227,16 @@ public class PointService {
 
 
         return "환불 성공";
+    }
+
+    // 포인트 결제 내역 조회
+    public List<PointDto> getPointList(Long user_id) {
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        List<OrderPoint> pointList = user.getOrderPoint();
+
+        return pointList.stream().map(orderPoint -> PointDto.createDto(orderPoint))
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,9 @@
 package com.bookpie.shop.repository;
 
 import com.bookpie.shop.domain.BookReview;
+import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,4 +41,17 @@ public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
     @Query(value = "select * from book_review where isbn=:isbn and like_cnt > 0" +
             " order by like_cnt DESC LIMIT 2", nativeQuery = true)
     List<BookReview> bestReview(@Param("isbn") String isbn);
+
+    // 회원이 가장 많은 리뷰를 남긴 카테고리 top 5
+    @Query(value = "select category, count(*) as count from book_review" +
+            " where user_id = :user_id" +
+            " group by category" +
+            " order by count(*) DESC LIMIT 5", nativeQuery = true)
+    List<JSONObject> myCategory(@Param("user_id") Long user_id);
+
+    // 해당 책의 평균 평점
+    @Query(value = "select avg(rating) from book_review " +
+            "where isbn = :isbn", nativeQuery = true)
+    Double averageRating(@Param("isbn") String isbn);
+
 }
