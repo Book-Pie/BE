@@ -45,7 +45,7 @@ spring:
     hibernate:
       ddl-auto: update
 path:
-  base: http://localhost:9090
+  base: http://localhost:8080
   image:
     dev: C:\bookpie_image\
 
@@ -57,7 +57,7 @@ spring:
       on-profile: release
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 path:
   base: http://bookpie.tk:8080
