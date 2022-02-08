@@ -35,42 +35,37 @@ public class BookReviewService {
 
     // 도서 리뷰 작성
     public BookReviewDto create(BookReviewDto dto, Long userId) {
-        // 회원 객체 생성
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
+        BookReview checkBookReview = bookReviewRepository.findMyReview(dto.getIsbn(), userId);
+        if (checkBookReview != null)
+            throw new IllegalArgumentException("도서 리뷰는 한 번 밖에 작성할 수 없습니다.");
 
-        // 책 리뷰 엔티티 생성
         BookReview bookReview = BookReview.createBookReview(dto, user);
 
-        // 연관 관계 생성
         user.getBookReviews().add(bookReview);
 
-        // DB저장
         BookReview createdBookReview = bookReviewRepository.save(bookReview);
         return BookReviewDto.createDto(createdBookReview, user.getId());
     }
 
     // 도서 리뷰 수정
     public BookReviewDto update(BookReviewDto dto, Long userId) {
-        // 해당 리뷰 생성
         BookReview bookReview = bookReviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
         if (userId != bookReview.getUser().getId())
             throw new IllegalArgumentException("도서리뷰 수정 실패! 회원 정보가 일치하지 않습니다.");
 
-        // 리뷰 수정
         bookReview.patch(dto);
 
-        // 리뷰 수정 후 DB저장
         BookReview createdBookReview = bookReviewRepository.save(bookReview);
         return BookReviewDto.createDto(createdBookReview, userId);
     }
 
     // 도서 리뷰 삭제
     public String delete(Long reviewId, Long userId) {
-        // 해당 리뷰 생성
         BookReview bookReview = bookReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
@@ -83,7 +78,6 @@ public class BookReviewService {
 
     // 해당 도서의 리뷰 전체 조회
     public JSONObject getReview(String isbn, String page, String size) {
-        // 반환할 제이슨 객체
         JSONObject response = new JSONObject();
         Long userId = 0L;
 
@@ -94,28 +88,38 @@ public class BookReviewService {
         PageRequest pageRequest = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reviewDate").descending());  // 페이징 정보
 
         Long finalUser_id = userId;
-        // Page<BookReview>객체를 Page<BookReviewDto> 객체로 변환
-        Page<BookReviewDto> bookReviewDtoPage = bookReviewRepository.findAllByIsbn(isbn, pageRequest)
-                .map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
 
-        // 해당 책에 대한 리뷰 평점
-        Double averageRating = bookReviewRepository.averageRating(isbn);
-        averageRating = Math.round(averageRating * 100) / 100.0;
-
-        // content, pageable, myCommentCheck를 JSON 객체에 담기
-        response.put("content", bookReviewDtoPage.stream().toArray());
-        response.put("pageable", bookReviewDtoPage.getPageable());
-        response.put("last", bookReviewDtoPage.isLast());
-        response.put("totalElements", bookReviewDtoPage.getTotalElements());
-        response.put("totalPages", bookReviewDtoPage.getTotalPages());
-        response.put("first", bookReviewDtoPage.isFirst());
-        response.put("empty", bookReviewDtoPage.isEmpty());
-        response.put("averageRating", averageRating);
-        // 해당 책에 내가 작성한 도서리뷰가 있는지 확인하고 있으면 true, 없으면 false
-        if (myReview(isbn, userId) != null) {
-            response.put("myCommentCheck", true);
+        Page<BookReview> bookReviews = bookReviewRepository.findAllByIsbn(isbn, pageRequest);
+        // 해당 isbn에 등록된 리뷰가 없으면 빈 배열 보내기
+        if (bookReviews.isEmpty()) {
+            response.put("content", bookReviews.stream().toArray());
+            response.put("pageable", bookReviews.getPageable());
+            response.put("last", bookReviews.isLast());
+            response.put("totalElements", bookReviews.getTotalElements());
+            response.put("totalPages", bookReviews.getTotalPages());
+            response.put("first", bookReviews.isFirst());
+            response.put("empty", bookReviews.isEmpty());
         } else {
-            response.put("myCommentCheck", false);
+            Page<BookReviewDto> bookReviewDtoPage = bookReviews.map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id));
+
+            Double averageRating = bookReviewRepository.averageRating(isbn);
+            averageRating = Math.round(averageRating * 100) / 100.0;
+
+            response.put("content", bookReviewDtoPage.stream().toArray());
+            response.put("pageable", bookReviewDtoPage.getPageable());
+            response.put("last", bookReviewDtoPage.isLast());
+            response.put("totalElements", bookReviewDtoPage.getTotalElements());
+            response.put("totalPages", bookReviewDtoPage.getTotalPages());
+            response.put("first", bookReviewDtoPage.isFirst());
+            response.put("empty", bookReviewDtoPage.isEmpty());
+            response.put("averageRating", averageRating);
+
+            // 해당 책에 내가 작성한 도서리뷰가 있는지 확인하고 있으면 true, 없으면 false
+            if (myReview(isbn, userId) != null) {
+                response.put("myCommentCheck", true);
+            } else {
+                response.put("myCommentCheck", false);
+            }
         }
 
         return response;
@@ -124,18 +128,12 @@ public class BookReviewService {
 
     // 내가 쓴 도서리뷰
     public Page<BookReviewDto> getMyReview(Long userId, String page, String size) {
-        // 회원 객체 생성
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        // 페이징 데이터
         Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reviewDate").descending());
 
-        // 해당 회원이 작성한 도서 리뷰 조회
         Page<BookReview> bookReviewPage = bookReviewRepository.findAllByUserId(userId, pageable);
-
-
-        List<BookReview> reviewList = user.getBookReviews();
 
         return bookReviewPage.map(bookReview -> BookReviewDto.createDto(bookReview, userId));
     }
@@ -181,7 +179,6 @@ public class BookReviewService {
 
         for (int i = 0; i < myCategoryList.size(); i++) {
             JSONObject jsonObject = new JSONObject();
-
             jsonObject.put("id", myCategoryList.get(i).get("category"));
             jsonObject.put("label", myCategoryList.get(i).get("category"));
             jsonObject.put("value", myCategoryList.get(i).get("count"));
