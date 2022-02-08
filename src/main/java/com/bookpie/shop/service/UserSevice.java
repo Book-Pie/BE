@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -40,8 +41,6 @@ public class UserSevice {
 
     private final JavaMailSender javaMailSender;
     private final ApiConfig apiConfig;
-    private Map<String, String> emailCode = new HashMap<>();
-    private final HttpSession session;
 
     @Value("${path.image.dev}")
     private String filePath;
@@ -162,7 +161,9 @@ public class UserSevice {
     }
 
     // 이메일 인증코드로 확인
-    public boolean emailCheck(String email) {
+    public boolean emailCheck(String email, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Map<String, String> emailCode = new HashMap<>();
         final String FROM_ADDRESS = apiConfig.getAdminMail();
         final String TITLE = "북파이 회원가입 전 이메일 확인 메일입니다.";
 
@@ -220,7 +221,9 @@ public class UserSevice {
         return sb.toString();
     }
     // 코드 확인 메서드
-    public Boolean emailCodeCheck(EmailDto dto) {
+    public Boolean emailCodeCheck(EmailDto dto, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
         Map<String, String> map = new HashMap<>();
         if (session.getAttribute("emailCode") == null) {
             throw new IllegalArgumentException("이메일 인증코드를 재요청 해주세요");
