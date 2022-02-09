@@ -64,14 +64,13 @@ public class UserController {
 
     // 회원 이메일 확인
     @PostMapping("/email")
-    public ResponseEntity emailCheck(@RequestBody EmailDto dto, HttpServletRequest request) {
-        log.info("이메일1 : " + dto.getEmail());
-        return new ResponseEntity(success(userSevice.emailCheck(dto.getEmail(), request)), HttpStatus.OK);
+    public ResponseEntity emailCheck(@RequestBody EmailDto dto) {
+        return new ResponseEntity(success(userSevice.emailCheck(dto.getEmail())), HttpStatus.OK);
     }
     // 이메일 코드 확인
     @PostMapping("/email/code")
-    public ResponseEntity emailCodeCheck(@RequestBody EmailDto dto, HttpServletRequest request) {
-        return new ResponseEntity(success(userSevice.emailCodeCheck(dto, request)), HttpStatus.OK);
+    public ResponseEntity emailCodeCheck(@RequestBody EmailDto dto) {
+        return new ResponseEntity(success(userSevice.emailCodeCheck(dto)), HttpStatus.OK);
     }
     //닉네임 변경
     @PutMapping("nickname/{nickname}")

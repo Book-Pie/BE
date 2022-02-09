@@ -38,16 +38,14 @@ public class ReplyService {
 
     // 게시글에 댓글 작성
     public BoardReplyDto create(BoardReplyDto dto, Long userId) {
-        // 유저 유효성 검사
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        // 해당 게시글 존재하는지 확인
         Board board = boardRepository.findById(dto.getBoardId())
                 .orElseThrow(()->new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
-        // 댓글 DB에 저장
         Reply reply = Reply.createReplyBoard(dto, user, board);
+
         if (replyRepository.save(reply) != null) {
             user.getReplies().add(reply);
             board.getReplies().add(reply);
@@ -60,15 +58,13 @@ public class ReplyService {
 
     // 게시글 댓글 수정
     public BoardReplyDto update(BoardReplyDto dto, Long userId) {
-        // 댓글 유효성 검사
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
-        // 유저 유효성 검사
         if (reply.getUser().getId() != userId) {
             throw new IllegalArgumentException("댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
         }
-        // 댓글 수정
+
         reply.patch(dto);
 
         return BoardReplyDto.createReplyDto(replyRepository.save(reply), reply.getSubReply());
@@ -76,11 +72,9 @@ public class ReplyService {
 
     // 게시글 댓글 삭제
    public String delete(Long replyId, Long userId) {
-        // 댓글 유효성 검사
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
-        // 유저 유효성 검사
         if (reply.getUser().getId() != userId) throw new IllegalArgumentException("게시글 삭제 실패! 회원 정보가 일치하지 않습니다.");
 
         if (reply.getUsedBook() != null) throw new IllegalArgumentException("중고도서에 대한 댓글입니다.");
@@ -91,21 +85,18 @@ public class ReplyService {
 
     // 게시글의 댓글 리스트 조회 (페이징 기능)
     public Page<BoardReplyDto> getAll(Long boardId, String page, String size) {
-        // 게시글 유효성 검사
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
         Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reply_date").descending());
 
-        // DB에서 해당 게시글의 댓글 리스트 조회
         Page<Reply> replies = replyRepository.findAllByBoard(boardId, pageable);
-        // 댓글 리스트들을 Dto로 변환 후 전달
+
         return replies.map(reply -> BoardReplyDto.createDto(reply));
     }
 
     // 대댓글 작성
     public SubReplyDto createSubReply(SubReplyDto dto, Long userId) {
-        // 댓글 유효성 검사
         Reply reply = replyRepository.findById(dto.getParentReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
@@ -129,6 +120,7 @@ public class ReplyService {
 
         return SubReplyDto.createDto(subReply);
     }
+
     // 대댓글 삭제
     public String deleteSubReply(Long replyId, Long userId) {
         Reply subReply = replyRepository.findById(replyId)
@@ -162,18 +154,14 @@ public class ReplyService {
 
     // 중고도서에 댓글 작성
     public UsedBookReplyDto replyOnUsedBook(UsedBookReplyDto dto, Long userId) {
-        // 중고도서 유효성 검사
         UsedBook usedBook = usedBookRepository.findById(dto.getUsedBookId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 중고도서는 존재하지 않습니다."));
 
-        // 유저 유효성 검사
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        // 댓글 엔티티 생성
         Reply reply = Reply.createReplyUsedBook(dto, user, usedBook);
 
-        // DB에 저장
         if (replyRepository.save(reply) != null) {
             usedBook.getReplies().add(reply);
             user.getReplies().add(reply);

@@ -25,7 +25,6 @@ public class ReviewLikeService {
     private final UserRepository userRepository;
 
     public ReviewLikeDto like(BookReviewDto dto, Long userId) {
-        // 해당 리뷰가 있는지 확인
         BookReview bookReview = bookReviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
