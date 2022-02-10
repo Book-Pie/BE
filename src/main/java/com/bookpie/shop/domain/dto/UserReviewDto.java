@@ -12,6 +12,7 @@ public class UserReviewDto {
     private String sellerName;
     private Long buyerId;
     private String buyerName;
+    private String buyerImage;
     private Long usedBookId;
     private String usedBookTitle;
     private String content;
@@ -31,6 +32,7 @@ public class UserReviewDto {
         this.reviewDate = userReview.getReviewDate();
         this.buyerId = userReview.getOrder().getBuyer().getId();
         this.buyerName = userReview.getOrder().getBuyer().getNickName();
+        this.buyerImage = userReview.getOrder().getBuyer().getImage();
         this.image = userReview.getOrder().getBook().getThumbnail();
         this.price = userReview.getOrder().getBook().getPrice();
     }
