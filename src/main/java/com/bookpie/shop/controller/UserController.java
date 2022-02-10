@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -64,7 +65,6 @@ public class UserController {
     // 회원 이메일 확인
     @PostMapping("/email")
     public ResponseEntity emailCheck(@RequestBody EmailDto dto) {
-        log.info("이메일1 : " + dto.getEmail());
         return new ResponseEntity(success(userSevice.emailCheck(dto.getEmail())), HttpStatus.OK);
     }
     // 이메일 코드 확인

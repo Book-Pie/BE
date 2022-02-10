@@ -10,7 +10,10 @@ import com.bookpie.shop.repository.UserRepository;
 import com.bookpie.shop.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,11 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -40,8 +46,10 @@ public class UserSevice {
 
     private final JavaMailSender javaMailSender;
     private final ApiConfig apiConfig;
-    private Map<String, String> emailCode = new HashMap<>();
     private final HttpSession session;
+
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
 
     @Value("${path.image.dev}")
     private String filePath;
@@ -168,9 +176,13 @@ public class UserSevice {
 
         // 인증코드
         String code = createKey();
-        emailCode.put(email, code);
-        session.setAttribute("emailCode", emailCode);
-        session.setMaxInactiveInterval(5*60);  // 세션 유지시간 5분
+        final ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(email, code);
+        redisTemplate.expire(email, 60*5, TimeUnit.SECONDS);
+
+        final String result = valueOperations.get(email);
+        log.info("redis 저장된 값 : " + result);
+        log.info("유효 시간 : " + redisTemplate.getExpire(email));
 
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
@@ -221,19 +233,11 @@ public class UserSevice {
     }
     // 코드 확인 메서드
     public Boolean emailCodeCheck(EmailDto dto) {
-        Map<String, String> map = new HashMap<>();
-        if (session.getAttribute("emailCode") == null) {
-            throw new IllegalArgumentException("이메일 인증코드를 재요청 해주세요");
-        } else {
-            map = (Map<String, String>) session.getAttribute("emailCode");
-        }
+        final ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String code = valueOperations.get(dto.getEmail());
 
-        if (dto.getCode().equals(map.get(dto.getEmail()))) {
-            session.removeAttribute("emailCode");
-            return true;
-        } else {
-            throw new IllegalArgumentException("코드번호가 일치하지 않습니다.");
-        }
+        if (code.equals(dto.getCode())) return true;
+        else throw new IllegalArgumentException("코드가 일치하지 않습니다.");
     }
 
 }

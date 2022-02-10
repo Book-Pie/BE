@@ -56,10 +56,11 @@ public class BookReviewController {
     }
 
     // 내가 쓴 도서리뷰 조회
-    @GetMapping("/my")
+    @GetMapping("/myReview/{userId}")
     public ResponseEntity getMyReview(@RequestParam(required = false, defaultValue = "0") String page,
-                                      @RequestParam(required = false, defaultValue = "5") String size) {
-        return new ResponseEntity(success(bookReviewService.getMyReview(getCurrentUserId(), page, size)), HttpStatus.OK);
+                                      @RequestParam(required = false, defaultValue = "5") String size,
+                                      @PathVariable Long userId) {
+        return new ResponseEntity(success(bookReviewService.getMyReview(userId, page, size)), HttpStatus.OK);
     }
 
     // 해당 도서에 내가 쓴 도서리뷰
