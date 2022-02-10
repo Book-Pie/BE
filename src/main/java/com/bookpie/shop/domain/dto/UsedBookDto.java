@@ -3,7 +3,6 @@ package com.bookpie.shop.domain.dto;
 import com.bookpie.shop.domain.Image;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.enums.BookState;
-import com.bookpie.shop.domain.enums.Category;
 import com.bookpie.shop.domain.enums.SaleState;
 import lombok.Data;
 
@@ -16,6 +15,7 @@ public class UsedBookDto {
     private Long usedBookId;
     private Long sellerId;
     private String sellerName;
+    private String sellerImage;
     private int price;
     private String title;
     private String content;
@@ -37,6 +37,7 @@ public class UsedBookDto {
         dto.setUsedBookId(usedBook.getId());
         dto.setSellerId(usedBook.getSeller().getId());
         dto.setSellerName(usedBook.getSeller().getNickName());
+        dto.setSellerImage(usedBook.getSeller().getImage());
         dto.setPrice(usedBook.getPrice());
         dto.setTitle(usedBook.getTitle());
         dto.setContent(usedBook.getContent());
