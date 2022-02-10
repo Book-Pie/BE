@@ -76,9 +76,9 @@ public class BookReviewController {
     }
 
     // 회원이 가장 많은 리뷰를 남긴 카테고리 top 5
-    @GetMapping("/myCategory")
-    public ResponseEntity myCategory() {
-        return new ResponseEntity(success(bookReviewService.myCategory(getCurrentUserId())), HttpStatus.OK);
+    @GetMapping("/myCategory/{userId}")
+    public ResponseEntity myCategory(@PathVariable Long userId) {
+        return new ResponseEntity(success(bookReviewService.myCategory(userId)), HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){

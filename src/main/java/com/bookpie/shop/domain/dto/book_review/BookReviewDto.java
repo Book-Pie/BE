@@ -28,6 +28,7 @@ public class BookReviewDto {
     private String category;
     @Builder.Default
     private Boolean likeCheck = false;
+    private String profile;
 
     public static BookReviewDto createDto(BookReview bookReview, Long user_id) {
         return BookReviewDto.builder()
@@ -40,6 +41,7 @@ public class BookReviewDto {
                 .reviewLikeCount(bookReview.getReviewLikes().size())
                 .reviewDate(bookReview.getReviewDate())
                 .category(bookReview.getCategory())
+                .profile(bookReview.getUser().getImage())
                 .likeCheck(likeCheck(bookReview, user_id))
                 .build();
     }
