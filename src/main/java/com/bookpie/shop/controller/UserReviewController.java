@@ -37,20 +37,20 @@ public class UserReviewController {
                                             @RequestParam(value = "page",required = false,defaultValue = "1")int page,
                                             @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
                                             @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
-        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(userId,page,limit,pageCount)),HttpStatus.OK);
+        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(userId,page,limit)),HttpStatus.OK);
     }
     @GetMapping("/me")
     public ResponseEntity findMyUserReview(@RequestParam(value = "page",required = false,defaultValue = "1")int page,
                                            @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
                                            @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
-        return new ResponseEntity(success(userReviewService.getUserReviewsByWriter(getCurrentUserId(),page,limit,pageCount)),HttpStatus.OK);
+        return new ResponseEntity(success(userReviewService.getUserReviewsByWriter(getCurrentUserId(),page,limit)),HttpStatus.OK);
     }
 
     @GetMapping("/to-me")
     public ResponseEntity findUserReviewToMe(@RequestParam(value = "page",required = false,defaultValue = "1")int page,
                                              @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
                                              @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
-        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId(),page,limit,pageCount)),HttpStatus.OK);
+        return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId(),page,limit)),HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){

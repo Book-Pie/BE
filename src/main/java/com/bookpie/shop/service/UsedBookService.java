@@ -3,15 +3,13 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.domain.*;
 import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.domain.enums.SaleState;
-import com.bookpie.shop.repository.BookTagAndImageRepository;
-import com.bookpie.shop.repository.TagRepository;
-import com.bookpie.shop.repository.UsedBookRepository;
-import com.bookpie.shop.repository.UserRepository;
+import com.bookpie.shop.repository.*;
 import com.bookpie.shop.utils.FileUtil;
 import com.bookpie.shop.utils.PageUtil.PageDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,8 @@ public class UsedBookService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final BookTagAndImageRepository bookTagAndImageRepository;
-
+    private final BookReviewRepository bookReviewRepository;
+    
     @Value("${path.image.dev}")
     private String filePath;
 
@@ -117,21 +116,25 @@ public class UsedBookService {
     public UsedBookDto getUsedBook(Long id){
         UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));
         log.debug(usedBook.getImages().toString());
+        List<JSONObject> categories= bookReviewRepository.myCategory(usedBook.getSeller().getId());
         UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
+        usedBookDto.addSellerCategories(categories);
         return usedBookDto;
     }
 
     //중고도서 검색
     public PageDto getUsedBookList(FindUsedBookDto findUsedBookDto){
         List<UsedBook> result = usedBookRepository.findAll(findUsedBookDto);
+        Long total = 0l;
         if(findUsedBookDto.getPageCount() == 0){
-            findUsedBookDto.setPageCount(usedBookRepository.count(findUsedBookDto));
+            total = usedBookRepository.count(findUsedBookDto);
+            findUsedBookDto.setPageCount(total);
         }
         Long pageCount =findUsedBookDto.getPageCount()/findUsedBookDto.getLimit();
         if (findUsedBookDto.getPageCount()% findUsedBookDto.getLimit() !=0){pageCount++;}
         log.debug(String.valueOf(result.size()));
         List<UsedBookListDto> collect = result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
-        return new PageDto(pageCount,collect);
+        return new PageDto(pageCount,total,collect);
     }
 
     //isbn으로 중고도서 검색
@@ -147,15 +150,13 @@ public class UsedBookService {
     }
 
     //회원이 올린 중고도서
-    public PageDto getUserUpload(Long userId,int offset,int limit,Long pageCount){
-        if (pageCount == 0){
-            Long total = usedBookRepository.count(userId);
-            pageCount = total/limit;
-            if (total%limit != 0) pageCount++;
-        }
+    public PageDto getUserUpload(Long userId,int offset,int limit){
+        Long total = usedBookRepository.count(userId);
+        Long pageCount = total/limit;
+        if (total%limit != 0) pageCount++;
         List<UsedBook> result = usedBookRepository.findAllByUserId(userId, offset, limit);
         List<UsedBookListDto> collect = result.stream().map(UsedBookListDto::new).collect(Collectors.toList());
-        return new PageDto(pageCount,collect);
+        return new PageDto(pageCount,total,collect);
     }
 
     //판매중,판매완료 책 개수

@@ -64,28 +64,27 @@ public class OrderService {
         return orderRepository.remove(order);
     }
 
-    public PageDto getOrdersByBuyer(Long userId, int page, int limit, Long pageCount){
-        if (pageCount == 0){
-            Long total = orderRepository.countByBuyer(userId);
-            pageCount = total/limit;
-            if(total%limit != 0) pageCount++;
-        }
+    public PageDto getOrdersByBuyer(Long userId, int page, int limit){
+
+        Long total = orderRepository.countByBuyer(userId);
+        Long pageCount = total/limit;
+        if(total%limit != 0) pageCount++;
         int offset = page*limit - limit;
         List<Order> orders = orderRepository.findByBuyer(userId,limit,offset);
         List<OrderListDto> result = orders.stream().map(o -> new OrderListDto(o)).collect(Collectors.toList());
-        return new PageDto(pageCount,result);
+        return new PageDto(pageCount,total,result);
     }
 
-    public PageDto getOrdersBySeller(Long userId, int page, int limit, Long pageCount){
-        if (pageCount == 0){
-            Long total = orderRepository.countBySeller(userId);
-            pageCount = total/limit;
-            if (total%limit != 0) pageCount++;
-        }
+    public PageDto getOrdersBySeller(Long userId, int page, int limit){
+
+        Long total = orderRepository.countBySeller(userId);
+        Long pageCount = total/limit;
+        if (total%limit != 0) pageCount++;
+
         int offset = page*limit - limit;
         List<Order> orders = orderRepository.findBySeller(userId,limit,offset);
         List<OrderListDto> result = orders.stream().map(o -> new OrderListDto(o)).collect(Collectors.toList());
-        return new PageDto(pageCount,result);
+        return new PageDto(pageCount,total,result);
     }
 
     public OrderDto getOrderDetail(Long id){

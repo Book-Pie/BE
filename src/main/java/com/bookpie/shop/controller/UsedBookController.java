@@ -106,7 +106,7 @@ public class UsedBookController {
                                       @RequestParam(value = "limit",required = false,defaultValue = "5")int limit,
                                       @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
         int offset = (page*limit)-limit;
-        return new ResponseEntity(success(usedBookService.getUserUpload(userId,offset,limit,pageCount)),HttpStatus.OK);
+        return new ResponseEntity(success(usedBookService.getUserUpload(userId,offset,limit)),HttpStatus.OK);
     }
 
     //isbn으로 중고도서 검색

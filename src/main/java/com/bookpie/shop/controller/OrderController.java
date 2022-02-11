@@ -41,7 +41,7 @@ public class OrderController {
                                             @RequestParam(value = "page",required = false,defaultValue = "1") int page,
                                             @RequestParam(value = "limit",required = false,defaultValue = "5") int limit,
                                             @RequestParam(value = "pageCount",required = false,defaultValue = "0")Long pageCount){
-        return new ResponseEntity(success(orderService.getOrdersBySeller(userId,page,limit,pageCount)),HttpStatus.OK);
+        return new ResponseEntity(success(orderService.getOrdersBySeller(userId,page,limit)),HttpStatus.OK);
     }
 
     @GetMapping("/buyer")
@@ -49,7 +49,7 @@ public class OrderController {
                                            @RequestParam(value = "page",required = false,defaultValue = "1") int page,
                                            @RequestParam(value = "limit",required = false,defaultValue = "5") int limit,
                                            @RequestParam(value = "pageCount",required = false,defaultValue = "0") Long pageCount){
-        return new ResponseEntity(success(orderService.getOrdersByBuyer(userId,page,limit,pageCount)),HttpStatus.OK);
+        return new ResponseEntity(success(orderService.getOrdersByBuyer(userId,page,limit)),HttpStatus.OK);
     }
 
     @GetMapping("/book/{id}")
