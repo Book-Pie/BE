@@ -13,9 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
                 .antMatchers("/api/order/**").hasRole("USER")
                 .antMatchers("/api/user/me").hasRole("USER")
-                .antMatchers("/api/usedbook/user/**").hasRole("USER")
                 .antMatchers("/api/usedbook/like/**").hasRole("USER")
                 .antMatchers("/api/usedbook/date/**").hasRole("USER")
                 .antMatchers("/api/board/my/**").hasRole("USER")
