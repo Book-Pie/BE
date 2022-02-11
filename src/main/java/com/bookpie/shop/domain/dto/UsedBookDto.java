@@ -5,6 +5,7 @@ import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.enums.BookState;
 import com.bookpie.shop.domain.enums.SaleState;
 import lombok.Data;
+import org.json.simple.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class UsedBookDto {
     private Long sellerId;
     private String sellerName;
     private String sellerImage;
+    private List<JSONObject> favoriteCategories;
     private int totalSales;
     private int price;
     private String title;
@@ -59,4 +61,9 @@ public class UsedBookDto {
         dto.setTotalSales(usedBook.getSeller().getBookCount());
         return dto;
     }
+
+    public void addSellerCategories(List<JSONObject> favoriteCategories){
+        this.favoriteCategories = favoriteCategories;
+    }
+
 }

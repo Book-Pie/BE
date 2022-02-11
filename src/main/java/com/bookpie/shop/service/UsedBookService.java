@@ -3,15 +3,13 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.domain.*;
 import com.bookpie.shop.domain.dto.*;
 import com.bookpie.shop.domain.enums.SaleState;
-import com.bookpie.shop.repository.BookTagAndImageRepository;
-import com.bookpie.shop.repository.TagRepository;
-import com.bookpie.shop.repository.UsedBookRepository;
-import com.bookpie.shop.repository.UserRepository;
+import com.bookpie.shop.repository.*;
 import com.bookpie.shop.utils.FileUtil;
 import com.bookpie.shop.utils.PageUtil.PageDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,8 @@ public class UsedBookService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final BookTagAndImageRepository bookTagAndImageRepository;
-
+    private final BookReviewRepository bookReviewRepository;
+    
     @Value("${path.image.dev}")
     private String filePath;
 
@@ -117,7 +116,9 @@ public class UsedBookService {
     public UsedBookDto getUsedBook(Long id){
         UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));
         log.debug(usedBook.getImages().toString());
+        List<JSONObject> categories= bookReviewRepository.myCategory(usedBook.getSeller().getId());
         UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
+        usedBookDto.addSellerCategories(categories);
         return usedBookDto;
     }
 
