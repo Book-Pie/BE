@@ -1,12 +1,10 @@
 package com.bookpie.shop.domain.dto;
 
 import com.bookpie.shop.domain.Address;
-import com.bookpie.shop.domain.Image;
 import com.bookpie.shop.domain.Point;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.enums.Grade;
 import com.bookpie.shop.domain.enums.LoginType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -38,6 +36,7 @@ public class UserDetailDto {
         dto.setCreateDate(user.getCreateDate());
         dto.setImage(user.getImage());
         dto.setLoginType(user.getLoginType());
+        dto.setRating(user.getRating());
         return dto;
     }
 
