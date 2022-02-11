@@ -66,27 +66,24 @@ public class UserReviewService {
         userReview.update(userReviewUpdateDto.getContent(),userReviewUpdateDto.getRating());
         return new UserReviewDto(userReview);
     }
-    public PageDto getUserReviewsByWriter(Long userId, int page, int limit, Long pageCount){
-        if(pageCount == 0 ){
-            Long total = userReviewRepository.countByWriter(userId);
-            pageCount = total/limit;
-            if(total % limit !=0) pageCount++;
-        }
+    public PageDto getUserReviewsByWriter(Long userId, int page, int limit){
+        Long total = userReviewRepository.countByWriter(userId);
+        Long pageCount = total/limit;
+        if(total % limit !=0) pageCount++;
         int offset = page*limit - limit;
         List<UserReview> result = userReviewRepository.findByWriter(userId,limit,offset);
         List<UserReviewDto> reviews = result.stream().map(UserReviewDto::new).collect(Collectors.toList());
-        return new PageDto(pageCount,reviews);
+        return new PageDto(pageCount,total,reviews);
     }
 
-    public PageDto getUserReviewsByReader(Long userId, int page, int limit, Long pageCount){
-        if(pageCount == 0){
-            Long total = userReviewRepository.countByReader(userId);
-            pageCount = total/limit;
-            if(total%limit != 0 ) pageCount++;
-        }
+    public PageDto getUserReviewsByReader(Long userId, int page, int limit){
+
+        Long total = userReviewRepository.countByReader(userId);
+        Long pageCount = total/limit;
+        if(total%limit != 0 ) pageCount++;
         int offset = page*limit - limit;
         List<UserReview> result = userReviewRepository.findByReader(userId,limit,offset);
         List<UserReviewDto> reviews = result.stream().map(UserReviewDto::new).collect(Collectors.toList());
-        return new PageDto(pageCount,reviews);
+        return new PageDto(pageCount,total,reviews);
     }
 }

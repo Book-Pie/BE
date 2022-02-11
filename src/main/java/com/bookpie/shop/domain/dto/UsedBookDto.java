@@ -16,6 +16,7 @@ public class UsedBookDto {
     private Long sellerId;
     private String sellerName;
     private String sellerImage;
+    private int totalSales;
     private int price;
     private String title;
     private String content;
@@ -55,6 +56,7 @@ public class UsedBookDto {
         images.stream().forEach(image -> dto.images.add(image.getFileName()));
         usedBook.getTags().stream()
                 .forEach(tag->dto.tags.add(tag.getTag().getName()));
+        dto.setTotalSales(usedBook.getSeller().getBookCount());
         return dto;
     }
 }

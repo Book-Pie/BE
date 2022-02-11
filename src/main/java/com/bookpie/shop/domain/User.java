@@ -78,6 +78,10 @@ public class User implements UserDetails {
     @Formula("(select count(1) from user_review r where r.order_id in (select o.id from orders o join used_book u on o.book_id = u.used_id where u.user_id = user_id))")
     private int reviewCount;
 
+    @Basic(fetch = FetchType.LAZY)
+    @Formula("(select count(1) from used_book ub where ub.user_id = user_id)")
+    private int bookCount;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
