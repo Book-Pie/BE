@@ -21,11 +21,12 @@ public class UsedBookReplyDto {
     private LocalDateTime replyDate;
     private String nickName;
     private Boolean secret;
+    private String profile;
 
     private List<SubReplyDto> subReply = new ArrayList<>();
 
     public UsedBookReplyDto(Long replyId, Long parentReplyId, Long usedBookId, Long userId, String content,
-                            LocalDateTime replyDate, String nickName, List<Reply> replies, Boolean secret) {
+                            LocalDateTime replyDate, String nickName, List<Reply> replies, Boolean secret, String profile) {
         this.replyId = replyId;
         this.usedBookId = usedBookId;
         this.userId = userId;
@@ -38,12 +39,13 @@ public class UsedBookReplyDto {
             this.subReply.sort(Comparator.comparing(SubReplyDto::getReplyDate).reversed());
         }
         this.secret = secret;
+        this.profile = profile;
     }
 
     public static UsedBookReplyDto createDto(Reply reply) {
         return new UsedBookReplyDto(reply.getId(), reply.getParentReply().getId(), reply.getUsedBook().getId(),
                 reply.getUser().getId(), reply.getContent(), reply.getReplyDate(), reply.getUser().getNickName(),
-                reply.getSubReply(), reply.getSecret());
+                reply.getSubReply(), reply.getSecret(), reply.getUser().getImage());
     }
 
     // 댓글 작성 후 반환 dto

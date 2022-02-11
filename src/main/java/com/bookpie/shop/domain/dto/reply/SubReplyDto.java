@@ -16,9 +16,10 @@ public class SubReplyDto {
     private LocalDateTime replyDate;
     private String nickName;
     private Boolean secret;
+    private String profile;
 
     public SubReplyDto(Long reply_id, Long parent_reply_id, Long user_id, String nickName,
-                       String content, LocalDateTime replyDate, Boolean secret) {
+                       String content, LocalDateTime replyDate, Boolean secret, String profile) {
         this.replyId = reply_id;
         this.parentReplyId = parent_reply_id;
         this.userId = user_id;
@@ -26,10 +27,12 @@ public class SubReplyDto {
         this.content = content;
         this.replyDate = replyDate;
         this.secret = secret;
+        this.profile = profile;
     }
 
     public static SubReplyDto createDto(Reply subReply) {
         return new SubReplyDto(subReply.getId(), subReply.getParentReply().getId(), subReply.getUser().getId(),
-                subReply.getUser().getNickName(), subReply.getContent(), subReply.getReplyDate(), subReply.getSecret());
+                subReply.getUser().getNickName(), subReply.getContent(), subReply.getReplyDate(),
+                subReply.getSecret(), subReply.getUser().getImage());
     }
 }
