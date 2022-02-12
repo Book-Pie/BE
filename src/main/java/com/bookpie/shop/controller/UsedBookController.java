@@ -69,7 +69,13 @@ public class UsedBookController {
     //중고도서 상세정보 조회
     @GetMapping("/{id}")
     public ResponseEntity getUsedBookDetail(@PathVariable("id")Long id){
-        return new ResponseEntity(success(usedBookService.getUsedBook(id)),HttpStatus.OK);
+        Long userId;
+        try{
+            userId = getCurrentUserId();
+        }catch (Exception e){
+            userId = 0l;
+        }
+        return new ResponseEntity(success(usedBookService.getUsedBook(id,userId)),HttpStatus.OK);
     }
 
     //중고도서 검색

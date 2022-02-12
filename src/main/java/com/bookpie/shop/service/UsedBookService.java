@@ -30,7 +30,8 @@ public class UsedBookService {
     private final TagRepository tagRepository;
     private final BookTagAndImageRepository bookTagAndImageRepository;
     private final BookReviewRepository bookReviewRepository;
-    
+    private final UsedBookLikeRepository usedBookLikeRepository;
+
     @Value("${path.image.dev}")
     private String filePath;
 
@@ -113,12 +114,17 @@ public class UsedBookService {
     }
 
     //중고도서 상세조회
-    public UsedBookDto getUsedBook(Long id){
-        UsedBook usedBook = usedBookRepository.findByIdDetail(id).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));
+    public UsedBookDto getUsedBook(Long bookId,Long userId){
+        UsedBook usedBook = usedBookRepository.findByIdDetail(bookId).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));
         log.debug(usedBook.getImages().toString());
+        boolean liked = false;
+        if (userId != 0){
+            liked = usedBookLikeRepository.isLiked(bookId,userId);
+        }
         List<JSONObject> categories= bookReviewRepository.myCategory(usedBook.getSeller().getId());
         UsedBookDto usedBookDto = UsedBookDto.createUsedBookDto(usedBook);
         usedBookDto.addSellerCategories(categories);
+        usedBookDto.setLiked(liked);
         return usedBookDto;
     }
 

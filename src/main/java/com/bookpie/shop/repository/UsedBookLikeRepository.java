@@ -1,13 +1,13 @@
 package com.bookpie.shop.repository;
 
-import com.bookpie.shop.domain.UsedBook;
+import com.bookpie.shop.domain.QUsedBookLike;
 import com.bookpie.shop.domain.UsedBookLike;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -37,6 +37,15 @@ public class UsedBookLikeRepository {
     public void delete(Long id){
         UsedBookLike usedBookLike = findById(id).orElseThrow(() -> new EntityNotFoundException("등록된 좋아요가 없습니다."));
         em.remove(usedBookLike);
+    }
+
+    public boolean isLiked(Long bookId,Long userId){
+        QUsedBookLike qUsedBookLike = QUsedBookLike.usedBookLike;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return  query.select(qUsedBookLike)
+                         .from(qUsedBookLike)
+                         .where(qUsedBookLike.book.id.eq(bookId), qUsedBookLike.user.id.eq(userId))
+                         .fetchFirst() != null;
     }
 
 }

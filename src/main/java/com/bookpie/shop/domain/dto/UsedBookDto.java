@@ -20,6 +20,7 @@ public class UsedBookDto {
     private List<JSONObject> favoriteCategories;
     private int totalSales;
     private int price;
+    private boolean liked;
     private String title;
     private String content;
     private LocalDateTime uploadDate;
@@ -64,6 +65,10 @@ public class UsedBookDto {
 
     public void addSellerCategories(List<JSONObject> favoriteCategories){
         this.favoriteCategories = favoriteCategories;
+    }
+
+    public void setLiked(boolean liked){
+        this.liked = liked;
     }
 
 }
