@@ -49,6 +49,10 @@ public class UsedBookController {
         if(!StringUtils.hasText(usedBookCreateDto.getTitle())) throw new IllegalArgumentException("제목을 입력해주세요.");
         if(!StringUtils.hasText(usedBookCreateDto.getContent())) throw new IllegalArgumentException("내용을 입력해주세요.");
         if(usedBookCreateDto.getPrice() == 0) throw new IllegalArgumentException("가격을 입력해주세요");
+        for (MultipartFile image : images){
+            if (image.isEmpty()) throw new IllegalArgumentException("이미지가 없습니다.");
+        }
+
         return new ResponseEntity(success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images)), HttpStatus.OK);
     }
 
