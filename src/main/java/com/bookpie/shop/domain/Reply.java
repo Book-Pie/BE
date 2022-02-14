@@ -42,7 +42,7 @@ public class Reply {
     @JoinColumn(name = "used_id")
     private UsedBook usedBook;
 
-    @Column(columnDefinition = "boolean default false")
+    //@Column(columnDefinition = "boolean default false")
     private Boolean secret;
 
     // 게시글 댓글 생성
