@@ -174,9 +174,13 @@ public class UsedBookController {
         log.info(relatedUsedBookDto.toString());
         return new ResponseEntity(success(usedBookService.getRelatedUsedBook(relatedUsedBookDto)),HttpStatus.OK);
     }
-    private Long getCurrentUserId(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
-    }
 
+    private Long getCurrentUserId(){
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return user.getId();
+        }catch (Exception e){
+            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
+        }
+    }
 }

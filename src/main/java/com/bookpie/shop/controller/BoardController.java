@@ -103,8 +103,12 @@ public class BoardController {
         return new ResponseEntity(success(boardService.search(keyWord, page, size, boardType)), HttpStatus.OK);
     }
     private Long getCurrentUserId(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("유저 정보 : " + user.getId()+", "+user.getName());
-        return user.getId();
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            log.info("유저 정보 : " + user.getId() + ", " + user.getName());
+            return user.getId();
+        }catch (Exception e){
+            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
+        }
     }
 }

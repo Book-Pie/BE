@@ -53,9 +53,14 @@ public class UserReviewController {
         return new ResponseEntity(success(userReviewService.getUserReviewsByReader(getCurrentUserId(),page,limit)),HttpStatus.OK);
     }
 
+
     private Long getCurrentUserId(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return user.getId();
+        }catch (Exception e){
+            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
+        }
     }
 
 }
