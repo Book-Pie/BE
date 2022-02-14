@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -117,10 +116,7 @@ public class UserController {
     public ResponseEntity changePassword(@RequestBody Map<String,String> request){
         return new ResponseEntity(success(userSevice.changePassword(getCurrentUserId(),request.get("password"))),HttpStatus.OK);
     }
-    private Long getCurrentUserId(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
-    }
+
 
     @PostMapping("/image")
     public ResponseEntity uploadUserImage(@RequestParam("image")MultipartFile file) throws Exception{
@@ -145,4 +141,13 @@ public class UserController {
         return new ResponseEntity(success(userSevice.totalUser()),HttpStatus.OK);
     }
 
+
+    private Long getCurrentUserId(){
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return user.getId();
+        }catch (Exception e){
+            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
+        }
+    }
 }

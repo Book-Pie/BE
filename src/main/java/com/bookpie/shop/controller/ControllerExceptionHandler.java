@@ -1,6 +1,5 @@
 package com.bookpie.shop.controller;
 
-import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletException;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -51,6 +49,12 @@ public class ControllerExceptionHandler {
     @ExceptionHandler({IOException.class, ServletException.class})
     protected ResponseEntity handleFilterException(Exception e){
         log.debug(e.getMessage());
+        return new ResponseEntity(error(e,HttpStatus.INTERNAL_SERVER_ERROR),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ClassCastException.class)
+    protected ResponseEntity handleClassCastException(Exception e){
+        log.info(e.getMessage());
         return new ResponseEntity(error(e,HttpStatus.INTERNAL_SERVER_ERROR),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

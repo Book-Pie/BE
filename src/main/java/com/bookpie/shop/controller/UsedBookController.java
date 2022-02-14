@@ -49,6 +49,10 @@ public class UsedBookController {
         if(!StringUtils.hasText(usedBookCreateDto.getTitle())) throw new IllegalArgumentException("제목을 입력해주세요.");
         if(!StringUtils.hasText(usedBookCreateDto.getContent())) throw new IllegalArgumentException("내용을 입력해주세요.");
         if(usedBookCreateDto.getPrice() == 0) throw new IllegalArgumentException("가격을 입력해주세요");
+        for (MultipartFile image : images){
+            if (image.isEmpty()) throw new IllegalArgumentException("이미지가 없습니다.");
+        }
+
         return new ResponseEntity(success(usedBookService.uploadUsedBook(getCurrentUserId(),usedBookCreateDto,images)), HttpStatus.OK);
     }
 
@@ -170,9 +174,13 @@ public class UsedBookController {
         log.info(relatedUsedBookDto.toString());
         return new ResponseEntity(success(usedBookService.getRelatedUsedBook(relatedUsedBookDto)),HttpStatus.OK);
     }
-    private Long getCurrentUserId(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
-    }
 
+    private Long getCurrentUserId(){
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return user.getId();
+        }catch (Exception e){
+            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
+        }
+    }
 }
