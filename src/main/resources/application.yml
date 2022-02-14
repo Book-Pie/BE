@@ -26,7 +26,7 @@ spring:
     defer-datasource-initialization: true
   sql:
     init:
-      mode: always
+      mode: never
 
 
 logging:
@@ -57,7 +57,7 @@ spring:
       on-profile: release
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 
 path:
   base: http://bookpie.tk:8080
