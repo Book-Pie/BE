@@ -6,17 +6,14 @@ import com.bookpie.shop.domain.User;
 import com.bookpie.shop.repository.UsedBookLikeRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
-import com.bookpie.shop.utils.ApiUtil;
-import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
-
-import static com.bookpie.shop.utils.ApiUtil.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,6 +37,15 @@ public class UsedBookLikeService {
             repository.save(like);
             return "created";
         }
+    }
+
+    @Transactional
+    public boolean deleteAll(List<Long> ids,Long userId){
+        ids.stream().forEach(id->{
+            UsedBookLike like = repository.findByUserIdAndBookId(userId, id).orElseThrow(() -> new EntityNotFoundException("등록된 좋아요가 없습니다."));
+            repository.delete(like);
+        });
+        return true;
     }
 
 }
