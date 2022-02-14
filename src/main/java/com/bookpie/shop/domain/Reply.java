@@ -43,7 +43,7 @@ public class Reply {
     private UsedBook usedBook;
 
     @Column(columnDefinition = "boolean default false")
-    private Boolean secret;
+    private boolean secret;
 
     // 게시글 댓글 생성
     public Reply(String content, User user, Board board) {
