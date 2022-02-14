@@ -41,9 +41,8 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "used_id")
     private UsedBook usedBook;
-
-    @Column(columnDefinition = "boolean default false")
-    private boolean secret;
+    
+    private Boolean secret;
 
     // 게시글 댓글 생성
     public Reply(String content, User user, Board board) {
