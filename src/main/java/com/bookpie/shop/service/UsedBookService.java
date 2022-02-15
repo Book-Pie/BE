@@ -70,7 +70,7 @@ public class UsedBookService {
     @Transactional
     public UsedBook updateUsedBook(Long userId,Long bookId,UsedBookCreateDto dto,List<MultipartFile> files) throws Exception{
         UsedBook usedBook = usedBookRepository.findByIdDetail(bookId).orElseThrow(()-> new EntityNotFoundException("중고도서를 찾을 수 없습니다."));
-        if (usedBook.getSeller().getId() != userId){
+        if (!usedBook.getSeller().getId().equals(userId)){
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
         if(usedBook.getSaleState() != SaleState.SALE){
@@ -118,7 +118,7 @@ public class UsedBookService {
         UsedBook usedBook = usedBookRepository.findByIdDetail(bookId).orElseThrow(()->new EntityNotFoundException("등록된 책이 없습니다."));
         log.debug(usedBook.getImages().toString());
         boolean liked = false;
-        if (userId != 0){
+        if (!userId.equals(0)){
             liked = usedBookLikeRepository.isLiked(bookId,userId);
         }
         List<JSONObject> categories= bookReviewRepository.myCategory(usedBook.getSeller().getId());

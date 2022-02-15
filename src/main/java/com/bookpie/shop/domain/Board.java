@@ -2,13 +2,15 @@ package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.board.BoardDto;
 import com.bookpie.shop.domain.enums.BoardType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -44,7 +46,7 @@ public class Board {
 
     public static Board createBoard(BoardDto dto, User user, Long userId) {
         // 예외 처리
-        if (userId != user.getId())
+        if (!user.getId().equals(userId))
             throw new IllegalArgumentException("게시글 작성 실패! 회원이 일치하지 않습니다.");
         if (dto == null)
             throw new IllegalArgumentException("게시글 작성 실패! 게시글이 존재하지 않습니다.");
