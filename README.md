@@ -2,6 +2,9 @@
 <p align=center>
 <img src=https://user-images.githubusercontent.com/81568304/154110748-4e849c5d-d5c3-4464-b51c-844a969bc310.png width=80% height=280 />
 </p>
+<p align=center>
+:calendar: 2021.12.13 ~ 2022.02.13
+</p>
 
 북파이는 책을 중심으로 한 중고 거래 플랫폼 및 커뮤니티로
 아래와 같은 기능들을 제공하고 있습니다.
