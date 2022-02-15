@@ -25,21 +25,13 @@
  패키지 구조(설명)
  
  ├─config      --- Spring 설정
- 
  ├─controller  
- 
  ├─domain
- 
  │  ├─dto
- 
  │  └─enums
- 
  ├─oauth
- 
  ├─repository
- 
  ├─service
- 
  └─utils       
  
 
