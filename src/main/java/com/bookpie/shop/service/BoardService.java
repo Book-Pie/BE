@@ -44,7 +44,7 @@ public class BoardService {
         Board board = boardRepository.findById(dto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
-        if (board.getUser().getId() != userId)
+        if (!board.getUser().getId().equals(userId))
             throw new IllegalArgumentException("게시글 수정 실패! 회원 정보가 일치하지 않습니다.");
 
         board.patch(dto);

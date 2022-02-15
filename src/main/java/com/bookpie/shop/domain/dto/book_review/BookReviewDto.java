@@ -52,7 +52,7 @@ public class BookReviewDto {
 
         List<ReviewLike> reviewLikeList = bookReview.getReviewLikes();
         for(ReviewLike reviewLike : reviewLikeList) {
-            if (reviewLike.getUser().getId() == user_id) return true;
+            if (reviewLike.getUser().getId().equals(user_id)) return true;
         }
         return false;
     }

@@ -34,7 +34,7 @@ public class ReviewLikeService {
         // 해당 회원이 좋아요를 눌렀으면 취소하는 메서드
         List<ReviewLike> reviewLikes = reviewLikeRepository.findAllByReviewId(dto.getReviewId());
         for (ReviewLike reviewLike : reviewLikes) {
-            if (reviewLike.getUser().getId() == userId) {
+            if (reviewLike.getUser().getId().equals(userId)) {
                 reviewLikeRepository.delete(reviewLike);
                 bookReviewRepository.decreaseLikeCnt(dto.getReviewId());
                 return ReviewLikeDto.createDto(reviewLike, false);
