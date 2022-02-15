@@ -69,8 +69,9 @@
 
 
 ## contributor 
+**Back-End**
 
 김준영 https://github.com/kky0426
-
+안민우 https://github.com/start-27
 
 
