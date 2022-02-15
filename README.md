@@ -58,19 +58,13 @@
 
 
 ## 기술 스택 
-  JAVA
-  
-  Spring Boot
-  
-  Jpa
-  
-  MySQL
-  
-  Jenkins
-  
-  Query DSL
-  
-  Redis
+ - JAVA
+ - Spring Boot
+ - JPA
+ - Query DSL
+ - MySQL
+ - Jenkins
+ - Redis
  
 
 
