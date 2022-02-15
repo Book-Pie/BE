@@ -23,7 +23,8 @@
  **DB 구조**
  
  <img  src=""  width="600" height="400">
- 
+ ![image](https://user-images.githubusercontent.com/18027740/154010100-a87114f9-10bd-489d-842c-e31ed69916d8.png)
+
  
 
  erd
