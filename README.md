@@ -20,7 +20,8 @@
 -- fe 링크  -- 
 
 ## 프로젝트 구조 
- ** DB 구조 **
+ **DB 구조**
+ <img  src="https://ifh.cc/g/w34yBw.jpg"  width="600" height="400">
  
  
 
