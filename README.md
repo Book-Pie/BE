@@ -77,5 +77,10 @@
 
 ## contributor 
 
+|이민욱|조영동|김준영|안민우|  
+| :---: | :---: | :---: | :---: |  
+|<img src="https://github.com/dnr14.png" width=200 height=200/>|<img src=https://github.com/choyd93.png width=200 height=200/>|<img src=https://github.com/kky0426.png width=200 height=200/>|<img src=https://github.com/start-27.png width=200 height=200/>|
+|[dnr14](https://github.com/dnr14)|[choyd93](https://github.com/choyd93)|[kky0426](https://github.com/kky0426)|[start-27](github.com/start-27)|
+|Front-End|Front-End|Back-End|Back-End|
 
 
