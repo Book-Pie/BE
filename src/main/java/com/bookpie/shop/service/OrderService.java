@@ -103,7 +103,7 @@ public class OrderService {
     public boolean orderEnd(Long orderId,Long userId){
         log.debug("userId : " + userId.toString());
         Order order = orderRepository.findDetailById(orderId).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
-        if (order.getBuyer().getId() != userId) throw new IllegalArgumentException("구매자가 아닙니다.");
+        if (order.getBuyer().getId().equals(userId)) throw new IllegalArgumentException("구매자가 아닙니다.");
         if (order.getOrderState() == OrderState.SOLD_OUT) throw new IllegalStateException("이미 구매 확정한 주문입니다.");
         order.end();
         return true;
