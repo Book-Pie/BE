@@ -39,11 +39,17 @@
 
 ## 기술 스택 
   JAVA
+  
   Spring Boot
+  
   Jpa
+  
   MySQL
+  
   Jenkins
+  
   Query DSL
+  
   Redis
  
 
