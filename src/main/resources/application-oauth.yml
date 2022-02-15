@@ -1,0 +1,23 @@
+
+
+kakao:
+  client-id: 18026e16808c2a78e74664808aa9dd9e
+  redirect-url: /api/oauth/loginresult/kakao
+  login: https://kauth.kakao.com/oauth/authorize
+  token: https://kauth.kakao.com/oauth/token
+  profile: https://kapi.kakao.com/v2/user/me
+
+naver:
+  url : https://openapi.naver.com/v1/nid/me
+  client-id: qtbZhYGrYVHhLWesnRyJ
+  client-secret: yffTE6zK6x
+  token : https://nid.naver.com/oauth2.0/token
+external:
+  aladin:
+    key: ttbminw70921526001
+  jungbo:
+    key: fea604846208253ec4d2da7945989a95356f50d74b131dc8b1eab0ff34011536
+  iamport:
+    code: imp09368544
+    key: 1956173896695491
+    secret: f1b6816762ca297bf2ddd12e6fcaf94c2ae665422448fe583489fb77499e4a09fb5f7ca3dec17db1

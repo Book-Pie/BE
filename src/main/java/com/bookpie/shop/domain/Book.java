@@ -46,6 +46,6 @@ public class Book {
 
     public static Book createBook(BookDto dto) {
         return new Book(dto.getTitle(), dto.getIntroduce(), dto.getAuthor(), dto.getPublisher(),
-                dto.getPrice(), dto.getCategory_id(), dto.getIsbn());
+                dto.getPrice(), dto.getCategoryId(), dto.getIsbn());
     }
 }

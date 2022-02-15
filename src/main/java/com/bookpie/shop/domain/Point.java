@@ -20,13 +20,22 @@ public class Point {
 
     public void chargePoint(int point){
         totalPoint+=point;
+        holdPoint+=point;
     }
 
-    public void usePoint(int point){
-        if(holdPoint>=point){
-            usedPoint+=point;
-            holdPoint-=point;
+    public void rollback(int point){
+        usedPoint-=point;
+        holdPoint+=point;
+    }
+    public void usePoint(int point) {
+        if (holdPoint >= point) {
+            usedPoint += point;
+            holdPoint -= point;
         }
+    }
+
+    public void addSalePoint(int point){
+        holdPoint+=point;
     }
     public static Point createDefaultPoint(){
         return new Point(0,0,0);

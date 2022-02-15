@@ -1,6 +1,5 @@
 package com.bookpie.shop.domain.dto;
 
-import com.bookpie.shop.domain.Tag;
 import com.bookpie.shop.domain.enums.Category;
 import lombok.Data;
 

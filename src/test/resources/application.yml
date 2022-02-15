@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: local
   datasource:
     url: jdbc:h2:mem:testdb
     username: book-pie
@@ -18,15 +20,52 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        #        show_sql: true
+       # show_sql: true
         default_batch_fetch_size: 100
         format_sql: true
-
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: embedded
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
+kakao:
+  client-id:
+  redirect-url:
+  login:
+  token:
+  profile:
+
+naver:
+  url :
+  client-id:
+  client-secret:
+  token :
+
+
+external:
+  aladin:
+    key:
+  jungbo:
+    key:
+  iamport:
+    code:
+    key:
+    secret:
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    hibernate:
+      ddl-auto: create
 path:
+  base: http://localhost:8080
   image:
     dev: C:\bookpie_image\
+

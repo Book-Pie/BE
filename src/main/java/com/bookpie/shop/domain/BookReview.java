@@ -1,11 +1,12 @@
 package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class BookReview {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +24,7 @@ public class BookReview {
 
     private String content;
     private float rating;
-    private Long isbn;
+    private String isbn;
 
     @Column(name = "review_date")
     private LocalDateTime reviewDate;
@@ -29,25 +32,27 @@ public class BookReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    private int likeCnt;
+    private String category;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review")
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book_review", cascade = CascadeType.ALL)
     private List<ReviewLike> reviewLikes = new ArrayList<>();
 
-    public BookReview(String content, float rating, Long isbn, LocalDateTime now, User user) {
-        this.content = content;
-        this.rating = rating;
-        this.isbn = isbn;
-        this.reviewDate = now;
-        this.user = user;
-    }
-
     public static BookReview createBookReview(BookReviewDto dto, User user) {
-        return new BookReview(dto.getContent(), dto.getRating(), dto.getIsbn(), LocalDateTime.now(), user);
+        return BookReview.builder()
+                .content(dto.getContent())
+                .rating(dto.getRating())
+                .isbn(dto.getIsbn())
+                .category(dto.getCategory())
+                .reviewDate(LocalDateTime.now())
+                .user(user)
+                .build();
     }
-
+    // 리뷰 수정
     public void patch(BookReviewDto dto) {
         // 예외 발생
-        if (this.id != dto.getReview_id())
+        if (this.id != dto.getReviewId())
             throw new IllegalArgumentException("리뷰 id가 일치하지 않습니다.");
 
         // 객체를 갱신

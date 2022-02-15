@@ -22,4 +22,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     //@Query(value = "select b from board b where b.user_id = :user_id", nativeQuery = true)
     Page<Board> findAllByUserId(Long user_id, @Param("pageable") Pageable pageable);
+
+    // 제목으로 검색
+    @Query(value = "select * from board where board_type = :type " +
+            "and replace(title, ' ', '') like %:keyWord%",
+            countQuery = "select count(*) from bookpie.board", nativeQuery = true)
+    Page<Board> findByKeyword(@Param("keyWord") String keyWord, @Param("type") String type, Pageable pageable);
 }

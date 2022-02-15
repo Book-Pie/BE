@@ -1,19 +1,15 @@
 package com.bookpie.shop.controller;
 
+import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.board.BoardDto;
 import com.bookpie.shop.domain.enums.BoardType;
 import com.bookpie.shop.service.BoardService;
-import com.bookpie.shop.utils.ApiUtil.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static com.bookpie.shop.utils.ApiUtil.success;
 
@@ -27,69 +23,54 @@ public class BoardController {
     // 게시글 작성
     @PostMapping("")
     public ResponseEntity create(@RequestBody BoardDto dto) {
-        return new ResponseEntity(success(boardService.create(dto)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.create(dto, getCurrentUserId())), HttpStatus.OK);
     }
 
     // 게시글 수정
     @PutMapping("")
     public ResponseEntity update(@RequestBody BoardDto dto) {
-        return new ResponseEntity(success(boardService.update(dto)), HttpStatus.OK);
+        return new ResponseEntity(success(boardService.update(dto, getCurrentUserId())), HttpStatus.OK);
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{board_id}")
-    public ResponseEntity delete(@PathVariable Long board_id) {
-        return new ResponseEntity(success(boardService.delete(board_id)), HttpStatus.OK);
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity delete(@PathVariable Long boardId) {
+        return new ResponseEntity(success(boardService.delete(boardId, getCurrentUserId())), HttpStatus.OK);
     }
 
     // 게시글 전체 조회(카테고리별)
-    @GetMapping("/{boardType}")
-    public ResponseEntity getAll(@PathVariable BoardType boardType, @RequestParam(required = false) String page,
-                                 @RequestParam(required = false) String size) {
+    @GetMapping("/getAll")
+    public ResponseEntity getAll(@RequestParam BoardType boardType,
+                                 @RequestParam(required = false, defaultValue = "0") String page,
+                                 @RequestParam(required = false, defaultValue = "10") String size) {
         return new ResponseEntity(success(boardService.getAll(boardType, page, size)), HttpStatus.OK);
     }
 
     // 게시글 상세 조회
-    @GetMapping("/{board_id}")
-    public ResponseEntity get(@PathVariable Long board_id, HttpServletRequest req,
-                         HttpServletResponse rep) {
-        Cookie oldCookie = null;
-        Cookie cookies[] = req.getCookies();
-
-        if (cookies != null) {
-            log.info("쿠키가 존재합니다.");
-            for (Cookie  cookie : cookies) {
-                if (cookie.getName().equals("postView")) {
-                    oldCookie = cookie;
-                }
-            }
-        }
-        if (oldCookie != null) {
-            log.info("oldCookie가 존재합니다.");
-            //oldCookie가 존재하지만 해당 번호를 가지지 않았을 경우 조회수 +1
-            if (!oldCookie.getValue().contains("[" + board_id + "]")) {
-                boardService.viewPlus(board_id);
-                oldCookie.setValue(oldCookie.getValue()+"_["+board_id+"]");
-                oldCookie.setPath("/");
-                oldCookie.setMaxAge(60 * 60 * 24);
-                rep.addCookie(oldCookie);
-            }
-        }else {
-            // oldCookie 존재하지 않을 경우 쿠키 새로 만들고 조회수 + 1
-            log.info("oldCookie가 존재하지 않습니다.");
-            Cookie newCookie = new Cookie("postView", "["+board_id+"}");
-            boardService.viewPlus(board_id);
-            newCookie.setPath("/");
-            newCookie.setMaxAge(60 * 60 * 24);
-            rep.addCookie(newCookie);
-        }
-        return new ResponseEntity(success(boardService.getBoard(board_id)), HttpStatus.OK);
+    @GetMapping("/{boardId}")
+    public ResponseEntity get(@PathVariable Long boardId) {
+        boardService.viewPlus(boardId);
+        return new ResponseEntity(success(boardService.getBoard(boardId)), HttpStatus.OK);
     }
 
     // 회원이 작성한 게시글 보기
-    @GetMapping("/my/{user_id}")
-    public ResponseEntity myBoard(@PathVariable Long user_id, @RequestParam(required = false) String page,
-                                  @RequestParam(required = false) String size) {
-        return new ResponseEntity(success(boardService.getMyBoard(user_id, page, size)), HttpStatus.OK);
+    @GetMapping("/my")
+    public ResponseEntity myBoard(@RequestParam(required = false, defaultValue = "0") String page,
+                                  @RequestParam(required = false, defaultValue = "10") String size) {
+        return new ResponseEntity(success(boardService.getMyBoard(getCurrentUserId(), page, size)), HttpStatus.OK);
+    }
+
+    // 게시글 검색
+    @GetMapping("/search")
+    public ResponseEntity search(@RequestParam(required = false, defaultValue = "") String keyWord,
+                                 @RequestParam(required = false, defaultValue = "0") String page,
+                                 @RequestParam(required = false, defaultValue = "10") String size,
+                                 @RequestParam(required = false) BoardType boardType) {
+        return new ResponseEntity(success(boardService.search(keyWord, page, size, boardType)), HttpStatus.OK);
+    }
+    private Long getCurrentUserId(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("유저 정보 : " + user.getId()+", "+user.getName());
+        return user.getId();
     }
 }

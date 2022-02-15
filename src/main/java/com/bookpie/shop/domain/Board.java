@@ -2,10 +2,7 @@ package com.bookpie.shop.domain;
 
 import com.bookpie.shop.domain.dto.board.BoardDto;
 import com.bookpie.shop.domain.enums.BoardType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,7 +14,7 @@ import java.util.Optional;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Builder
 public class Board {
 
     @Id
@@ -26,10 +23,11 @@ public class Board {
     private Long id;
 
     private String title;
+    @Lob
     private String content;
     @Column(name = "board_date")
     private LocalDateTime boardDate;
-    private int view;
+    @Builder.Default private int view = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "board_type")
@@ -41,33 +39,29 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
-    public Board(String title, String content, LocalDateTime now, int view, BoardType boardType, int price, User user) {
-        this.title = title;
-        this.content = content;
-        this.boardDate = now;
-        this.view = view;
-        this.boardType = boardType;
-        this.price = price;
-        this.user = user;
-    }
-
-    public static Board createBoard(BoardDto dto, User user) {
+    public static Board createBoard(BoardDto dto, User user, Long userId) {
         // 예외 처리
-        if (dto.getUser_id() != user.getId())
+        if (userId != user.getId())
             throw new IllegalArgumentException("게시글 작성 실패! 회원이 일치하지 않습니다.");
         if (dto == null)
             throw new IllegalArgumentException("게시글 작성 실패! 게시글이 존재하지 않습니다.");
 
-        return new Board(dto.getTitle(), dto.getContent(),
-                LocalDateTime.now(), 0, dto.getBoardType(), dto.getPrice(), user);
+        return Board.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .boardType(dto.getBoardType())
+                .price(dto.getPrice())
+                .boardDate(LocalDateTime.now())
+                .user(user)
+                .build();
     }
 
     public void patch(BoardDto dto) {
         // 예외 발생
-        if (this.id != dto.getBoard_id())
+        if (this.id != dto.getBoardId())
             throw new IllegalArgumentException("게시글이 일치하지 않습니다.");
 
         // 게시글 수정
@@ -75,4 +69,5 @@ public class Board {
         if (dto.getContent() != null) this.content = dto.getContent();
         if (dto.getPrice() != this.price) this.price = dto.getPrice();
     }
+
 }

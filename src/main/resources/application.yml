@@ -1,19 +1,33 @@
+
 spring:
+  profiles:
+    include:
+      - oauth
+      - mail
+    default: local
   datasource:
     driver-class-name : com.mysql.cj.jdbc.Driver
     url : jdbc:mysql://localhost:3306/bookpie?serverTimezone=UTC&characterEncoding=UTF-8
     username : bookpie
     password : bookpie
-
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
   jpa:
     database : mysql
     database-platform : org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: update
+#    hibernate:
+#      ddl-auto: create
     properties:
       hibernate:
         default_batch_fetch_size: 30
         format_sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: never
+
 
 logging:
   level:
@@ -21,6 +35,31 @@ logging:
     org.hibernate.type: trace
     com.bookpie.shop : debug
 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    hibernate:
+      ddl-auto: update
 path:
+  base: http://localhost:8080
   image:
     dev: C:\bookpie_image\
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: release
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+path:
+  base: http://bookpie.tk:8080
+  image:
+    dev: /home/ubuntu/image/
