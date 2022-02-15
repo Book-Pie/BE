@@ -100,7 +100,7 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean orderEnd(Long orderId,Long userId){ㅑ
+    public boolean orderEnd(Long orderId,Long userId){
         log.debug("userId : " + userId.toString());
         Order order = orderRepository.findDetailById(orderId).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
         if (!order.getBuyer().getId().equals(userId)) throw new IllegalArgumentException("구매자가 아닙니다.");
