@@ -59,7 +59,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
-        if (userId != board.getUser().getId())
+        if (!board.getUser().getId().equals(userId))
             throw new IllegalArgumentException("게시글 삭제 실패! 작성한 유저가 아닙니다.");
 
         boardRepository.delete(board);

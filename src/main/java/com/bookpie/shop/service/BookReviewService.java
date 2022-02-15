@@ -55,7 +55,7 @@ public class BookReviewService {
         BookReview bookReview = bookReviewRepository.findById(dto.getReviewId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
-        if (userId != bookReview.getUser().getId())
+        if (!bookReview.getUser().getId().equals(userId))
             throw new IllegalArgumentException("도서리뷰 수정 실패! 회원 정보가 일치하지 않습니다.");
 
         bookReview.patch(dto);
@@ -69,7 +69,7 @@ public class BookReviewService {
         BookReview bookReview = bookReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰는 존재하지 않습니다."));
 
-        if (bookReview.getUser().getId() != userId)
+        if (!bookReview.getUser().getId().equals(userId))
             throw new IllegalArgumentException("도서리뷰 삭제 실패! 회원 정보가 일치하지 않습니다.");
 
         bookReviewRepository.delete(bookReview);

@@ -32,7 +32,7 @@ public class UserReviewService {
         Order order = orderRepository.findDetailById(dto.getOrderId()).orElseThrow(()->new EntityNotFoundException("주문을 찾을 수 없습니다."));
         UserReview userReview = UserReview.createUserReview(dto,order);
         User user = order.getBook().getSeller();
-        if (order.getBuyer().getId()!= userId){
+        if (!order.getBuyer().getId().equals(userId)){
             throw new IllegalArgumentException("주문을 한 회원이 아닙니다.");
         }
         user.addRating(dto.getRating());
@@ -47,7 +47,7 @@ public class UserReviewService {
     public Long deleteUserReview(Long reviewId,Long userId){
         UserReview userReview = userReviewRepository.findById(reviewId)
                                                     .orElseThrow(()->new EntityNotFoundException("등록된 리뷰가 없습니다."));
-        if(userReview.getOrder().getBuyer().getId() != userId){
+        if(!userReview.getOrder().getBuyer().getId().equals(userId)){
             throw new IllegalArgumentException("리뷰 등록자가 아닙니다.");
         }
         userReview.getOrder().removeReview();
@@ -58,7 +58,7 @@ public class UserReviewService {
     @Transactional
     public UserReviewDto updateUserReview(UserReviewUpdateDto userReviewUpdateDto, Long userId){
         UserReview userReview = userReviewRepository.findById(userReviewUpdateDto.getUserReviewId()).orElseThrow(() -> new EntityNotFoundException("등록된 리뷰가 없습니다."));
-        if(userReview.getOrder().getBuyer().getId() != userId){
+        if(!userReview.getOrder().getBuyer().getId().equals(userId)){
             throw new IllegalArgumentException("리뷰 수정 권한이 없습니다.");
         }
 
