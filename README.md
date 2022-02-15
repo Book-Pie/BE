@@ -27,15 +27,22 @@
  erd
  패키지 구조(설명)
  
- ├─config      --- Spring 설정
+ ├─config        -- Spring 설정 관련 클래스  
+ |                  
  ├─controller  
- ├─domain
- │  ├─dto
- │  └─enums
- ├─oauth
- ├─repository
- ├─service
- └─utils       
+ |  
+ ├─domain         -- Entity 관련 클래스  
+ |  |  
+ │  ├─dto         --  Data Transfer Object 클래스  
+ │  └─enums       --  Enumerate 클래스  
+ |  
+ ├─oauth          -- 카카오,네이버 로그인 등 OAuth 2.0 관련 클래스 
+ |  
+ ├─repository     
+ |  
+ ├─service  
+ |  
+ └─utils          -- 파일, Api 반환을 위한 wrapper 등 Util 클래스
  
 
 
