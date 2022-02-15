@@ -1,4 +1,5 @@
 # Book Pie
+<img src="154053869-4766368b-5895-450f-9247-cded5d5e7e35](https://user-images.githubusercontent.com/81568304/154110748-4e849c5d-d5c3-4464-b51c-844a969bc310.png">
 
 북파이는 책을 중심으로 한 중고 거래 플랫폼 및 커뮤니티로
 아래와 같은 기능들을 제공하고 있습니다.
