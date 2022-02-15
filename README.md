@@ -23,9 +23,11 @@
   ![image](https://user-images.githubusercontent.com/18027740/154010180-82b63874-a459-4102-8ef0-369114ea59bb.png)
 
 
- **DB 구조**
+ ### **DB 구조**
  
- <img  src=""  width="600" height="400">
+![image](https://user-images.githubusercontent.com/18027740/154010299-c646da0b-b505-4db9-aa13-1d259cb24fd6.png)
+
+
 
 
  
