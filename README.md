@@ -1,4 +1,4 @@
-# 프로젝트명
+# Book-Pie
 
 북파이는 책을 중심으로 한 중고 거래 플랫폼 및 커뮤니티로
 아래와 같은 기능들을 제공하고 있습니다.
@@ -20,10 +20,13 @@
 -- fe 링크  -- 
 
 ## 프로젝트 구조 
- 이미지
- erd
- 패키지 구조(설명)
  
+ ![image](https://user-images.githubusercontent.com/18027740/154008374-3b3adb58-f90a-49e0-8d93-2b9d0fa589cf.png)
+ 
+ ### ER Diagram
+![image](https://user-images.githubusercontent.com/18027740/154008588-c6621104-47a8-46c5-8769-7d9184cbb7eb.png)
+
+ ### 패키지 구조 
  ├─config      --- Spring 설정
  ├─controller  
  ├─domain
