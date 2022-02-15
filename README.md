@@ -69,10 +69,6 @@
 
 
 ## contributor 
-### :뿌루퉁한_남성: 팀 구성
-|이민욱|조영동|김준영|안민우|
-| :---: | :---: | :---: | :---: |
-|![](https://github.com/dnr14.png?size=200)%7C![](https://github.com/choyd93.png?size=200)%7C<img src=https://github.com/kky0426.png width=200 height=200 />|<img src=https://github.com/start-27.png width=200 height=200 />|
-|[dnr14](https://github.com/dnr14)%7C[choyd93](https://github.com/choyd93)%7C[kky0426](https://github.com/kky0426)%7C[start-27](https://github.com/start-27)%7C
+
 
 
