@@ -75,7 +75,8 @@
 
 
 ## contributor 
-프로필 
+
+김준영 https://github.com/kky0426
 
 
 
