@@ -24,9 +24,11 @@
 북파이는 게시판을 통해 책을 중심으로 한 커뮤니티 기능도 제공하고 있습니다.
 자유게시판은 자유롭게 글을 작성할 수 있고, 책 구합니다 게시판은 사용자가 구입하고 싶은 책을 구하는 용도로 사용할 수 있습니다.
 
-## Front-End 링크
+## View
 
-https://github.com/Book-Pie/FE
+**Front-End 링크** : https://github.com/Book-Pie/FE
+
+**북파이 사이트** : http://www.react-dev.p-e.kr/
 
 ## 프로젝트 구조 
   ![image](https://user-images.githubusercontent.com/18027740/154010180-82b63874-a459-4102-8ef0-369114ea59bb.png)
