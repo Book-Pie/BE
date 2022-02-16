@@ -99,6 +99,8 @@ public class BookService {
 
     // 키워드로 검색색
     public JSONObject searchKeyword(String queryType, String keyword, String page, String size) {
+        if (keyword.length() < 2) throw new IllegalArgumentException("두 글자 이상 입력해주세요.");
+
         String uri = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey="+apiConfig.getAladinAPI()+"&Query="+keyword+"&QueryType="+queryType+"" +
                 "&MaxResults="+size+"&start="+page+"&SearchTarget=Book&output=js&Version=20131101&Cover=Big";
 
