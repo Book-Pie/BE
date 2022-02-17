@@ -97,9 +97,8 @@ public class BookService {
         return callApi(uri);
     }
 
-    // 키워드로 검색색
+    // 키워드로 검색
     public JSONObject searchKeyword(String queryType, String keyword, String page, String size) {
-        if (keyword.length() < 2) throw new IllegalArgumentException("두 글자 이상 입력해주세요.");
         String realKeyword = keyword.replaceAll(" ", "");;
 
 
