@@ -38,7 +38,7 @@ public class BookReviewDto {
                 .content(bookReview.getContent())
                 .rating(bookReview.getRating())
                 .isbn(bookReview.getIsbn())
-                .reviewLikeCount(bookReview.getReviewLikes().size())
+                .reviewLikeCount(bookReview.getLikeCnt())
                 .reviewDate(bookReview.getReviewDate())
                 .category(bookReview.getCategory())
                 .profile(bookReview.getUser().getImage())
