@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,16 +151,10 @@ public class UsedBookController {
 
     //좋아요 다중 삭제
     @DeleteMapping("/like")
-    public ResponseEntity deleteAllLike(@RequestBody Map<String,Object> request){
+    public ResponseEntity deleteAllLike(@RequestBody Map<String,List<Long>> request){
         log.info(request.toString());
-        Map<String,Object> map = (Map<String, Object>) request.get("data");
-        List ids = (List) map.get("id");
-        List<Long> deleted = new ArrayList<>();
-        for (Object id : ids){
-            deleted.add(Long.valueOf(id.toString()));
-        }
-
-        return new ResponseEntity(success(usedBookLikeService.deleteAll(deleted,getCurrentUserId())),HttpStatus.OK);
+        List<Long> ids = request.get("id");
+        return new ResponseEntity(success(usedBookLikeService.deleteAll(ids,getCurrentUserId())),HttpStatus.OK);
     }
     //판매중,판매완료 책 개수
     @GetMapping("/groupcount")
