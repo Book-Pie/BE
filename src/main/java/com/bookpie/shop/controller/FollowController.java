@@ -42,7 +42,13 @@ public class FollowController {
     // 현재 접속자가 해당 유저를 팔로우 했는지
     @GetMapping("/followCheck/{userId}")
     public ResponseEntity followCheck(@PathVariable Long userId) {
-        return new ResponseEntity(success(followService.followCheck(userId)), HttpStatus.OK);
+        Long currendUserId;
+        try {
+            currendUserId = getCurrentUserId();
+        } catch (Exception e) {
+            currendUserId = 0L;
+        }
+        return new ResponseEntity(success(followService.followCheck(userId, currendUserId)), HttpStatus.OK);
     }
 
     @GetMapping("/followNumber/{userId}")

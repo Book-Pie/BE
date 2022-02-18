@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final HttpServletRequest request;
 
 
     public Boolean following(Long toUserId, Long currentUserId) {
@@ -34,7 +32,7 @@ public class FollowService {
         User toUser = userRepository.findById(toUserId)
                     .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (followCheck(toUserId)) throw new IllegalArgumentException("팔로우는 한 번만 할 수 있습니다.");
+        if (followCheck(toUserId, currentUserId)) throw new IllegalArgumentException("팔로우는 한 번만 할 수 있습니다.");
 
         Follow follow = new Follow(fromUser, toUser);
         followRepository.save(follow);
@@ -71,17 +69,10 @@ public class FollowService {
         return follows.stream().map(follow -> FollowerDto.createDto(follow)).collect(Collectors.toList());
     }
 
-    public Boolean followCheck(Long userId) {
-        Long currentUserId = 0L;
-        // 로그인 유저가 있으면
-        if (jwtTokenProvider.resolveToken(request) != null) {
-            currentUserId = getCurrentUserId();
-        } else {
-            return false;
-        }
+    public Boolean followCheck(Long userId, Long currentUserId) {
+        if (currentUserId.equals(0L)) return false;
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        User currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         List<FollowingDto> followingList = myFollowing(currentUserId);
@@ -91,24 +82,13 @@ public class FollowService {
         return false;
     }
 
-    private Long getCurrentUserId(){
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return user.getId();
-        }catch (Exception e){
-            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
-        }
-    }
-
     public JSONObject followNumber(Long userId) {
         JSONObject obj = new JSONObject();
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        System.out.println("여기까지1");
         Long following = followRepository.followingNumber(userId);
         Long follower = followRepository.followerNumber(userId);
-        System.out.println("여기까지2");
         obj.put("following", following);
         obj.put("follower", follower);
 

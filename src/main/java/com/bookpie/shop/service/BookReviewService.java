@@ -13,11 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +28,6 @@ import java.util.stream.Collectors;
 public class BookReviewService {
     private final BookReviewRepository bookReviewRepository;
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final HttpServletRequest request;
 
     // 도서 리뷰 작성
     public BookReviewDto create(BookReviewDto dto, Long userId) {
@@ -77,14 +73,9 @@ public class BookReviewService {
     }
 
     // 해당 도서의 리뷰 전체 조회
-    public JSONObject getReview(String isbn, String page, String size) {
+    public JSONObject getReview(String isbn, String page, String size, Long userId) {
         JSONObject response = new JSONObject();
-        Long userId = 0L;
 
-        // 로그인 유저가 있으면
-        if (jwtTokenProvider.resolveToken(request) != null) {
-            userId = getCurrentUserId();
-        }
         PageRequest pageRequest = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), Sort.by("reviewDate").descending());  // 페이징 정보
 
         Long finalUser_id = userId;
@@ -140,7 +131,7 @@ public class BookReviewService {
 
     // 해당 책에 내가 쓴 도서리뷰
     public BookReviewDto myReview(String isbn, Long userId) {
-        if (userId == 0) {
+        if (userId.equals(0L)) {
             return null;
         }
 
@@ -154,16 +145,9 @@ public class BookReviewService {
     }
 
     // 해당 책에서 베스트 리뷰 2개
-    public List<BookReviewDto> bestReview(String isbn) {
-        Long user_id = 0L;
-        if (jwtTokenProvider.resolveToken(request) != null) {
-            user_id = getCurrentUserId();
-            User user = userRepository.findById(user_id)
-                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        }
-
+    public List<BookReviewDto> bestReview(String isbn, Long userId) {
         List<BookReview> reviewList = bookReviewRepository.bestReview(isbn);
-        Long finalUser_id = user_id;
+        Long finalUser_id = userId;
         return reviewList.stream()
                 .map(bookReview -> BookReviewDto.createDto(bookReview, finalUser_id))
                 .collect(Collectors.toList());
@@ -188,12 +172,4 @@ public class BookReviewService {
         return resultObjs;
     }
 
-    private Long getCurrentUserId(){
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return user.getId();
-        }catch (Exception e){
-            throw new ClassCastException("토큰에서 사용자 정보를 불러오는데 실패하였습니다.");
-        }
-    }
 }
