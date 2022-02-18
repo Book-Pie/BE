@@ -33,10 +33,21 @@ public class FollowController {
         return new ResponseEntity(success(followService.myFollowing(getCurrentUserId())), HttpStatus.OK);
     }
 
-    // 나를 팔로우 한 유저 리스트트
+    // 나를 팔로우 한 유저 리스트
     @GetMapping("/follower")
     public ResponseEntity myFollower() {
         return new ResponseEntity(success(followService.myFollower(getCurrentUserId())), HttpStatus.OK);
+    }
+
+    // 현재 접속자가 해당 유저를 팔로우 했는지
+    @GetMapping("/followCheck/{userId}")
+    public ResponseEntity followCheck(@PathVariable Long userId) {
+        return new ResponseEntity(success(followService.followCheck(userId)), HttpStatus.OK);
+    }
+
+    @GetMapping("/followNumber/{userId}")
+    public ResponseEntity followNumber(@PathVariable Long userId) {
+        return new ResponseEntity(success(followService.followNumber(userId)), HttpStatus.OK);
     }
 
     private Long getCurrentUserId(){
