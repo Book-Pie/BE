@@ -15,9 +15,10 @@ public class FollowerDto {
     public static FollowerDto createDto(Follow follow) {
         return FollowerDto.builder()
                 .followId(follow.getId())
-                .userId(follow.getToUser().getId())
-                .nickName(follow.getToUser().getNickName())
-                .profile(follow.getToUser().getImage())
+                .userId(follow.getFromUser().getId())
+                .nickName(follow.getFromUser().getNickName())
+                .profile(follow.getFromUser().getImage())
                 .build();
     }
+
 }
