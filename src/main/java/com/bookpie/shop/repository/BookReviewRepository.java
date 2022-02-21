@@ -42,4 +42,13 @@ public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
             "where isbn = :isbn", nativeQuery = true)
     Double averageRating(@Param("isbn") String isbn);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update book_review set like_cnt = like_cnt+1 where book_review_id = :reviewId", nativeQuery = true)
+    void plusLikeCnt(@Param("reviewId") Long reviewId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update book_review set like_cnt = like_cnt-1 where book_review_id = :reviewId", nativeQuery = true)
+    void downLikeCnt(@Param("reviewId") Long reviewId);
 }

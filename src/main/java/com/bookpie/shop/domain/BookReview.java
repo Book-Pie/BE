@@ -34,8 +34,8 @@ public class BookReview {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Basic(fetch = FetchType.LAZY)
-    @Formula("(select count(1) from review_like r where r.book_review_id = book_review_id)")
+//    @Basic(fetch = FetchType.LAZY)
+//    @Formula("(select count(1) from review_like r where r.book_review_id = book_review_id)")
     private int likeCnt;
 
     private String category;

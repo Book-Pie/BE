@@ -36,6 +36,7 @@ public class ReviewLikeService {
         for (ReviewLike reviewLike : reviewLikes) {
             if (reviewLike.getUser().getId().equals(userId)) {
                 reviewLikeRepository.delete(reviewLike);
+                bookReviewRepository.downLikeCnt(reviewLike.getBook_review().getId());
                 return ReviewLikeDto.createDto(reviewLike, false);
             }
         }
@@ -43,6 +44,7 @@ public class ReviewLikeService {
         // 좋아요를 안눌렀으면 좋아요 추가
         ReviewLike reviewLike = ReviewLike.createReviewLike(bookReview, user);
         bookReview.getReviewLikes().add(reviewLike);
+        bookReviewRepository.plusLikeCnt(bookReview.getId());
 
         ReviewLike created = reviewLikeRepository.save(reviewLike);
         return ReviewLikeDto.createDto(created, true);
