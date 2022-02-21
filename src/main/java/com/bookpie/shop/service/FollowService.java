@@ -33,6 +33,7 @@ public class FollowService {
         if (followCheck(toUserId, currentUserId)) throw new IllegalArgumentException("팔로우는 한 번만 할 수 있습니다.");
 
         Follow follow = new Follow(fromUser, toUser);
+        followRepository.save(follow);
         fromUser.getFollowings().add(follow);
         toUser.getFollowers().add(follow);
 
