@@ -1,6 +1,5 @@
 package com.bookpie.shop.service;
 
-import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.Follow;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.domain.dto.follow.FollowerDto;
@@ -59,7 +58,7 @@ public class FollowService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         List<Follow> follows = followRepository.myFollowing(userId);
-        return follows.stream().map(follow -> FollowingDto.createDto(follow)).collect(Collectors.toList());
+        return follows.stream().map(follow -> FollowingDto.createDto(follow, currentUserId)).collect(Collectors.toList());
     }
 
     // 나를 팔로우 한 유저 리스트
@@ -69,7 +68,7 @@ public class FollowService {
 
         List<Follow> followers = followRepository.myFollower(userId);
 
-        return followers.stream().map(follow-> FollowerDto.createDto(follow)).collect(Collectors.toList());
+        return followers.stream().map(follow-> FollowerDto.createDto(follow, currentUserId)).collect(Collectors.toList());
     }
 
     public Boolean followCheck(Long userId, Long currentUserId) {
@@ -78,12 +77,11 @@ public class FollowService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        List<Follow> follows = followRepository.myFollowing(currentUserId);
-        List<FollowingDto> followingList = follows.stream().map(follow -> FollowingDto.createDto(follow))
-                .collect(Collectors.toList());
-        for (FollowingDto dto : followingList) {
-            if (dto.getUserId().equals(user.getId())) return true;
+        List<Follow> list = user.getFollowers();
+        for (Follow follow : list) {
+            if (follow.getFromUser().getId().equals(currentUserId)) return true;
         }
+
         return false;
     }
 

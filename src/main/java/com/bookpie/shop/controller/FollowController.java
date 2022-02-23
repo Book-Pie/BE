@@ -27,7 +27,7 @@ public class FollowController {
         return new ResponseEntity(success(followService.deleteFollow(userId, getCurrentUserId())), HttpStatus.OK);
     }
 
-    // 내가 팔로잉 한 유저 리스트
+    // 팔로잉 한 유저 리스트
     @GetMapping("/following/{userId}")
     public ResponseEntity myFollowing(@PathVariable Long userId) {
         Long currentUserId;
@@ -39,7 +39,7 @@ public class FollowController {
         return new ResponseEntity(success(followService.myFollowing(userId, currentUserId)), HttpStatus.OK);
     }
 
-    // 나를 팔로우 한 유저 리스트
+    // 팔로워 유저 리스트
     @GetMapping("/follower/{userId}")
     public ResponseEntity myFollower(@PathVariable Long userId) {
         Long currentUserId;
