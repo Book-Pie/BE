@@ -35,7 +35,7 @@
 
 **Front-End 링크** : https://github.com/Book-Pie/FE
 
-**북파이 사이트** : http://www.react-dev.p-e.kr/
+**북파이 사이트** : http://dzjv6uzpvhcwz.cloudfront.net/
 
 
 
