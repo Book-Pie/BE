@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
+import java.io.Serializable;
 
 @Embeddable
 @Getter
 @AllArgsConstructor
-public class Address {
+public class Address implements Serializable {
 
     private String postalCode;
     private String mainAddress;
