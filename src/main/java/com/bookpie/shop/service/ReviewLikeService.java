@@ -34,9 +34,9 @@ public class ReviewLikeService {
         // 해당 회원이 좋아요를 눌렀으면 취소하는 메서드
         List<ReviewLike> reviewLikes = reviewLikeRepository.findAllByReviewId(dto.getReviewId());
         for (ReviewLike reviewLike : reviewLikes) {
-            if (reviewLike.getUser().getId() == userId) {
+            if (reviewLike.getUser().getId().equals(userId)) {
                 reviewLikeRepository.delete(reviewLike);
-                bookReviewRepository.decreaseLikeCnt(dto.getReviewId());
+                bookReviewRepository.downLikeCnt(reviewLike.getBook_review().getId());
                 return ReviewLikeDto.createDto(reviewLike, false);
             }
         }
@@ -44,7 +44,7 @@ public class ReviewLikeService {
         // 좋아요를 안눌렀으면 좋아요 추가
         ReviewLike reviewLike = ReviewLike.createReviewLike(bookReview, user);
         bookReview.getReviewLikes().add(reviewLike);
-        bookReviewRepository.increaseLikeCnt(dto.getReviewId());
+        bookReviewRepository.plusLikeCnt(bookReview.getId());
 
         ReviewLike created = reviewLikeRepository.save(reviewLike);
         return ReviewLikeDto.createDto(created, true);

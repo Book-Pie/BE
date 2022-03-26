@@ -35,18 +35,6 @@ public class BookController {
         return new ResponseEntity(success(bookService.getAll()), HttpStatus.OK);
     }
 
-    // 도서 추가 (테스트용)
-    @PostMapping("/api/book")
-    public ResponseEntity create(@RequestBody BookDto dto) {
-        return new ResponseEntity(success(bookService.create(dto)), HttpStatus.OK);
-    }
-
-    // 도서 삭제 (테스트용)
-    @DeleteMapping("/api/book/{bookId}")
-    public ResponseEntity delete(@PathVariable Long bookId) {
-        return new ResponseEntity(success(bookService.delete(bookId)), HttpStatus.OK);
-    }
-
     // 베스트 셀러 조회 (알라딘 api 호출)
     @GetMapping("/api/book/bestseller")
     public ResponseEntity best(@RequestParam(required = false, defaultValue = "1") String page,

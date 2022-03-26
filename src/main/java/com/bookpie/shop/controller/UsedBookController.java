@@ -149,9 +149,12 @@ public class UsedBookController {
         return new ResponseEntity(success(map),HttpStatus.OK);
     }
 
+    //좋아요 다중 삭제
     @DeleteMapping("/like")
-    public ResponseEntity deleteAllLike(@RequestBody Map<String,List<Long>> map){
-        return new ResponseEntity(success(usedBookLikeService.deleteAll(map.get("id"),getCurrentUserId())),HttpStatus.OK);
+    public ResponseEntity deleteAllLike(@RequestBody Map<String,List<Long>> request){
+        log.info(request.toString());
+        List<Long> ids = request.get("id");
+        return new ResponseEntity(success(usedBookLikeService.deleteAll(ids,getCurrentUserId())),HttpStatus.OK);
     }
     //판매중,판매완료 책 개수
     @GetMapping("/groupcount")

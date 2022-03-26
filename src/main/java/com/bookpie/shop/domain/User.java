@@ -86,6 +86,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "fromUser")
+    private List<Follow> followings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toUser")
+    private List<Follow> followers = new ArrayList<>();
+
     @Builder
     public User(String name,String password,String nickName,Role role,LocalDateTime createDate,
                 Grade grade,Point point,LoginType loginType,String phone,Address address,String email){

@@ -38,7 +38,7 @@ public class BookReviewDto {
                 .content(bookReview.getContent())
                 .rating(bookReview.getRating())
                 .isbn(bookReview.getIsbn())
-                .reviewLikeCount(bookReview.getReviewLikes().size())
+                .reviewLikeCount(bookReview.getLikeCnt())
                 .reviewDate(bookReview.getReviewDate())
                 .category(bookReview.getCategory())
                 .profile(bookReview.getUser().getImage())
@@ -52,7 +52,7 @@ public class BookReviewDto {
 
         List<ReviewLike> reviewLikeList = bookReview.getReviewLikes();
         for(ReviewLike reviewLike : reviewLikeList) {
-            if (reviewLike.getUser().getId() == user_id) return true;
+            if (reviewLike.getUser().getId().equals(user_id)) return true;
         }
         return false;
     }

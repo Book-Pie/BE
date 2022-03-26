@@ -20,4 +20,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 나를 팔로잉 한 유저 리스트
     @Query(value = "select * from follow where to_user_id = :to_user_id", nativeQuery = true)
     List<Follow> myFollower(@Param("to_user_id") Long to_user_id);
+
+    @Query(value = "select count(*) from follow where from_user_id = :from_user_id", nativeQuery = true)
+    Long followingNumber(@Param("from_user_id") Long from_user_id);
+
+    @Query(value = "select count(*) from follow where to_user_id = :to_user_id", nativeQuery = true)
+    Long followerNumber(@Param("to_user_id") Long to_user_id);
 }

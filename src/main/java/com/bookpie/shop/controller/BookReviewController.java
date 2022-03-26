@@ -51,8 +51,13 @@ public class BookReviewController {
     public ResponseEntity getReview(@PathVariable String isbn,
                                     @RequestParam(required = false, defaultValue = "0") String page,
                                     @RequestParam(required = false, defaultValue = "4") String size) {
-
-        return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size)), HttpStatus.OK);
+        Long userId;
+        try {
+            userId = getCurrentUserId();
+        } catch (Exception e) {
+            userId = 0L;
+        }
+        return new ResponseEntity(success(bookReviewService.getReview(isbn, page, size, userId)), HttpStatus.OK);
     }
 
     // 내가 쓴 도서리뷰 조회
@@ -72,7 +77,13 @@ public class BookReviewController {
     // 해당 도서에서 베스트 리뷰 2개
     @GetMapping("/bestReview/{isbn}")
     public ResponseEntity bestReview(@PathVariable String isbn) {
-        return new ResponseEntity(success(bookReviewService.bestReview(isbn)), HttpStatus.OK);
+        Long userId;
+        try {
+            userId = getCurrentUserId();
+        } catch (Exception e) {
+            userId = 0L;
+        }
+        return new ResponseEntity(success(bookReviewService.bestReview(isbn, userId)), HttpStatus.OK);
     }
 
     // 회원이 가장 많은 리뷰를 남긴 카테고리 top 5

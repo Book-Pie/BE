@@ -3,11 +3,13 @@ package com.bookpie.shop.utils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 public class PageUtil {
 
     @Getter
     @Setter
-    public static class PageDto<T>{
+    public static class PageDto<T> implements Serializable {
         private Long pageCount;
         private Long totalElement;
         private T pages;

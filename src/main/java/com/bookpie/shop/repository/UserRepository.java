@@ -1,11 +1,12 @@
 package com.bookpie.shop.repository;
 
-import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.QUser;
 import com.bookpie.shop.domain.User;
+import com.bookpie.shop.domain.enums.Cache;
 import com.bookpie.shop.domain.enums.Grade;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -73,6 +74,7 @@ public class UserRepository {
         fechjoin 을 이용해 한번의 쿼리로 User Entity의 roles를 가져오기
         위해 findByEmail 메서드와 분리함
      */
+    @Cacheable(cacheNames = Cache.KEY_USER,key = "#email",value = "user")
     public Optional<User> findByEmailWithRole(String email){
         List<User> users = em.createQuery("select distinct u from User u " +
                                             " join fetch u.roles" +

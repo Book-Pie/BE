@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,7 +33,11 @@ public class BookReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+//    @Basic(fetch = FetchType.LAZY)
+//    @Formula("(select count(1) from review_like r where r.book_review_id = book_review_id)")
     private int likeCnt;
+
     private String category;
 
     @Builder.Default

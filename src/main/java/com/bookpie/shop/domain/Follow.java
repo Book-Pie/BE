@@ -15,12 +15,12 @@ public class Follow {
     @Column(name = "follow_id")
     private Long id;
 
-    // 구독을 하는 사람
+    // 팔로우를 하는 사람
     @JoinColumn(name = "from_user_id")
     @ManyToOne
     private User fromUser;
 
-    // 구독을 당하는 사람
+    // 팔로우를 당하는 사람
     @JoinColumn(name = "to_user_id")
     @ManyToOne
     private User toUser;

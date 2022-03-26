@@ -13,7 +13,6 @@ import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -61,7 +56,7 @@ public class ReplyService {
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
-        if (reply.getUser().getId() != userId) {
+        if (!reply.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
         }
 
@@ -75,7 +70,7 @@ public class ReplyService {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
-        if (reply.getUser().getId() != userId) throw new IllegalArgumentException("게시글 삭제 실패! 회원 정보가 일치하지 않습니다.");
+        if (!reply.getUser().getId().equals(userId)) throw new IllegalArgumentException("게시글 삭제 실패! 회원 정보가 일치하지 않습니다.");
 
         if (reply.getUsedBook() != null) throw new IllegalArgumentException("중고도서에 대한 댓글입니다.");
 
@@ -126,7 +121,7 @@ public class ReplyService {
         Reply subReply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 대댓글은 존재하지 않습니다."));
 
-        if (subReply.getUser().getId() != userId)
+        if (!subReply.getUser().getId().equals(userId))
             throw new IllegalArgumentException("대댓글 삭제 실패! 회원 정보가 일치하지 않습니다.");
 
         if (subReply.getParentReply() == null) {
@@ -141,7 +136,7 @@ public class ReplyService {
         Reply subReply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 대댓글은 존재하지 않습니다."));
 
-        if (subReply.getUser().getId() != userId)
+        if (!subReply.getUser().getId().equals(userId))
             throw new IllegalArgumentException("대댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
 
         if (subReply.getParentReply() == null) {
@@ -177,7 +172,7 @@ public class ReplyService {
         Reply reply = replyRepository.findById(dto.getReplyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
 
-        if (reply.getUser().getId() != userId)
+        if (!reply.getUser().getId().equals(userId))
             throw new IllegalArgumentException("중고도서 댓글 수정 실패! 회원 정보가 일치하지 않습니다.");
 
         reply.patchUsedBook(dto);
@@ -195,7 +190,7 @@ public class ReplyService {
         if (reply.getBoard() != null)
             throw new IllegalArgumentException("게시글에 대한 댓글입니다.");
 
-        if (reply.getUser().getId() != userId)
+        if (!reply.getUser().getId().equals(userId))
             throw new IllegalArgumentException("중고도서 댓글 삭제 실패! 회원 정보가 일치하지 않습니다.");
 
         replyRepository.delete(reply);

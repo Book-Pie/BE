@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Point {
+public class Point implements Serializable {
 
     private int totalPoint;
     private int usedPoint;

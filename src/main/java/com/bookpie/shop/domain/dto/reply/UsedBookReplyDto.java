@@ -48,14 +48,14 @@ public class UsedBookReplyDto {
                 reply.getSubReply(), reply.getSecret(), reply.getUser().getImage());
     }
 
-    // 댓글 작성 후 반환 dto
+    // 댓글 작성/수정 후 반환 dto
     public static UsedBookReplyDto createReplyDto(Reply reply, List<Reply> subReplies) {
         return new UsedBookReplyDto(reply.getId(), reply.getUsedBook().getId(), reply.getUser().getId(),
                 reply.getContent(), reply.getReplyDate(), reply.getUser().getNickName(), reply.getSecret(),
-                subReplies);
+                subReplies, reply.getUser().getImage());
     }
     public UsedBookReplyDto(Long replyId, Long usedBookId, Long userId, String content,
-                            LocalDateTime replyDate, String nickName, Boolean secret, List<Reply> subReplies) {
+                            LocalDateTime replyDate, String nickName, Boolean secret, List<Reply> subReplies, String profile) {
         this.replyId = replyId;
         this.usedBookId = usedBookId;
         this.userId = userId;
@@ -67,6 +67,7 @@ public class UsedBookReplyDto {
             this.subReply = subReplies.stream().map(reply -> SubReplyDto.createDto(reply)).collect(Collectors.toList());
             this.subReply.sort(Comparator.comparing(SubReplyDto::getReplyDate).reversed());
         }
+        this.profile = profile;
     }
 
 }
