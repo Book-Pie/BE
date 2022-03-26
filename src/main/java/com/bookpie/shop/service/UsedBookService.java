@@ -2,6 +2,7 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.*;
 import com.bookpie.shop.domain.dto.*;
+import com.bookpie.shop.domain.enums.Cache;
 import com.bookpie.shop.domain.enums.SaleState;
 import com.bookpie.shop.repository.*;
 import com.bookpie.shop.utils.FileUtil;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,6 +131,7 @@ public class UsedBookService {
     }
 
     //중고도서 검색
+    @Cacheable(value = Cache.KEY_USEDBOOK,key = "#findUsedBookDto.toString")
     public PageDto getUsedBookList(FindUsedBookDto findUsedBookDto){
         List<UsedBook> result = usedBookRepository.findAll(findUsedBookDto);
         Long total = 0l;
