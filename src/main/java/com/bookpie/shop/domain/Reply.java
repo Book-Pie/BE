@@ -1,8 +1,8 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.reply.BoardReplyDto;
-import com.bookpie.shop.domain.dto.reply.SubReplyDto;
-import com.bookpie.shop.domain.dto.reply.UsedBookReplyDto;
+import com.bookpie.shop.dto.reply.BoardReplyDto;
+import com.bookpie.shop.dto.reply.SubReplyDto;
+import com.bookpie.shop.dto.reply.UsedBookReplyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

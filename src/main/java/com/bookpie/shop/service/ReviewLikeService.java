@@ -3,14 +3,13 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.domain.BookReview;
 import com.bookpie.shop.domain.ReviewLike;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
-import com.bookpie.shop.domain.dto.book_review.ReviewLikeDto;
+import com.bookpie.shop.dto.book_review.BookReviewDto;
+import com.bookpie.shop.dto.book_review.ReviewLikeDto;
 import com.bookpie.shop.repository.BookReviewRepository;
 import com.bookpie.shop.repository.ReviewLikeRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

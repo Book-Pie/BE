@@ -1,7 +1,7 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import com.bookpie.shop.dto.book_review.BookReviewDto;
 import com.bookpie.shop.service.BookReviewService;
 import com.bookpie.shop.service.ReviewLikeService;
 import lombok.RequiredArgsConstructor;

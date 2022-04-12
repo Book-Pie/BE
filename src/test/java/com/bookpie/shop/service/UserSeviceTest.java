@@ -2,8 +2,8 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.Address;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.LoginDto;
-import com.bookpie.shop.domain.dto.UserCreateDto;
+import com.bookpie.shop.dto.LoginDto;
+import com.bookpie.shop.dto.UserCreateDto;
 import com.bookpie.shop.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

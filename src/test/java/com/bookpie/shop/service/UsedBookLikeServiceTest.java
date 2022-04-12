@@ -1,10 +1,9 @@
 package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.UsedBook;
-import com.bookpie.shop.domain.UsedBookLike;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.dto.UserCreateDto;
+import com.bookpie.shop.dto.UsedBookCreateDto;
+import com.bookpie.shop.dto.UserCreateDto;
 import com.bookpie.shop.repository.UsedBookLikeRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;

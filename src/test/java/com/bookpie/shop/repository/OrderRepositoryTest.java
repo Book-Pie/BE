@@ -4,7 +4,7 @@ import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.Point;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.enums.BookState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

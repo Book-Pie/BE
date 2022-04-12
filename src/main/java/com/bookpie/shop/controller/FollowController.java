@@ -1,7 +1,7 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.follow.FollowingDto;
+import com.bookpie.shop.dto.follow.FollowingDto;
 import com.bookpie.shop.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

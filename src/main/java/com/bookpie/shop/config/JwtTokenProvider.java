@@ -1,6 +1,6 @@
 package com.bookpie.shop.config;
 
-import com.bookpie.shop.domain.enums.Role;
+import com.bookpie.shop.enums.Role;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,9 +1,9 @@
 package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.*;
-import com.bookpie.shop.domain.dto.*;
-import com.bookpie.shop.domain.enums.Cache;
-import com.bookpie.shop.domain.enums.SaleState;
+import com.bookpie.shop.dto.*;
+import com.bookpie.shop.enums.Cache;
+import com.bookpie.shop.enums.SaleState;
 import com.bookpie.shop.repository.*;
 import com.bookpie.shop.utils.FileUtil;
 import com.bookpie.shop.utils.PageUtil.PageDto;

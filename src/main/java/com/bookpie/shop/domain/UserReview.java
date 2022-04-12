@@ -1,6 +1,6 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.UserReviewCreateDto;
+import com.bookpie.shop.dto.UserReviewCreateDto;
 import lombok.*;
 
 import javax.persistence.*;

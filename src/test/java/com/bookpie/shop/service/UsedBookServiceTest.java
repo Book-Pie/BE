@@ -2,8 +2,8 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.dto.UserCreateDto;
+import com.bookpie.shop.dto.UsedBookCreateDto;
+import com.bookpie.shop.dto.UserCreateDto;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

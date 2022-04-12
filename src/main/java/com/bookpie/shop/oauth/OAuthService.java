@@ -2,7 +2,7 @@ package com.bookpie.shop.oauth;
 
 import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.enums.LoginType;
+import com.bookpie.shop.enums.LoginType;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

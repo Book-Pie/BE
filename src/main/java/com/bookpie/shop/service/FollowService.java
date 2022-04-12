@@ -2,8 +2,8 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.Follow;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.follow.FollowerDto;
-import com.bookpie.shop.domain.dto.follow.FollowingDto;
+import com.bookpie.shop.dto.follow.FollowerDto;
+import com.bookpie.shop.dto.follow.FollowingDto;
 import com.bookpie.shop.repository.FollowRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

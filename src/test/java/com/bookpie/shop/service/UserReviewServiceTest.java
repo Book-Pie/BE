@@ -1,8 +1,8 @@
 package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.*;
-import com.bookpie.shop.domain.dto.UserReviewCreateDto;
-import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.dto.UserReviewCreateDto;
+import com.bookpie.shop.enums.BookState;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;

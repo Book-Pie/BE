@@ -1,10 +1,10 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.UserCreateDto;
-import com.bookpie.shop.domain.dto.UserUpdateDto;
-import com.bookpie.shop.domain.enums.Grade;
-import com.bookpie.shop.domain.enums.LoginType;
-import com.bookpie.shop.domain.enums.Role;
+import com.bookpie.shop.dto.UserCreateDto;
+import com.bookpie.shop.dto.UserUpdateDto;
+import com.bookpie.shop.enums.Grade;
+import com.bookpie.shop.enums.LoginType;
+import com.bookpie.shop.enums.Role;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.security.core.GrantedAuthority;

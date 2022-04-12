@@ -1,7 +1,7 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.point.PointDto;
+import com.bookpie.shop.dto.point.PointDto;
 import com.bookpie.shop.service.PointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

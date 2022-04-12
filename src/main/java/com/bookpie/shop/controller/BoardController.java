@@ -1,8 +1,8 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.board.BoardDto;
-import com.bookpie.shop.domain.enums.BoardType;
+import com.bookpie.shop.dto.board.BoardDto;
+import com.bookpie.shop.enums.BoardType;
 import com.bookpie.shop.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

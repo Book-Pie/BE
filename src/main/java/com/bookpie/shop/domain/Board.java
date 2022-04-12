@@ -1,7 +1,7 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.board.BoardDto;
-import com.bookpie.shop.domain.enums.BoardType;
+import com.bookpie.shop.dto.board.BoardDto;
+import com.bookpie.shop.enums.BoardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

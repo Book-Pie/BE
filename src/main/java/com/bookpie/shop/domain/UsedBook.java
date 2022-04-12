@@ -1,9 +1,9 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.enums.BookState;
-import com.bookpie.shop.domain.enums.Category;
-import com.bookpie.shop.domain.enums.SaleState;
+import com.bookpie.shop.dto.UsedBookCreateDto;
+import com.bookpie.shop.enums.BookState;
+import com.bookpie.shop.enums.Category;
+import com.bookpie.shop.enums.SaleState;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

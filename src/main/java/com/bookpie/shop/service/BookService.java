@@ -3,8 +3,8 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.config.ApiConfig;
 import com.bookpie.shop.domain.Book;
 import com.bookpie.shop.domain.BookCategory;
-import com.bookpie.shop.domain.dto.book.BookCategoryDto;
-import com.bookpie.shop.domain.dto.book.BookDto;
+import com.bookpie.shop.dto.book.BookCategoryDto;
+import com.bookpie.shop.dto.book.BookDto;
 import com.bookpie.shop.repository.BookCategoryRepository;
 import com.bookpie.shop.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

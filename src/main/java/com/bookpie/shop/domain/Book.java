@@ -1,15 +1,10 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.book.BookDto;
-import com.bookpie.shop.domain.enums.Category;
-import com.sun.source.util.TaskEvent;
+import com.bookpie.shop.dto.book.BookDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
