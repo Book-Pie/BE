@@ -169,6 +169,7 @@ public class UsedBookService {
     }
 
     //판매중,판매완료 책 개수
+    @Cacheable(cacheNames = "groupCount")
     public Map<SaleState,Long> getGroupCount(){
         List<Tuple> result = usedBookRepository.groupCount();
         Map<SaleState,Long> map = new HashMap<>();
