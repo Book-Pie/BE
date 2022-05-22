@@ -27,6 +27,24 @@ spring:
   sql:
     init:
       mode: embedded
+  cache:
+    type: none
+
+  mail:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth:
+          starttls:
+            enable:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
 logging:
   level:
     org.hibernate.SQL: debug
@@ -68,4 +86,3 @@ path:
   base: http://localhost:8080
   image:
     dev: C:\bookpie_image\
-

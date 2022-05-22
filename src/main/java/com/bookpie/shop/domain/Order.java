@@ -54,7 +54,7 @@ public class Order {
                            .buyer(user)
                            .address(dto.getAddress())
                            .orderDate(LocalDateTime.now())
-                            .deliveryRequest(dto.getDeliveryRequest())
+                           .deliveryRequest(dto.getDeliveryRequest())
                            .build();
         user.addOrder(order);
         usedBook.trading();

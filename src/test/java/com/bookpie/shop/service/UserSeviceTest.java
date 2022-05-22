@@ -1,94 +1,144 @@
 package com.bookpie.shop.service;
 
-import com.bookpie.shop.domain.Address;
+import com.bookpie.shop.config.JwtTokenProvider;
+import com.bookpie.shop.domain.Point;
 import com.bookpie.shop.domain.User;
 import com.bookpie.shop.dto.LoginDto;
 import com.bookpie.shop.dto.UserCreateDto;
 import com.bookpie.shop.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class UserSeviceTest {
 
-    @Autowired UserSevice userSevice;
-    @Autowired UserRepository userRepository;
+    @InjectMocks
+    UserSevice userSevice;
 
-    @Test
-    UserCreateDto init() {
-        UserCreateDto userCreateDto= new UserCreateDto();
-        userCreateDto.setAddress(new Address("aaa","bbb","ccc"));
-        userCreateDto.setEmail("test@gmail.com");
-        userCreateDto.setName("kim");
-        userCreateDto.setNickName("nick");
-        userCreateDto.setPassword("1234");
-        userCreateDto.setPhone("01049432618");
-        return userCreateDto;
+    @Spy
+    BCryptPasswordEncoder encoder;
+
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    JwtTokenProvider jwtTokenProvider;
+
+    User user(Long id){
+        return User.builder()
+                .id(id)
+                .name("name"+ id)
+                .email("email"+id+"@gmail.com")
+                .point(Point.createDefaultPoint())
+                .nickName("nick"+id)
+                .password(encoder.encode("password"+id)).build();
+
     }
-
     @Test
-    public void signupTest() throws Exception{
+    public void signupSuccessTest() throws Exception{
         //given
-        UserCreateDto userCreateDto = init();
+        UserCreateDto dto = new UserCreateDto();
+        dto.setEmail("email@gmail.com");
+        dto.setName("name");
+        dto.setPassword("1234");
+
+        when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(null));
+        when(userRepository.findByNickName(any())).thenReturn(Optional.ofNullable(null));
+
         //when
-        userSevice.signup(userCreateDto);
-        User user = userRepository.findByEmail("test@gmail.com").get();
+        userSevice.signup(dto);
+
         //then
-        assertEquals("kim",user.getName());
+        verify(userRepository).save(any());
+
+    }
+    @Test
+    public void signupFailTest() throws Exception{
+        //given
+        User user = user(1l);
+        UserCreateDto dto = new UserCreateDto();
+        dto.setNickName("asd123");
+        dto.setName("name");
+        dto.setPassword("123123");
+        dto.setEmail("test@gmail.com");
+        //when
+        when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(user));
+        //when(userRepository.findByNickName(any())).thenReturn(Optional.ofNullable(user));
+
+        //then
+        assertThrows(IllegalArgumentException.class,()->userSevice.signup(dto));
+
     }
 
     @Test
     public void loginSuccessTest() throws Exception{
         //given
-        UserCreateDto userCreateDto = init();
-        userSevice.signup(userCreateDto);
+        User user = user(1l);
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail(user.getEmail());
+        loginDto.setPassword("password1");
+
         //when
-        LoginDto loginDto= new LoginDto();
-        loginDto.setEmail("test@gmail.com");
-        loginDto.setPassword("1234");
-        //then
+        when(userRepository.findByEmailAllgrade(any())).thenReturn(Optional.ofNullable(user));
+        when(jwtTokenProvider.createToken(any(),any())).thenReturn("token");
+
         String token = userSevice.login(loginDto);
-        assertNotNull(token);
+        //then
+        assertEquals("token",token);
+
 
     }
 
     @Test
     public void loginFailTest() throws Exception{
         //given
-        UserCreateDto userCreateDto = init();
-        userSevice.signup(userCreateDto);
+        User user = user(1l);
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail(user.getEmail());
+        loginDto.setPassword("password1234");
+
         //when
-        LoginDto loginDto= new LoginDto();
-        loginDto.setEmail("test@gmail.com");
-        loginDto.setPassword("12345");
+        when(userRepository.findByEmailAllgrade(any())).thenReturn(Optional.ofNullable(user));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> userSevice.login(loginDto));
+
         //then
-        assertThrows(IllegalArgumentException.class,()->userSevice.login(loginDto));
+        assertEquals("잘못된 비밀번호 입니다.",exception.getMessage());
     }
 
     @Test
     public void validationTest() throws Exception{
         //given
-        UserCreateDto userCreateDto = init();
-        userSevice.signup(userCreateDto);
-        //when
-        boolean exist_id = userSevice.emailValidation("test@gmail.com");
-        boolean empty_id = userSevice.emailValidation("test11@gmail.com");
-        boolean exist_nick = userSevice.nickNameValidation("nick");
-        boolean empty_nick = userSevice.nickNameValidation("nickkkk");
-        //then
+        User user = user(1l);
+        String validEmail = "validEmail@gmail.com";
+        String nonvalidEmail = "nonvalidEmail@gmail.com";
+        String validNickname = "validNickname";
+        String nonvalidNickname = "nonvaliNickname";
+        when(userRepository.findByNickName(validNickname)).thenReturn(Optional.ofNullable(null));
+        when(userRepository.findByNickName(nonvalidNickname)).thenReturn(Optional.ofNullable(user));
+        when(userRepository.findByEmail(validEmail)).thenReturn(Optional.ofNullable(null));
+        when(userRepository.findByEmail(nonvalidEmail)).thenReturn(Optional.ofNullable(user));
 
-        assertEquals(false,exist_id);
-        assertEquals(true,empty_id);
-        assertEquals(false,exist_nick);
-        assertEquals(true,empty_nick);
+        //when
+        boolean ev = userSevice.emailValidation(validEmail);
+        boolean env = userSevice.emailValidation(nonvalidEmail);
+        boolean nv = userSevice.nickNameValidation(validNickname);
+        boolean nnv = userSevice.nickNameValidation(nonvalidNickname);
+
+        //then
+        assertEquals(ev,true);
+        assertEquals(env,false);
+        assertEquals(nv,true);
+        assertEquals(nnv,false);
     }
 
 }

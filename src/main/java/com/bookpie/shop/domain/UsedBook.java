@@ -78,7 +78,7 @@ public class UsedBook {
 
     @Builder
     public UsedBook(User seller,String content,String title,int price,LocalDateTime uploadDate,BookState bookState,
-                    SaleState saleState,Category first,Category second,String isbn){
+                    SaleState saleState,Category first,Category second,String isbn,Long id){
         this.seller = seller;
         this.content = content;
         this.title = title;
@@ -91,6 +91,7 @@ public class UsedBook {
         this.sndCategory = second;
         this.isbn = isbn;
         this.view = 0;
+        this.id = id;
     }
 
     public void update(UsedBookCreateDto dto){
