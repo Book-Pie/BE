@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,10 +45,14 @@ public class UsedBookRepository {
                 .setParameter("isbn",isbn)
                 .getResultList();
     }
+
+
     public Optional<UsedBook> findByIdWithUser(Long id){
         return em.createQuery("select ub from UsedBook  ub" +
                                 " join fetch  ub.seller s" +
-                                " where ub.id= :id").setParameter("id",id).getResultList().stream().findAny();
+                                " where ub.id= :id")
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                 .setParameter("id",id).getResultList().stream().findAny();
     }
 
     public List<UsedBook> findByUserId(Long userId){
