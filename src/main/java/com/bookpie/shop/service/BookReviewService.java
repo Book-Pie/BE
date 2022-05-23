@@ -1,9 +1,8 @@
 package com.bookpie.shop.service;
 
-import com.bookpie.shop.config.JwtTokenProvider;
 import com.bookpie.shop.domain.BookReview;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import com.bookpie.shop.dto.book_review.BookReviewDto;
 import com.bookpie.shop.repository.BookReviewRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

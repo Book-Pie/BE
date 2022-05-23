@@ -2,8 +2,8 @@ package com.bookpie.shop.repository;
 
 import com.bookpie.shop.domain.QUser;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.enums.Cache;
-import com.bookpie.shop.domain.enums.Grade;
+import com.bookpie.shop.enums.Cache;
+import com.bookpie.shop.enums.Grade;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

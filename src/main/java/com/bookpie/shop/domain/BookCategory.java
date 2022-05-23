@@ -1,6 +1,6 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.book.BookCategoryDto;
+import com.bookpie.shop.dto.book.BookCategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

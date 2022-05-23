@@ -1,7 +1,6 @@
 package com.bookpie.shop.controller;
 
-import com.bookpie.shop.domain.dto.book.BookCategoryDto;
-import com.bookpie.shop.domain.dto.book.BookDto;
+import com.bookpie.shop.dto.book.BookCategoryDto;
 import com.bookpie.shop.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

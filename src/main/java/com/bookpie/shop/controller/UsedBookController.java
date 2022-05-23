@@ -2,12 +2,12 @@ package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.FindUsedBookDto;
-import com.bookpie.shop.domain.dto.RelatedUsedBookDto;
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.dto.UsedBookDto;
-import com.bookpie.shop.domain.enums.Category;
-import com.bookpie.shop.domain.enums.SaleState;
+import com.bookpie.shop.dto.FindUsedBookDto;
+import com.bookpie.shop.dto.RelatedUsedBookDto;
+import com.bookpie.shop.dto.UsedBookCreateDto;
+import com.bookpie.shop.dto.UsedBookDto;
+import com.bookpie.shop.enums.Category;
+import com.bookpie.shop.enums.SaleState;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.service.UsedBookLikeService;
 import com.bookpie.shop.service.UsedBookService;

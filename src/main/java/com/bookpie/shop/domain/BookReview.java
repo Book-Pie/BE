@@ -1,11 +1,10 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.book_review.BookReviewDto;
+import com.bookpie.shop.dto.book_review.BookReviewDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

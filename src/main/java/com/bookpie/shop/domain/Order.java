@@ -1,12 +1,11 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.OrderCreateDto;
-import com.bookpie.shop.domain.enums.OrderState;
+import com.bookpie.shop.dto.OrderCreateDto;
+import com.bookpie.shop.enums.OrderState;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -55,7 +54,7 @@ public class Order {
                            .buyer(user)
                            .address(dto.getAddress())
                            .orderDate(LocalDateTime.now())
-                            .deliveryRequest(dto.getDeliveryRequest())
+                           .deliveryRequest(dto.getDeliveryRequest())
                            .build();
         user.addOrder(order);
         usedBook.trading();

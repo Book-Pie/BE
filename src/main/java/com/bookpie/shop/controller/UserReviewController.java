@@ -1,8 +1,8 @@
 package com.bookpie.shop.controller;
 
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.UserReviewCreateDto;
-import com.bookpie.shop.domain.dto.UserReviewUpdateDto;
+import com.bookpie.shop.dto.UserReviewCreateDto;
+import com.bookpie.shop.dto.UserReviewUpdateDto;
 import com.bookpie.shop.service.UserReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -2,19 +2,13 @@ package com.bookpie.shop.repository;
 
 import com.bookpie.shop.domain.Address;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.UserCreateDto;
+import com.bookpie.shop.dto.UserCreateDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

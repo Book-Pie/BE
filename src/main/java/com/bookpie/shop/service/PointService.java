@@ -3,7 +3,7 @@ package com.bookpie.shop.service;
 import com.bookpie.shop.config.ApiConfig;
 import com.bookpie.shop.domain.OrderPoint;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.point.PointDto;
+import com.bookpie.shop.dto.point.PointDto;
 import com.bookpie.shop.repository.OrderPointRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

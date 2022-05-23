@@ -2,8 +2,8 @@ package com.bookpie.shop.service;
 
 import com.bookpie.shop.domain.Board;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.board.BoardDto;
-import com.bookpie.shop.domain.enums.BoardType;
+import com.bookpie.shop.dto.board.BoardDto;
+import com.bookpie.shop.enums.BoardType;
 import com.bookpie.shop.repository.BoardRepository;
 import com.bookpie.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

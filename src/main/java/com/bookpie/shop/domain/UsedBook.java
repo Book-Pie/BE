@@ -1,9 +1,9 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.enums.BookState;
-import com.bookpie.shop.domain.enums.Category;
-import com.bookpie.shop.domain.enums.SaleState;
+import com.bookpie.shop.dto.UsedBookCreateDto;
+import com.bookpie.shop.enums.BookState;
+import com.bookpie.shop.enums.Category;
+import com.bookpie.shop.enums.SaleState;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,7 +78,7 @@ public class UsedBook {
 
     @Builder
     public UsedBook(User seller,String content,String title,int price,LocalDateTime uploadDate,BookState bookState,
-                    SaleState saleState,Category first,Category second,String isbn){
+                    SaleState saleState,Category first,Category second,String isbn,Long id){
         this.seller = seller;
         this.content = content;
         this.title = title;
@@ -91,6 +91,7 @@ public class UsedBook {
         this.sndCategory = second;
         this.isbn = isbn;
         this.view = 0;
+        this.id = id;
     }
 
     public void update(UsedBookCreateDto dto){

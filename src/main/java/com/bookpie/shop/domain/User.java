@@ -1,10 +1,10 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.UserCreateDto;
-import com.bookpie.shop.domain.dto.UserUpdateDto;
-import com.bookpie.shop.domain.enums.Grade;
-import com.bookpie.shop.domain.enums.LoginType;
-import com.bookpie.shop.domain.enums.Role;
+import com.bookpie.shop.dto.UserCreateDto;
+import com.bookpie.shop.dto.UserUpdateDto;
+import com.bookpie.shop.enums.Grade;
+import com.bookpie.shop.enums.LoginType;
+import com.bookpie.shop.enums.Role;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.security.core.GrantedAuthority;
@@ -94,7 +94,7 @@ public class User implements UserDetails {
 
     @Builder
     public User(String name,String password,String nickName,Role role,LocalDateTime createDate,
-                Grade grade,Point point,LoginType loginType,String phone,Address address,String email){
+                Grade grade,Point point,LoginType loginType,String phone,Address address,String email,Long id){
         this.name = name;
         this.password = password;
         this.nickName = nickName;
@@ -106,6 +106,7 @@ public class User implements UserDetails {
         this.phone = phone;
         this.address = address;
         this.email = email;
+        this.id = id;
     }
 
     public static User oauthCreate(String email,String name,LoginType type){

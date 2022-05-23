@@ -1,6 +1,6 @@
 package com.bookpie.shop.config;
 
-import com.bookpie.shop.domain.enums.Cache;
+import com.bookpie.shop.enums.Cache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;

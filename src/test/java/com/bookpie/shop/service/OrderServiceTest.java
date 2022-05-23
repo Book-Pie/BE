@@ -4,91 +4,130 @@ import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.Point;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.OrderCreateDto;
-import com.bookpie.shop.domain.dto.OrderDto;
-import com.bookpie.shop.domain.enums.BookState;
+import com.bookpie.shop.dto.OrderCreateDto;
+import com.bookpie.shop.enums.BookState;
+import com.bookpie.shop.enums.OrderState;
+import com.bookpie.shop.enums.SaleState;
 import com.bookpie.shop.repository.OrderRepository;
 import com.bookpie.shop.repository.UsedBookRepository;
 import com.bookpie.shop.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
-@Transactional
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
+@ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
-    @Autowired OrderService orderService;
-    @Autowired UserRepository userRepository;
-    @Autowired UsedBookRepository usedBookRepository;
-    @Autowired OrderRepository orderRepository;
+    @InjectMocks
+    @Spy
+    private OrderService orderService;
+
+    @Mock
+    private OrderRepository orderRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private UsedBookRepository usedBookRepository;
 
 
-    User user1(){
+    User user(Long id){
         return User.builder()
-                   .name("user1")
-                   .nickName("nick1")
+                    .id(id)
+                   .name("user"+ id)
+                   .nickName("nick"+ id)
                    .point(Point.createDefaultPoint())
-                   .email("user1@gmail.com")
+                   .email("user"+ id +"@gmail.com")
                    .build();
     }
 
-    User user2(){
-        return User.builder()
-                   .name("user2")
-                   .nickName("nick2")
-                   .email("user2@gmail.com")
-                   .point(Point.createDefaultPoint())
-                   .build();
-    }
 
-    UsedBook book(User user){
+    UsedBook book(User user,Long id){
         return UsedBook.builder()
+                       .id(id)
                        .price(1000)
                        .title("책 팝니다")
                        .seller(user)
                        .bookState(BookState.UNRELEASED)
+                       .saleState(SaleState.SALE)
                        .build();
     }
-    @Test
-    public void orderSaveTest() throws Exception{
-        //given
-        User user = user1();
-        userRepository.save(user);
-        UsedBook usedBook = book(user);
-        usedBookRepository.save(usedBook);
-        //when
-        OrderCreateDto dto = new OrderCreateDto();
-        dto.setUsedBookId(usedBook.getId());
-        dto.setUserId(user.getId());
-        //then
-        Long id = orderService.saveOrder(dto);
-        Order saveOrder = orderRepository.findDetailById(id).get();
-        assertEquals("user1",saveOrder.getBuyer().getName());
-        assertEquals("책 팝니다",saveOrder.getBook().getTitle());
+
+    OrderCreateDto dto(Long userId,Long bookId){
+        return OrderCreateDto.builder()
+                .userId(userId)
+                .usedBookId(bookId)
+                .build();
     }
 
     @Test
-    public void findByIdTest() throws Exception{
+    public void orderSaveTest() throws Exception{
         //given
-        User user1 = user1();
-        User user2 = user2();
-        UsedBook book = book(user1);
-        usedBookRepository.save(book);
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Order order = Order.createOrder(user2,null,book);
-        Long id = orderRepository.save(order);
+        User user1 = user(1l);
+        User user2 = user(2l);
+        user2.getPoint().chargePoint(1000);
+        UsedBook usedBook = book(user1,3l);
+
+        when(userRepository.findById(2l)).thenReturn(Optional.ofNullable(user2));
+        when(usedBookRepository.findByIdWithUser(3l)).thenReturn(Optional.ofNullable(usedBook));
+        OrderCreateDto dto = dto(user2.getId(), usedBook.getId());
+
         //when
-        OrderDto dto = orderService.getOrderDetail(id);
+        orderService.saveOrder(dto);
+
         //then
-        assertEquals(user2.getNickName(),dto.getBuyer().getNickName());
-        assertEquals(user1.getNickName(),dto.getSeller().getNickName());
+        verify(orderRepository).save(any());
+        assertEquals(SaleState.TRADING,usedBook.getSaleState());
+        assertEquals(0,user2.getPoint().getHoldPoint());
+        assertEquals(1000,user2.getPoint().getUsedPoint());
+
     }
+
+    @Test
+    public void orderEndTest() throws Exception{
+        //given
+        User user1 = user(1l);
+        User user2 = user(2l);
+        UsedBook usedBook = book(user1,3l);
+        OrderCreateDto dto = new OrderCreateDto();
+        dto.setUserId(2l);
+        Order order = Order.createOrder(user2,dto,usedBook);
+        //when
+        order.end();
+        //then
+        assertEquals(OrderState.SOLD_OUT,order.getOrderState());
+        assertEquals(1000,user1.getPoint().getHoldPoint());
+    }
+
+    @Test
+    public void orderRemoveTest() throws Exception{
+        //given
+        User user1 = user(1l);
+        User user2 = user(2l);
+        UsedBook usedBook = book(user1,3l);
+        OrderCreateDto dto = new OrderCreateDto();
+        dto.setUserId(2l);
+        Order order = Order.createOrder(user2,dto,usedBook);
+        when(orderRepository.findDetailById(any())).thenReturn(Optional.ofNullable(order));
+
+        //when
+        orderService.removeOrder(order.getId());
+
+        //then
+        verify(orderRepository).findDetailById(any());
+        verify(orderRepository).remove(any());
+        assertEquals(SaleState.SALE,usedBook.getSaleState());
+        assertEquals(1000,user2.getPoint().getHoldPoint());
+    }
+
 }

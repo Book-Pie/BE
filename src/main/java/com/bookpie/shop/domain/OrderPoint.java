@@ -1,6 +1,6 @@
 package com.bookpie.shop.domain;
 
-import com.bookpie.shop.domain.dto.point.PointDto;
+import com.bookpie.shop.dto.point.PointDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,12 +1,10 @@
 package com.bookpie.shop.repository;
 
-import com.bookpie.shop.domain.Order;
 import com.bookpie.shop.domain.UsedBook;
 import com.bookpie.shop.domain.User;
-import com.bookpie.shop.domain.dto.UsedBookCreateDto;
-import com.bookpie.shop.domain.dto.UserCreateDto;
-import com.bookpie.shop.domain.enums.BookState;
-import com.bookpie.shop.domain.enums.SaleState;
+import com.bookpie.shop.dto.UsedBookCreateDto;
+import com.bookpie.shop.dto.UserCreateDto;
+import com.bookpie.shop.enums.SaleState;
 import com.querydsl.core.Tuple;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
