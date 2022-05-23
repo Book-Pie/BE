@@ -63,6 +63,13 @@ class OrderServiceTest {
                        .build();
     }
 
+    OrderCreateDto dto(Long userId,Long bookId){
+        return OrderCreateDto.builder()
+                .userId(userId)
+                .usedBookId(bookId)
+                .build();
+    }
+
     @Test
     public void orderSaveTest() throws Exception{
         //given
@@ -71,17 +78,14 @@ class OrderServiceTest {
         user2.getPoint().chargePoint(1000);
         UsedBook usedBook = book(user1,3l);
 
-        when(userRepository.findById(1l)).thenReturn(Optional.ofNullable(user1));
         when(userRepository.findById(2l)).thenReturn(Optional.ofNullable(user2));
         when(usedBookRepository.findByIdWithUser(3l)).thenReturn(Optional.ofNullable(usedBook));
+        OrderCreateDto dto = dto(user2.getId(), usedBook.getId());
 
         //when
-        OrderCreateDto dto = new OrderCreateDto();
-        dto.setUsedBookId(usedBook.getId());
-        dto.setUserId(user2.getId());
+        orderService.saveOrder(dto);
 
         //then
-        orderService.saveOrder(dto);
         verify(orderRepository).save(any());
         assertEquals(SaleState.TRADING,usedBook.getSaleState());
         assertEquals(0,user2.getPoint().getHoldPoint());
@@ -125,6 +129,5 @@ class OrderServiceTest {
         assertEquals(SaleState.SALE,usedBook.getSaleState());
         assertEquals(1000,user2.getPoint().getHoldPoint());
     }
-
 
 }
